@@ -1,0 +1,19 @@
+<!-- $Id$ -->
+<!-- To run these tests, load this file into the JSunit test runner -->
+<html>
+ <head>
+  <title>MiscLib - JsUnit Test Suite</title>
+  <script language="JavaScript" type="text/javascript" src="jsUnit/app/jsUnitCore.js"></script>
+ </head>
+ <body>
+  <script language="javascript">
+    function suite() {
+      var result = new top.jsUnitTestSuite();
+      result.addTestPage("./SimpleTestcases.html");
+      result.addTestPage("./TestCombinatorParser.html");
+      return result;
+      }
+  </script>
+ </body>
+</html>
+

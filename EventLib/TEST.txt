@@ -1,0 +1,27 @@
+
+    >> R2Events1/ev1,R2Source1/src1 >>      >> R2Events1/ev1,R2Source1/src1 >>
+                                            >> R1Events1/ev1,R1Source1/src1 >>
+
+    >> *            ,R2Source/src1  >>      >> *            ,R2Source/src1  >>
+                                            >> *            ,R1Source/src1  >>
+
+    >> R2Events/ev1 ,*              >>      >> R2Events/ev1 ,*              >>
+                                            >> R1Events/ev1 ,*              >>
+
+R2  ----------------------------------  R1  ----------------------------------  R3
+
+    << R1Events/ev1 ,*              <<                                        
+    << R3Events/ev1 ,*              <<      << R3Events/ev1 ,*              <<
+
+    << *,            R1Source/src1  <<
+    << *,            R3Source/src1  <<      << *            ,R3Source/src1  <<
+
+    << R1Events1/ev1,R1Source1/src1 <<
+    << R3Events1/ev1,R3Source1/src1 <<      << R3Events1/ev1,R3Source1/src1 <<
+
+    >> RREvents2/ev1,RRSource2/src1 >>
+    << RREvents2/ev1,RRSource2/src1 <<
+
+    >> RREvents3/ev1,RRSource3/src1 >>      >> RREvents3/ev1,RRSource3/src1 >>
+    << - - - - - - - - - - RREvents3/ev1,RRSource3/src1 - - - - - - - - - - <<
+

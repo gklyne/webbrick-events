@@ -1,0 +1,65 @@
+<!-- $Id$ -->
+<!-- To run this test:
+  -
+  -  1. Start the panel widgets test server:
+  -     /HomeGateway2/Trunk/WebBrickGateway/WebBrickGateway/panels/tests/TestServer/start-testserver.py
+  -  2. Browse to http:/localhost:8080/
+  -  3. Load this HTML file via the link:
+  -     http://localhost:8080/testserver/static/TestTestEventResponder.html
+  -
+  -  This arrangement ensures that the javascript callbacks in the test program are
+  -  permitted in the browser security model, and the HTTP event requests are
+  -  directed to the appropriate HTTP test server ports.
+  -->
+
+<html>
+
+  <head>
+    <title>Asynchronous Test Suite for HTTP event event forwarding functions</title>
+
+    <!-- basic style foundations -->
+    <link type="text/css"
+          href="/misclib/static/SimpleTest/test.css" rel="stylesheet">
+
+    <!-- MochiKit dependencies -->
+    <script type="text/javascript">MochiKit = {__export__: false};</script>
+    <script type="text/javascript"
+            src="/misclib/static/javascript/MochiKit.js">
+    </script>
+
+    <!-- WebBrickLibs dependencies -->
+    <script type="text/javascript" src="/misclib/static/javascript/Namespace.js"></script>
+    <script type="text/javascript"
+            src="/misclib/static/SimpleTest/SimpleTest.js">
+    </script>
+
+    <!-- Testing dependencies -->
+    <script type="text/javascript" src="/misclib/static/javascript/DeferredMonad.js"></script>
+    <script type="text/javascript" src="/misclib/static/javascript/AsyncUnitTest.js"></script>
+
+    <!-- Modules under test -->
+    <script type="text/javascript" src="/eventlib/static/javascript/URI.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/Status.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/Event.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/EventEnvelope.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/EventSerializer.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/EventAgent.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/EventHandler.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/EventRouter.js"></script>
+    <script type="text/javascript" src="/eventlib/static/javascript/EventRouterHTTPC.js"></script>
+
+    <!-- Test script -->
+    <script type="text/javascript" src="/static/javascript/TestTestEventResponder.js"></script>
+  </head>
+
+  <body>
+    <h1>TestTestEventResponder.html</h1>
+    <p>Test takes about 10 seconds to display results</p>
+    <pre id="test">
+    <script type="text/javascript">
+    runTestSuite(TestTestEventResponder);
+    </script>
+    </pre>
+  </body>
+
+</html>

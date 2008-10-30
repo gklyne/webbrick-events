@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>TestTempSetPoint</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TestCountdownDisplay</td></tr>
+</thead><tbody>
+<tr>
+    <td>open</td>
+    <td>http://localhost:8080/Tests/TestTempSetPoint</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertTitle</td>
+    <td>Temperature Set Point</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//div[@id='main_content']/form/table/tbody/tr/th/label</td>
+    <td>Temperature set point:</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//*[@id='spname']//setpointvalue</td>
+    <td>??.?</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-unknown</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-unknown</td>
+</tr>
+<!-- Set up to use the widget event router -->
+<tr>
+    <td>getWidgetEventRouter</td>
+    <td>http://id.webbrick.co.uk/source/TempSetPoint_Subject</td>
+    <td></td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>1000</td>
+    <td></td>
+</tr>
+<!-- Set current value event -->
+<tr>
+    <td>publishEvent</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent</td>
+    <td>javascript{15.0}</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<!-- Show target for 1 second event -->
+<tr>
+    <td>publishEvent</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent</td>
+    <td>1</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>??.?</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-unknown</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>set point</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-unknown</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>1200</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<!-- Set target value -->
+<!-- Set current value event -->
+<tr>
+    <td>publishEvent</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent</td>
+    <td>19.5</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<!-- Show target for 1 second event -->
+<tr>
+    <td>publishEvent</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent</td>
+    <td>1</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>19.5</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>set point</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>1200</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<!-- Create, subscribe and set target event listener -->
+<tr>
+    <td>storeEventListener</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent</td>
+    <td>settargetlistener</td>
+</tr>
+<!-- Click button to bump up target value -->
+<!-- (first click activates display, second changes the value) -->
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointup</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointup</td>
+    <td></td>
+</tr>
+<!--
+<tr>
+    <td>assertEventType</td>
+    <td>settargetlistener</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent</td>
+</tr>
+<tr>
+    <td>verifyEventSource</td>
+    <td>settargetlistener</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_Subject</td>
+</tr>
+-->
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>20.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointstate</td>
+    <td>set point</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointstate@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointdisplay@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<!-- Wait for display to revert -->
+<tr>
+    <td>pause</td>
+    <td>1750</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>20.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>20.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<!-- Bump down target value twice -->
+<!-- (again, 1st click activates the setpoint display) -->
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointdown</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointdown</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointdown</td>
+    <td></td>
+</tr>
+<!--
+<tr>
+    <td>assertEventType</td>
+    <td>SetTargetListener</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent</td>
+</tr>
+<tr>
+    <td>verifyEventSource</td>
+    <td>SetTargetListener</td>
+    <td>http://id.webbrick.co.uk/events/TempSetPoint_Subject</td>
+</tr>
+-->
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>19.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<!-- Wait for display to revert -->
+<tr>
+    <td>pause</td>
+    <td>3750</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>19.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<!-- Bump down target value 3 times at 2-second intervals -->
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointdown</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointdown</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>18.5</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointdown</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>18.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>click</td>
+    <td>//setpointwidget//setpointdown</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>17.5</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<!-- Wait for display to revert -->
+<tr>
+    <td>pause</td>
+    <td>3750</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>17.5</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-target</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
+</tr>
+<!--End of test-->
+
+</tbody></table>
+</body>
+</html>

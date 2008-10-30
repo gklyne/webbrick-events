@@ -1,0 +1,1 @@
+Files in this directory are Selenium test scripts that depenend on a running copy of TestServer

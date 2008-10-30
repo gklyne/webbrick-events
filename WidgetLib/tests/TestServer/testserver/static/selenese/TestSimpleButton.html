@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+ !  $Id$
+ !
+ !  Selenium test case for simple button widget
+ -->
+<html>
+
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>TestSimpleButton</title>
+</head>
+
+<body>
+
+<table cellpadding="1" cellspacing="1" border="1">
+  <tbody>
+    <tr>
+      <td rowspan="1" colspan="3"><b>TestSimpleButton</b></td>
+    </tr>
+    <tr>
+      <td rowspan="1" colspan="3">
+        <code>tests/static/TestSimpleButton.html</code>:
+        This test suite checks basic rendering of a simple button, and in particular
+        that the values supplied by the application controller are reflected in the
+        rendered page (the test controller in turn gets these values from the URI).
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="1" colspan="3">
+        Works in conjunction with templates, <code>TestSimpleButton.kid</code>,
+        which itself extends <code>TestMaster.kid</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>http://localhost:8080/Tests/TestSimpleButton</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>assertTitle</td>
+      <td>Simple button</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>verifyAttribute</td>
+      <td>name=sbname@value</td>
+      <td>A simple button</td>
+    </tr>
+    <tr>
+      <td>verifyText</td>
+      <td>name=sbname</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>http://localhost:8080/Tests/TestSimpleButton?name=button1</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>assertTitle</td>
+      <td>Simple button</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>verifyAttribute</td>
+      <td>name=button1@value</td>
+      <td>A simple button</td>
+    </tr>
+    <tr>
+      <td>verifyText</td>
+      <td>name=button1</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

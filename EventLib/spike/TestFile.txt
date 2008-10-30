@@ -1,0 +1,3 @@
+D:\Svn\Thirtover\HomeGateway2\Trunk\WebBrickLibs\EventLib\tests\static\TestFile.txt
+
+This is a test file

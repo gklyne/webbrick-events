@@ -1,0 +1,230 @@
+<setpointwidget _moz-userdefined="" 
+      initializewidget="TempSetPoint_Init" 
+      id="spname" 
+      name="spname" 
+      subject="http://id.webbrick.co.uk/source/TempSetPoint_Subject" 
+      setcurrentevent="http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent" 
+      settargetevent="http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent" 
+      showtargetevent="http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent">
+  <setpointbody _moz-userdefined="">
+    <setpointdisplay _moz-userdefined="" class="tempsetpoint-unknown">
+      <setpointvalue _moz-userdefined="" class="tempsetpoint-unknown">??.?</setpointvalue>
+      <setpointstate _moz-userdefined="" class="tempsetpoint-current">current</setpointstate>
+    </setpointdisplay>
+    <setpointbuttons _moz-userdefined="">
+      <setpointup _moz-userdefined="">
+  <button value="Up" name="Up" type="button">
+    <img alt="Increase set point" src="/widgets/bullet_arrow_up.png"/>
+  </button>
+      </setpointup>
+      <setpointdown _moz-userdefined="">
+  <button value="Down" name="Down" type="button">
+    <img alt="Decrease set point" src="/widgets/bullet_arrow_down.png"/>
+  </button>
+      </setpointdown>
+    </setpointbuttons>
+  </setpointbody>
+</setpointwidget>
+
+
+
+### With self.named logic commented out:
+
+<setpointwidget _moz-userdefined="" 
+      initializewidget="TempSetPoint_Init" 
+      settargetevent="http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent"
+      showtargetevent="http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent"
+      setcurrentevent="http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent"
+      subject="http://id.webbrick.co.uk/source/TempSetPoint_Subject">
+  <setpointbody _moz-userdefined="">
+    <setpointdisplay _moz-userdefined="" class="tempsetpoint-unknown">
+      <setpointvalue _moz-userdefined="" class="tempsetpoint-unknown">??.?</setpointvalue>
+      <setpointstate _moz-userdefined="" class="tempsetpoint-current">current</setpointstate>
+    </setpointdisplay>
+    <setpointbuttons _moz-userdefined="">
+      <setpointup _moz-userdefined="">
+  <button value="Up" name="Up" type="button">
+    <img alt="Increase set point" src="/widgets/bullet_arrow_up.png"/>
+  </button>
+      </setpointup>
+      <setpointdown _moz-userdefined="">
+  <button value="Down" name="Down" type="button">
+    <img alt="Decrease set point" src="/widgets/bullet_arrow_down.png"/>
+  </button>
+      </setpointdown>
+    </setpointbuttons>
+  </setpointbody>
+</setpointwidget>
+
+{'convert': True, 
+ 'name': 'spname',
+ 'error': None,
+ 'field_id': 'spname',
+ 'field_class': 'tempsetpoint',
+ 'label': 'Spname',
+ 'value': None,
+ 'css_classes': [],
+ 'help_text': None,
+
+ 'id': 'myzone',
+ 'SetCurrentEvent': 'myuri:SetCurrentEvent',
+ 'SetTargetEvent': 'myuri:SetTargetEvent',
+ 'ShowTargetEvent': 'myuri:ShowTargetEvent',
+ 'DefaultTarget': '15.0',
+ 'Subject': 'myuri:myzone'
+
+ 'SetPointState_class': 'tempsetpoint-unknown',
+ 'SetPointValue_class': 'tempsetpoint-unknown',
+
+ 'attrs': {'SetCurrentEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent',
+           'ShowTargetEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent',
+           'Subject': 'http://id.webbrick.co.uk/source/TempSetPoint_Subject',
+           'SetTargetEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent'
+          },
+}
+
+
+### Extenbded naming logic:
+
+
+
+<setpointwidget _moz-userdefined="" 
+      settargetevent="http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent" 
+      initializewidget="TempSetPoint_Init" 
+      id="myzone" 
+      subject="http://id.webbrick.co.uk/source/TempSetPoint_Subject" 
+      setcurrentevent="http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent" 
+      name="spname" 
+      showtargetevent="http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent">
+  <setpointbody _moz-userdefined="">
+    <setpointdisplay _moz-userdefined="" class="tempsetpoint-unknown">
+      <setpointvalue _moz-userdefined="" class="tempsetpoint-unknown">??.?</setpointvalue>
+      <setpointstate _moz-userdefined="" class="tempsetpoint-current">current</setpointstate>
+    </setpointdisplay>
+    <setpointbuttons _moz-userdefined="">
+      <setpointup _moz-userdefined="">
+        <button value="Up" name="Up" type="button">
+          <img alt="Increase set point" src="/widgets/bullet_arrow_up.png"/>
+        </button>
+      </setpointup>
+      <setpointdown _moz-userdefined="">
+        <button value="Down" name="Down" type="button">
+          <img alt="Decrease set point" src="/widgets/bullet_arrow_down.png"/>
+        </button>
+      </setpointdown>
+    </setpointbuttons>
+  </setpointbody>
+</setpointwidget>
+
+{ 'convert': True,
+  'SetPointState_class': 'tempsetpoint-unknown',
+  'name': 'spname',
+  'SetPointValue_class': 'tempsetpoint-unknown',
+  'SetCurrentEvent': 'myuri:SetCurrentEvent',
+  'error': None,
+  'field_id': 'spname',
+  'label': 'Spname',
+  'value': None,
+  'DefaultTarget': '15.0',
+  'ShowTargetEvent': 'myuri:ShowTargetEvent',
+  'attrs': { 'name': 'spname', 
+             'SetCurrentEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent',
+             'ShowTargetEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent',
+             'Subject': 'http://id.webbrick.co.uk/source/TempSetPoint_Subject',
+             'id': 'myzone',
+             'SetTargetEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent'},
+  'css_classes': [],
+  'help_text': None,
+  'field_class': 'tempsetpoint',
+  'SetTargetEvent': 'myuri:SetTargetEvent',
+  'id': 'myzone',
+  'Subject': 'myuri:myzone'
+}
+
+
+<setpointwidget _moz-userdefined="" 
+      settargetevent="http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent" 
+      initializewidget="TempSetPoint_Init" 
+      showtargetevent="http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent" 
+      setcurrentevent="http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent" 
+      subject="http://id.webbrick.co.uk/source/TempSetPoint_Subject">
+  <setpointbody _moz-userdefined="">
+    <setpointdisplay _moz-userdefined="" class="tempsetpoint-unknown">
+      <setpointvalue _moz-userdefined="" class="tempsetpoint-unknown">??.?</setpointvalue>
+      <setpointstate _moz-userdefined="" class="tempsetpoint-current">current</setpointstate>
+    </setpointdisplay>
+    <setpointbuttons _moz-userdefined="">
+      <setpointup _moz-userdefined="">
+        <button value="Up" name="Up" type="button">
+          <img alt="Increase set point" src="/widgets/bullet_arrow_up.png"/>
+        </button>
+      </setpointup>
+      <setpointdown _moz-userdefined="">
+        <button value="Down" name="Down" type="button">
+          <img alt="Decrease set point" src="/widgets/bullet_arrow_down.png"/>
+        </button>
+      </setpointdown>
+    </setpointbuttons>
+  </setpointbody>
+{'convert': True, 'SetPointState_class': 'tempsetpoint-unknown', 'name': 'widget', 'SetPointValue_class': 'tempsetpoint-unknown', 'SetCurrentEvent': 'myuri:SetCurrentEvent', 'error': None, 'field_id': 'widget', 'label': None, 'value': None, 'DefaultTarget': '15.0', 'ShowTargetEvent': 'myuri:ShowTargetEvent', 'attrs': {'SetCurrentEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent', 'ShowTargetEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent', 'Subject': 'http://id.webbrick.co.uk/source/TempSetPoint_Subject', 'SetTargetEvent': 'http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent'}, 'css_classes': [], 'help_text': None, 'field_class': 'tempsetpoint', 'SetTargetEvent': 'myuri:SetTargetEvent', 'id': 'myzone', 'Subject': 'myuri:myzone'}
+</setpointwidget>
+
+# With revised value cascade logic...
+
+<setpointwidget _moz-userdefined="" 
+      settargetevent="myuri:SetTargetEvent" 
+      initializewidget="TempSetPoint_Init" 
+      id="myzone" 
+      subject="myuri:myzone" 
+      showtargetevent="myuri:ShowTargetEvent" 
+      defaulttarget="15.0" 
+      setcurrentevent="myuri:SetCurrentEvent" 
+      name="uriname">
+  <setpointbody _moz-userdefined="">
+    <setpointdisplay _moz-userdefined="" class="tempsetpoint-unknown">
+      <setpointvalue _moz-userdefined="" class="tempsetpoint-unknown">??.?</setpointvalue>
+      <setpointstate _moz-userdefined="" class="tempsetpoint-current">current</setpointstate>
+    </setpointdisplay>
+    <setpointbuttons _moz-userdefined="">
+      <setpointup _moz-userdefined="">
+        <button value="Up" name="Up" type="button">
+          <img alt="Increase set point" src="/widgets/bullet_arrow_up.png"/>
+        </button>
+      </setpointup>
+      <setpointdown _moz-userdefined="">
+        <button value="Down" name="Down" type="button">
+          <img alt="Decrease set point" src="/widgets/bullet_arrow_down.png"/>
+        </button>
+      </setpointdown>
+    </setpointbuttons>
+  </setpointbody>
+
+{ 'convert': True, 
+  'error': None,
+  'field_id': u'uriname',
+  'field_class': 'tempsetpoint',
+  'label': u'Uriname',
+  'value': None,
+  'css_classes': [], 
+  'help_text': None,
+
+  'id': 'myzone',
+  'name': u'uriname',
+  'Subject': 'myuri:myzone',
+  'DefaultTarget': '10.0',
+  'SetCurrentEvent': 'myuri:SetCurrentEvent',
+  'SetTargetEvent': 'myuri:SetTargetEvent',
+  'ShowTargetEvent': 'myuri:ShowTargetEvent',
+
+  'SetPointValue_class': 'tempsetpoint-unknown',
+  'SetPointState_class': 'tempsetpoint-unknown',
+
+  'attrs': { 'name': u'uriname', 
+             'SetCurrentEvent': 'myuri:SetCurrentEvent',
+             'DefaultTarget': '10.0',
+             'ShowTargetEvent': 'myuri:ShowTargetEvent',
+             'Subject': 'myuri:myzone',
+             'id': 'myzone',
+             'SetTargetEvent': 'myuri:SetTargetEvent'}
+  }
+</setpointwidget>

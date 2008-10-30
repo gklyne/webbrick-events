@@ -1,0 +1,36 @@
+/* $Id$
+ *
+ * CSS declarations for button logic to show various states of activation
+ *
+ * The styles could be more useful:  note this is a default for testing 
+ * that can be overridden by user supplied styles, or an alternatiuve style 
+ * sheet.  As such, this file should be viewed as an example rather than 
+ * a production stylesheet.
+ */
+
+.button_normal {
+    /* background-color:silver; */
+    color:black;
+}
+
+.button_depressed {
+    background-color:silver;
+    color:blue;
+}
+
+.button_pending {
+    background-color:yellow;
+    color:black;
+}
+
+.button_unknown {
+    background-color:grey;
+    color:silver;
+}
+
+.button_inactive {
+    background-color:white;
+    color: grey;
+}
+
+/* End. */

@@ -1,0 +1,24 @@
+<!-- $Id$ -->
+<!-- To run these tests, load this file into the JSunit test runner -->
+<html>
+ <head>
+  <title>EventLib - JsUnit Test Suite</title>
+  <link rel="stylesheet" type="text/css" href="jsUnit/app/css/jsUnitStyle.css">
+  <script language="JavaScript" type="text/javascript" src="jsUnit/app/jsUnitCore.js"></script>
+ </head>
+ <body>
+  <script language="javascript">
+    function suite() {
+      var result = new top.jsUnitTestSuite();
+      result.addTestPage("./TestURI.html");
+      result.addTestPage("./TestEvent.html");
+      result.addTestPage("./TestStatus.html");
+      result.addTestPage("./TestEventAgent.html");
+      result.addTestPage("./TestEventEnvelope.html");
+      result.addTestPage("./TestEventSerializer.html");
+      return result;
+      }
+  </script>
+ </body>
+</html>
+

@@ -1,0 +1,54 @@
+/* $Id$
+ *
+ * Minimal stylesheet for ModeSelector widget
+ *
+ * Pattern
+ *  <ModeSelectorWidget id="...", ModeSubject="...", DefaultMode="...">
+ *    <ModeSelectorBody>
+ *      <ModeSelectorButton class="modeselector-selected">
+ *        button 1 label
+ *      </ModeSelectorButton>
+ *      <ModeSelectorButton class="modeselector-normal">
+ *        Button 2 label
+ *      </ModeSelectorButton>
+ *       :
+ *    </ModeSelectorBody>
+ *  </ModeSelectorWidget>
+ */
+
+ModeSelectorWidget, ModeSelectorBody, ModeSelectorButton{
+    text-align: center;
+}
+
+ModeSelectorWidget{
+    display: table;
+    text-align: center;
+}
+
+ModeSelectorBody{
+    display: table-row-group;
+    vertical-align: middle;
+    text-align: left;
+}
+
+ModeSelectorButton{
+    display: table-row;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.modeselector-unknown {
+    background-color:grey;
+    color:silver;
+}
+
+.modeselector-normal {
+    color:black;
+}
+
+.modeselector-selected {
+    background-color:yellow;
+    color:black;
+}
+
+// End.

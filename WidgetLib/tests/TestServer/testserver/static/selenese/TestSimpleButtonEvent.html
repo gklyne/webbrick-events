@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>TestSimpleButtonEvent</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TestSimpleButtonEvent</td></tr>
+</thead><tbody>
+<!-- Initial load widget -->
+<tr>
+  <td>open</td>
+  <td>http://localhost:8080/Tests/TestSimpleButton?name=button1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>Simple button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@value</td>
+  <td>A simple button</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>name=button1</td>
+  <td></td>
+</tr>
+<!-- Test the supporting event subscribe/generation code -->
+<!-- Register event listener-->
+<tr>
+  <td>makeEventRouter</td>
+  <td>TestSimpleButton_PubSub</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeEventListener</td>
+  <td>foo:eventtype1</td>
+  <td>listener1</td>
+</tr>
+<tr>
+  <td>publishEvent</td>
+  <td>foo:eventtype1</td>
+  <td>EventPayload1</td>
+</tr>
+<tr>
+  <td>assertEventReceived</td>
+  <td>listener1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeEventReceived</td>
+  <td>listener1</td>
+  <td>flagEventReceived</td>
+</tr>
+<tr>
+  <td>assertEventObject</td>
+  <td>listener1</td>
+  <td>EventPayload1</td>
+</tr>
+<tr>
+  <td>storeEventObject</td>
+  <td>listener1</td>
+  <td>valEventReceived</td>
+</tr>
+<!-- Check for buttonclick event generation -->
+<!-- Set up to use the widget event router -->
+<tr>
+  <td>getWidgetEventRouter</td>
+  <td>TestSimpleButton_Sender</td>
+  <td></td>
+</tr>
+<!-- Create, subscribe and save button click event listener -->
+<tr>
+  <td>storeEventListener</td>
+  <td>http://id.webbrick.co.uk/events/ButtonClickEvent</td>
+  <td>clicklistener</td>
+</tr>
+<!-- Click button and look for event generated -->
+<tr>
+  <td>click</td>
+  <td>button1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertEventType</td>
+  <td>clicklistener</td>
+  <td>http://id.webbrick.co.uk/events/ButtonClickEvent</td>
+</tr>
+<!-- Another way: save event type and check saved value -->
+<tr>
+  <td>storeEventType</td>
+  <td>clicklistener</td>
+  <td>clickevent</td>
+</tr>
+<tr>
+  <td>verifyExpression</td>
+  <td>${clickevent}</td>
+  <td>http://id.webbrick.co.uk/events/ButtonClickEvent</td>
+</tr>
+<!-- Check for response to incoming SetButtonText event -->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonText</td>
+  <td>New button label</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@value</td>
+  <td>New button label</td>
+</tr>
+<!-- Check for response to incoming SetButtonState event -->
+<!-- up -->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonState</td>
+  <td>up</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_normal</td>
+</tr>
+<!-- down -->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonState</td>
+  <td>down</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_depressed</td>
+</tr>
+<!-- waiting -->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonState</td>
+  <td>waiting</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_pending</td>
+</tr>
+<!-- unknown -->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonState</td>
+  <td>unknown</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_unknown</td>
+</tr>
+<!-- up, again-->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonState</td>
+  <td>up</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_normal</td>
+</tr>
+<!-- other value -->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonState</td>
+  <td>zzz</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_unknown</td>
+</tr>
+<!-- up, again-->
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/SetButtonState</td>
+  <td>up</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_normal</td>
+</tr>
+</tbody></table>
+</body>
+</html>

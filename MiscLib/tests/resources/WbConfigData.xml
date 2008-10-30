@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<WebbrickConfig Ver="6.0.252">
+<NN>Build2</NN>
+<SN>23</SN>
+<SRs>
+<SR id="0" Value="8"/>
+<SR id="1" Value="8"/>
+</SRs>
+<IR>93</IR>
+<SF>4</SF>
+<!-- <MM lo="4" hi="63" fr="2" dig="1985229328" an="12816" /> -->
+<MM lo="4" hi="63" fr="2" dig='2253664784' an='61968' />
+
+<CDs>
+<CD id = "0" Name="Pb-0">
+<Trg B1="68" B2="0" B3="0" />
+</CD>
+<CD id = "1" Name="Pb-1">
+<Trg B1="226" B2="1" B3="0" />
+</CD>
+<CD id = "2" Name="Pb-2">
+<Trg B1="69" B2="2" B3="0" />
+</CD>
+<CD id = "3" Name="Pb-3">
+<Trg B1="225" B2="1" B3="0" />
+</CD>
+<CD id = "4" Name="Pb-4">
+<Trg B1="115" B2="5" B3="0" />
+</CD>
+<CD id = "5" Name="Pb-5">
+<Trg B1="70" B2="5" B3="0" />
+</CD>
+<CD id = "6" Name="AnOn">
+<Trg B1="2" B2="133" B3="0" />
+</CD>
+<CD id = "7" Name="AnOf">
+<Trg B1="1" B2="128" B3="0" />
+</CD>
+</CDs>
+<CCs>
+<CC id = "0" Dm="0" Ds="0" Am="15" Av="0" />
+<CC id = "1" Dm="7" Ds="5" Am="13" Av="21554" />
+<CC id = "2" Dm="0" Ds="0" Am="15" Av="30275" />
+<CC id = "3" Dm="0" Ds="0" Am="0" Av="0" />
+<CC id = "4" Dm="0" Ds="0" Am="0" Av="0" />
+<CC id = "5" Dm="0" Ds="0" Am="0" Av="0" />
+<CC id = "6" Dm="0" Ds="0" Am="0" Av="0" />
+<CC id = "7" Dm="0" Ds="0" Am="0" Av="0" />
+</CCs>
+
+<CWs>
+<CW id="0">30</CW>
+<CW id="1">5</CW>
+<CW id="2">60</CW>
+<CW id="3">4200</CW>
+</CWs>
+
+<CSs>
+<CS id="0">0</CS>
+<CS id="1">12</CS>
+<CS id="2">25</CS>
+<CS id="3">35</CS>
+<CS id="4">50</CS>
+<CS id="5">75</CS>
+<CS id="6">99</CS>
+<CS id="7">100</CS>
+</CSs>
+
+<CTs>
+<CT id="0" Name="Temp-1">
+<TrgL Val="-800" B1="192" B2="0" B3="0" />
+<TrgH Val="1600" B1="192" B2="0" B3="0" />
+</CT>
+<CT id="1" Name="Temp-2">
+<TrgL Val="-800" B1="192" B2="0" B3="0" />
+<TrgH Val="1600" B1="192" B2="0" B3="0" />
+</CT>
+<CT id="2" Name="Temp-3">
+<TrgL Val="-800" B1="192" B2="0" B3="0" />
+<TrgH Val="1600" B1="192" B2="0" B3="0" />
+</CT>
+<CT id="3" Name="Temp-4">
+<TrgL Val="-800" B1="192" B2="0" B3="0" />
+<TrgH Val="1600" B1="192" B2="0" B3="0" />
+</CT>
+<CT id="4" Name="Temp-5">
+<TrgL Val="-800" B1="192" B2="0" B3="0" />
+<TrgH Val="1600" B1="192" B2="0" B3="0" />
+</CT>
+</CTs>
+
+<CIs>
+<CI id="0" Name="An-1">
+<TrgL Val="0" B1="192" B2="0" B3="0" />
+<TrgH Val="100" B1="0" B2="0" B3="0" />
+</CI>
+<CI id="1" Name="An-2">
+<TrgL Val="0" B1="192" B2="0" B3="0" />
+<TrgH Val="100" B1="0" B2="0" B3="0" />
+</CI>
+<CI id="2" Name="An-3">
+<TrgL Val="0" B1="192" B2="0" B3="0" />
+<TrgH Val="100" B1="0" B2="0" B3="0" />
+</CI>
+<CI id="3" Name="An-4">
+<TrgL Val="0" B1="192" B2="0" B3="0" />
+<TrgH Val="100" B1="0" B2="0" B3="0" />
+</CI>
+</CIs>
+
+<CEs>
+<CE id="0" Days="0" Hrs="0" Mins="0" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="1" Days="0" Hrs="1" Mins="1" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="2" Days="0" Hrs="2" Mins="2" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="3" Days="0" Hrs="3" Mins="3" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="4" Days="0" Hrs="4" Mins="4" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="5" Days="0" Hrs="5" Mins="5" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="6" Days="0" Hrs="6" Mins="6" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="7" Days="0" Hrs="7" Mins="7" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="8" Days="0" Hrs="8" Mins="8" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="9" Days="0" Hrs="9" Mins="9" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="10" Days="0" Hrs="10" Mins="10" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="11" Days="0" Hrs="11" Mins="11" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="12" Days="31" Hrs="12" Mins="12" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="13" Days="127" Hrs="13" Mins="13" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="14" Days="62" Hrs="14" Mins="14" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+<CE id="15" Days="65" Hrs="15" Mins="15" >
+<Trg B1="192" B2="0" B3="0" />
+</CE>
+</CEs>
+
+<NOs>
+<NO id="0" Name="Main" />
+<NO id="1" Name="Out1" />
+<NO id="2" Name="Heat" />
+<NO id="3" Name="Out3" />
+<NO id="4" Name="Out4" />
+<NO id="5" Name="Out5" />
+<NO id="6" Name="Out6" />
+<NO id="7" Name="Tst7" />
+</NOs>
+
+<NMs>
+<NM id="0" Name="Door" />
+<NM id="1" Name="Wndw" />
+<NM id="2" Name="GDr1" />
+<NM id="3" Name="Mon3" />
+</NMs>
+
+<NAs>
+<NA id="0" Name="Lights"/>
+<NA id="1" Name="Floor"/>
+<NA id="2" Name="An-3"/>
+<NA id="3" Name="An-4"/>
+</NAs>
+</WebbrickConfig>

@@ -1,0 +1,43 @@
+<!-- $Id$ -->
+<html>
+ <head>
+  <title>JsUnit Test Suite</title>
+  <link rel="stylesheet" type="text/css" href="jsUnit/app/css/jsUnitStyle.css">
+  <script language="JavaScript" type="text/javascript" src="../../static/javascript/URI.js"></script>
+  <script language="JavaScript" type="text/javascript" src="../../static/javascript/Event.js"></script>
+  <script language="JavaScript" type="text/javascript" src="../../static/javascript/Status.js"></script>
+  <script language="JavaScript" type="text/javascript" src="../../static/javascript/EventAgent.js"></script>
+  <script language="JavaScript" type="text/javascript" src="../../static/javascript/EventHandler.js"></script>
+  <script language="JavaScript" type="text/javascript" src="../../static/javascript/EventEnvelope.js"></script>
+  <script language="JavaScript" type="text/javascript" src="../../static/javascript/EventRouter.js"></script>
+  <script language="JavaScript" type="text/javascript" src="jsUnit/app/jsUnitCore.js"></script>
+  <script language="JavaScript" type="text/javascript" src="javascript/Testhelpers.js"></script>
+ </head>
+ <body>
+  <script language="javascript">
+
+    <!-- Specify order of tests -->
+
+    function exposeTestFunctionNames() {
+        return [ 'testXXX'
+               , 'testXXX'
+               ];
+    }
+
+    <!-- Setup and teardown -->
+
+    function setUp() {
+    }
+
+    function tearDown() {
+    }
+
+    <!-- Test cases -->
+
+    function testXXX() {
+        assertEquals( "testXXX", 4, 2+2 );
+    }
+
+  </script>
+ </body>
+</html>

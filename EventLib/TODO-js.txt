@@ -1,0 +1,15 @@
+$Id$
+
+Javascript event distribution libraries - TODO notes
+====================================================
+
+Javascript event forwarding library
+
+* HTTP event forwarding re-write.
+
+* EventPubSub/EventRouter:  think more clearly about what functionality is required.
+  Try to tease the functions apart more cleanly, and determine which pieces should be dropped 
+  for client-side handling, where routing is a binary choice.
+
+* Reimplement WildDict.prototype.iterate using iterateKey
+
