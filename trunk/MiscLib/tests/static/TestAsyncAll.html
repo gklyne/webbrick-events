@@ -1,0 +1,23 @@
+<!-- $Id$ -->
+<!-- To run these tests, just load this file into a browser -->
+<html>
+<head>
+    <!-- Test all functions in Mochikit asynchronous test runner -->
+    <!--
+    -->
+    <link rel="stylesheet" type="text/css" href="../../static/mochikit/tests/SimpleTest/test.css">
+    <script type="text/javascript">MochiKit = {__export__: false};</script>
+    <script type="text/javascript" src="../../static/javascript/MochiKit.js"></script>
+    <script type="text/javascript" src="../../static/javascript/Namespace.js"></script>
+    <script type="text/javascript" src="../../static/SimpleTest/TestRunner.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+TestRunner.runTests(
+    'TestAsyncTrivial.html',
+    'TestAsyncUnitTest.html',
+    'TestAsyncCombinatorParser.html'
+);
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<html>
+<!--
+  To run these tests, start testRunner.html, then load and run this file.
+  Do not try to run this file directy.
+  All files used must be in subdirectories of the directory containing testRunner.html
+-->
+
+ <head>
+  <title>JsUnit Test Suite</title>
+  <script type="text/javascript" src="jsUnit/app/jsUnitCore.js"></script>
+ </head>
+
+ <body>
+  <script language="javascript">
+    function suite() {
+      var result = new top.jsUnitTestSuite();
+      result.addTestPage("./SimpleTestCases.html");
+      return result;
+      }
+
+    function suitesuite() {
+      var newsuite = new top.jsUnitTestSuite();
+      newsuite.addTestSuite(coreSuite());
+      newsuite.addTestSuite(librariesSuite());
+      return newsuite;
+      }
+  </script>
+ </body>
+
+</html>

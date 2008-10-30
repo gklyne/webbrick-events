@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=windows-1252">
+    <title>JavaScript URI functions &ndash; unit tests</title>
+    <style type="text/css">
+      body { font-family: sans-serif; font-size: 80%; background-color: #ddd; }
+      h3 { text-decoration: underline; }
+      table { border-style: outset; border-collapse: collapse; border-width: 1px; border-color: green; background-color: #eee; }
+      td,th { border-style: inset;  border-width: 1px; border-color: #aaa; }
+      th { background-color: #ce8; border-bottom: 2px solid black; }
+      .failure { background-color: #eaa; }
+      .uri { font-family: monospace; }
+    </style>
+
+    <!--unit test framework-->
+    <script language="javascript" type="text/javascript" src="uri_tests.js"></script>
+
+    <!--libraries containing functions to test-->
+    <script language="javascript" type="text/javascript" src="http://dig.csail.mit.edu/2005/ajar/ajaw/uri.js"></script>
+    <script language="javascript" type="text/javascript" src="uri_funcs.js"></script>
+    <script language="javascript" type="text/javascript" src="../static/javascript/URI.js"></script>
+
+    <!--list of functions to test from above libraries-->
+    <script language="javascript" type="text/javascript">
+      functionsToTest = [
+        [absolutizeURI, "Mike Brown's absolutizeURI()"],
+        [Util.uri.join, "Tim Berners-Lee's Util.uri.join()"],
+        [uriJoinRefBase, "Graham Klyne's uriJoin()"]
+      ];
+    </script>
+  </head>
+  <body>
+
+    <h1>JavaScript URI functions &ndash; unit tests</h1>
+
+    <noscript>
+      <h4>JavaScript/JScript/ECMAScript must be available and enabled in your web browser.</h4>
+    </noscript>
+
+    <div id="results"></div>
+
+    <script language="javascript" type="text/javascript">
+      resultsDiv = document.getElementById("results");
+      numFuncs = functionsToTest.length;
+      for (var i = 0; i < numFuncs; i++) {
+        func = functionsToTest[i][0];
+        funcName = functionsToTest[i][1];
+        resultsDiv.innerHTML += "<h3>" + funcName + "<\/h3>";
+        var results, resultmsg;
+        try {
+          results = testAbsolutize(func, absolutizeTestCases);
+          resultmsg = results.length + " tests were run.";
+        } catch (ex) {
+          results = []
+          resultmsg = "There was a problem: " + String(ex);
+        }
+        resultsDiv.innerHTML += "<p>" + resultmsg + "<\/p>";
+
+        var numresults = results.length;
+        var a = [];
+        var failurecount = 0;
+        for (var j = 0; j < numresults; j++) {
+          var r = results[j];
+          var success=r[0], uriRef=r[1], baseUri=r[2], expectedUri=r[3], testResult=r[4];
+          var successMsg = (success && "success" || "failure");
+          var expectedUriMsg;
+          if (!success) failurecount++;
+          if (success) {
+            expectedUriMsg = "";
+          } else if (expectedUri instanceof Array) {
+            expectedUriMsg = " (expected <span class=\"uri\">" +
+                             expectedUri.join("<\/span> or <span class=\"uri\">") + "<\/span>)";
+          } else {
+            expectedUriMsg = " (expected <span class=\"uri\">" + expectedUri + "<\/span>)";
+          }
+          a.push("<tr class=\"" + successMsg + "\">" +
+                 "<td>" + (j+1) + "<\/td>" +
+                 "<td>" + successMsg + "<\/td>" +
+                 "<td class=\"uri\">" + uriRef + "<\/td>" +
+                 "<td class=\"uri\">" + baseUri + "<\/td>" +
+                 "<td><span class=\"uri\">" + testResult + "<\/span>" + expectedUriMsg + "<\/td>" +
+                 "<\/tr>");
+        }
+        var tableHtml = "<table><thead><tr>" +
+                        "<th>#<\/th><\/th>" +
+                        "<th>Outcome<\/th>" +
+                        "<th>URI reference<\/th>" +
+                        "<th>Base URI<\/th>" +
+                        "<th>Result<\/th>" +
+                        "<\/tr><\/thead><tbody>" + a.join("") + "<\/tbody><\/table>";
+        resultsDiv.innerHTML += tableHtml + "<p>" + failurecount + " tests failed.<\/p>";
+      }
+      resultsDiv.innerHTML += "<p>End of tests.<\/p>";
+    </script>
+  </body>
+</html>

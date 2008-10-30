@@ -1,0 +1,81 @@
+<!-- $Id$ -->
+<!-- To run this test, just load it into a browser -->
+
+<!--
+    Test asynchronous test wrappers.
+    This test suite aims to test that the various callbacks are occurring
+    roughly as they should.
+
+    To run tests in isolation, just load this file into a browser.
+-->
+
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../static/mochikit/tests/SimpleTest/test.css">
+    <script type="text/javascript">MochiKit = {__export__: false};</script>
+    <script type="text/javascript" src="../../static/javascript/MochiKit.js"></script>
+    <script type="text/javascript" src="../../static/javascript/Namespace.js"></script>
+    <script type="text/javascript" src="../../static/SimpleTest/SimpleTest.js"></script>
+    <script type="text/javascript" src="../../static/javascript/AsyncUnitTest.js"></script>
+  </head>
+
+  <body>
+
+  <pre id="test">
+  <script type="text/javascript">
+
+  var cb_report = function(p,n,nam,msg) {
+      var tn = p+n;
+      ok(true,"Test complete: "+tn.toString()+": "+nam+": "+msg);
+  };
+
+  var cb_complete = function(p,n,res) {
+      is(0,p,"previous tests");
+      is(2,n,"number of tests");
+      is(this.numTests(),       2,       "test count");
+      is(this._tests._status,   "setUp", "status");
+      is(this._tests._setup,    2,       "setUp call count");
+      is(this._tests._test,     2,       "test call count");
+      is(this._tests._teardown, 2,       "tearDown call count");
+      var tn = p+n;
+      ok(true,"All tests complete: "+tn.toString());
+      SimpleTest.finish();
+  };
+
+  // Trivial test wrapper
+  TrivialTest = function() {
+      this._setup    = 0;
+      this._teardown = 0;
+      this._test     = 0;
+  };
+
+  TrivialTest.exposeTestFunctionNames = function() {
+      return ["testTrivial", "testTrivial"];
+  }
+
+  TrivialTest.prototype.setUp = function() {
+      ok(true, "Trivial setUp");
+      this._status = "setUp";
+      this._setup++;
+      // ok(true, "_setup "+this._setup);
+  };
+
+  TrivialTest.prototype.tearDown = function() {
+      this._teardown++;
+      ok(true, "Trivial tearDown");
+  };
+
+  TrivialTest.prototype.testTrivial = function() {
+      this._test++;
+      ok(true, "testTrivial activiated");
+  }
+
+  //runTestSuite(TrivialTest, cb_report, cb_complete);
+  runTestSuite(TrivialTest);
+
+  </script>
+  </pre>
+
+  </body>
+</html>

@@ -1,0 +1,120 @@
+NOTE.txt
+
+Notes for Event handling documentation
+
+Basic application interface:
+
+Class EventPubSub
+-----------------
+(Endpoint only)
+
+Maintains table of event subscriptions _sub, with watch subscriptions
+handled as subscriptions to Subscribe events, with the watched event type 
+as the source of received subscribe events.
+
+A subscriptions (and unsubscription) request generate an event that serves 
+two distinct purposes:
+(a) as a subscription request, passed to any node that can directly or
+indirectly generate the specified event (i.e. may be noted by an 
+intermediate node that is already subscribed to the designated event), and
+(b) as a subscription notification, which is passed to the ultimate source(s)
+of the specified event as notification that a subscription or unsubscription
+has occurred.
+
+HACK: for subscription events, the subscribed event type is treated as the 
+source.  This avoids having to keep a separate table for watchers, as a watch
+request can be translated into a subscription to subscribe events from a
+specified event source.  Care is needed, though, that watcher events are not 
+published, as these are detected as incoming subscriptions in this coded
+form, and generate spurious watcher callbacks.
+
+Local event methods:
+  def publish(self, source, event):
+        (has special processing for subscription watching)
+
+Internal:
+  def deliver(self, event):
+        (has special processing for subscription watching)
+
+Subscription methods:
+  def subscribe(self, interval, handler, evtype=None, source=None):
+  def unsubscribe(self, handler, evtype=None, source=None):
+  def getSubscriptionCount(self):
+  def watch(self, interval, handler, evtype):
+  def endWatch(self, handler, evtype):
+
+
+Class EventRouter
+-----------------
+(Adds relay functionality)
+
+Maintains table of static routes for subscribe events, _fwdroute.
+(Watch subscriptions are never forwarded, since they are local 
+responses to received subscriptions.  Why was this not always obvious 
+to me?)
+
+When a subscribe event is received from another router, two things happen 
+separately:
+(a) the dynamic routing tables are updated
+(b) the event is forwarded according to the static routes registered.
+These are triggered by two distinct events from a subscribe request:
+see above for more details.
+
+Where there are several subscriptions to a given event, these may be
+consolidated into a single upstream subscription.  Thus, the forwarding 
+of subscription notifications is something that takes place separately
+from subscription requests.  Subscriptions for any router are 
+maintained for as long as there are any downstream subscriptions 
+outstanding.
+
+Event forwarding methods:
+  def receive(self, fromrouter, envelope):
+        (loop detection and special processing for subscription watching)
+        (fromrouter is the previous-hop router, and is used to create
+         new forwarding requests
+  def getForwardCount(self):
+
+Forward routing setup:
+  def routeEventFrom(self,evtype=None,source=None,router=None):
+  def getRouteTable(self):
+
+Internal:
+  def forward(self, event, envelaope):  (relay)
+  def wrap(self, event):                (create relaying envelope)
+        (currently just uses EventEnvelope constructor)
+  // def relay(self, envelope):            (relay next hop)
+  def addHop(self, envelope):           (add hop to envelope)
+  def unwrap(self, envelope):           (extract event)
+
+
+Summary of routing logic and method interactions:
+
+publish  -->  deliver  (to local subscribers)
+         -->  wrap in envelope
+         -->  forward  (to routers for remote subscribers)
+
+deliver  --> (to local subscribers)
+             (has special logic for delivery of subscribe events)
+
+forward  (to routers for remote subscribers)
+         (has special logic for forwarding of subscribe events)
+         --> <remote router>.receive
+
+receive  -->  loop-detect/block
+         -->  for subscribe events: update forwarding table update logic 
+              If the upstream subscription is still required, don't forward
+              unsubscribe events.
+         -->  unwrap envelope and deliver  (to local subscribers)
+         -->  add hop details and forward
+
+subscribe  -->  cancel any current matching subscription (unsubscribe)
+           -->  if the supplied subscribe interval is non-zero:
+                  insert entry into local subscription table'
+                  call handler subscription initialization method
+                  publish subscription events to propagate subscription to
+                  other routers, and to notify the event source.
+                  
+watch      -->  subscribe to subscribe-notify events, with the event type as 
+                the event source for the subscription.
+
+

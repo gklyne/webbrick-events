@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>TestModeSelector</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TestModeSelector</td></tr>
+</thead><tbody>
+<!-- Load page -->
+<tr>
+    <td>open</td>
+    <td>/Tests/TestModeSelector</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertTitle</td>
+    <td>Mode selectors with events</td>
+    <td></td>
+</tr>
+<!-- Test initial state -->
+<tr>
+    <td>verifyText</td>
+    <td>//label[@id='label1']</td>
+    <td>Mode selection 1:</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[1]</td>
+    <td>dawn</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[2]</td>
+    <td>day</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[3]</td>
+    <td>dusk</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[3]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[4]</td>
+    <td>night</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[4]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//label[@id='label2']</td>
+    <td>Mode selection 2:</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//modeselectorwidget[@id='mymode2']//modeselectorbutton[1]</td>
+    <td>vacant</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyText</td>
+    <td>//modeselectorwidget[@id='mymode2']//modeselectorbutton[2]</td>
+    <td>occupied</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-selected</td>
+</tr>
+
+<!-- Click on vacant button, check for change -->
+<tr>
+    <td>click</td>
+    <td>//modeselectorwidget[@id='mymode2']//modeselectorbutton[1]</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-selected</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[3]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[4]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+
+<!-- Click on 'dawn' button. check for change -->
+<tr>
+    <td>click</td>
+    <td>//modeselectorwidget[@id='mymode1']//modeselectorbutton[1]</td>
+    <td></td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-selected</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[3]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[4]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-selected</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+
+<!-- Generate event to select new mode, check result -->
+<tr>
+    <td>getWidgetEventRouter</td>
+    <td>myuri:mymode1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>1000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>publishEvent</td>
+    <td>myuri:SetMode</td>
+    <td>3</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[3]@class</td>
+    <td>modeselector-selected</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[4]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-selected</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+
+<!-- Generate event to set second mode undefined, check result -->
+<tr>
+    <td>getWidgetEventRouter</td>
+    <td>myuri:mymode2</td>
+    <td></td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>1000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>publishEvent</td>
+    <td>myuri:SetMode</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[3]@class</td>
+    <td>modeselector-selected</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode1']/modeselectorbody/modeselectorbutton[4]@class</td>
+    <td>modeselector-normal</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[1]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+<tr>
+    <td>verifyAttribute</td>
+    <td>//modeselectorwidget[@id='mymode2']/modeselectorbody/modeselectorbutton[2]@class</td>
+    <td>modeselector-unknown</td>
+</tr>
+
+<!-- End of tests -->
+
+</tbody></table>
+</body>
+</html>

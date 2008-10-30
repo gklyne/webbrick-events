@@ -1,0 +1,26 @@
+/* $Id$
+ *
+ * CSS declarations for button logic to show various states of activation
+ *
+ * The styles could be more useful:  note this is a default for testing 
+ * that can be overridden by user supplied styles, or an alternatiuve style 
+ * sheet.  As such, this file should be viewed as an example rather than 
+ * a production stylesheet.
+ */
+
+.countdown_done {
+    /* background-color:silver; */
+    color:black;
+}
+
+.countdown_pending {
+    background-color:yellow;
+    color:black;
+}
+
+.countdown_unknown {
+    background-color:grey;
+    color:silver;
+}
+
+/* End. */

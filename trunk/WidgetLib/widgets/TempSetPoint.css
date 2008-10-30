@@ -1,0 +1,74 @@
+/* $Id$
+ *
+ * Minimal stylesheet for TempSetPoint widget
+ *
+ * Pattern
+ *   <SetPointWidget>
+ *     <SetPointBody>
+ *       <SetPointDisplay>
+ *         <SetPointValue>
+ *           ...
+ *         </SetPointValue>
+ *         <SetPointState>
+ *           ...
+ *         </SetPointState>
+ *       </SetPointDisplay>
+ *       <SetPointButtons>
+ *         <SetPointUp>
+ *           ...
+ *         </SetPointUp>
+ *         <SetPointDown>
+ *           ...
+ *         </SetPointDown>
+ *       </SetPointButtons>
+ *     </SetPointBody>
+ *   </SetPointWidget>
+ */
+
+SetPointWidget {
+    display: table;
+}
+
+SetPointBody {
+    display: table-row;
+}
+
+SetPointDisplay, SetPointButtons {
+    display: table-cell;
+}
+
+SetPointValue, SetPointState, SetPointUp, SetPointDown {
+    display: block;
+}
+
+SetPointWidget, SetPointBody, SetPointDisplay, SetPointValue, SetPointState, SetPointButtons {
+    text-align: center;
+}
+
+SetPointButtons {
+    vertical-align: middle;
+}
+
+SetPointValue {
+    font-size: xx-large;
+}
+
+SetPointState {
+    font-size: large;
+}
+
+.tempsetpoint-current {
+    color:black;
+}
+
+.tempsetpoint-target {
+    background-color:yellow;
+    color:black;
+}
+
+.tempsetpoint-unknown {
+    background-color:grey;
+    color:silver;
+}
+
+// End.

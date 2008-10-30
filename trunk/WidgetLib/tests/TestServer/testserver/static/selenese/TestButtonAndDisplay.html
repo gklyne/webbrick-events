@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>TestButtonAndDisplay</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TestButtonAndDisplay</td></tr>
+</thead><tbody>
+<tr>
+  <td>open</td>
+  <td>http://localhost:8080/Tests/TestButtonAndDisplay?value=0&amp;buttonname=button1&amp;buttonid=field1&amp;displayname=display1&amp;displayid=field2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>Button and value display</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTable</td>
+  <td>//div[@id='main_content']/form/table.0.0</td>
+  <td>Simple button:</td>
+</tr>
+<tr>
+  <td>verifyTable</td>
+  <td>//div[@id='main_content']/form/table.0.1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>button1</td>
+  <td>A simple button</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_normal</td>
+</tr>
+<tr>
+  <td>verifyTable</td>
+  <td>//div[@id='main_content']/form/table.1.0</td>
+  <td>Numeric Display:</td>
+</tr>
+<tr>
+  <td>verifyTable</td>
+  <td>//div[@id='main_content']/form/table.1.1</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>display1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@id='display1']</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>display1</td>
+  <td>0</td>
+</tr>
+<!-- Wait for page to settle -->
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<!-- Set up to use the widget event router -->
+<tr>
+	<td>getWidgetEventRouter</td>
+	<td>TestButtonAndDisplay_Sender</td>
+	<td></td>
+</tr>
+<tr>
+  <td>publishEvent</td>
+  <td>http://id.webbrick.co.uk/events/reset</td>
+  <td></td>
+</tr>
+<!-- Click button and look for event generated -->
+<tr>
+  <td>click</td>
+  <td>field1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1200</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field1</td>
+  <td>Button:1</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_depressed</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>display1</td>
+  <td>1</td>
+</tr>
+<!-- Click again and check response -->
+<tr>
+  <td>click</td>
+  <td>name=button1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1200</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=button1</td>
+  <td>Button:2</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_pending</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>display1</td>
+  <td>2</td>
+</tr>
+<!-- Click again and check response -->
+<tr>
+  <td>click</td>
+  <td>name=button1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1200</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=button1</td>
+  <td>Button:3</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_unknown</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>display1</td>
+  <td>3</td>
+</tr>
+<!-- Click again and check response -->
+<tr>
+  <td>click</td>
+  <td>name=button1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1200</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=button1</td>
+  <td>Button:4</td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_normal</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>display1</td>
+  <td>4</td>
+</tr>
+<!-- End of test -->
+
+</tbody></table>
+</body>
+</html>

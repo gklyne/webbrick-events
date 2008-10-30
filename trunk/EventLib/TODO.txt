@@ -1,0 +1,66 @@
+$Id$
+
+Event routing notes TODO
+========================
+
+Current status
+
+The event delivery structure has been completely revised so that
+local delivery is completely separated from forwarding logic.
+When forwarding an event between event routers, an envelope is included
+that carries a trail of the event's delivery path.  The original
+design using the same publish/subscribe mechanism for forwarding had
+a fundamental problem with its event-delivery loop detection when run
+in an asynchronous environment.
+
+Refactored Python event distribution, which now passes all tests.
+Subscription handling is MUCH simpler now it's propagated using events.
+Also, the model for extending the basic event router is much more focused
+on new functionality, and the interface used is much simpler: see
+EventRouterHTTPC and EventRouterHTTPS.
+
+
+Current TODO:
+
+* Check, when renewing a subscription, that a longer subscription is not supplanted 
+  by a shorter one.
+
+* Finish testing Javascript version
+
+
+Test cases
+
+* Prior subscription watch tests in threaded environment (run on MP machine)
+
+* Overlapping wildcard and specific subscriptions, check no double-delivery
+
+
+Planned future jobs
+
+* Take account of subscription timeouts
+
+* Event router for Twisted environment
+
+* Need to consider case or HTTPC router that is not used to receive events.
+  In this case, don't issue an HTTP GET, but keep the HTTP thread free to 
+  receive new incoming requests.  In the event driven case, the HTTP and local
+  request handling can proceed concurrently, so there's no problem here.
+
+* Allow multiple subscribing agents to be serviced through a single HTTP server,
+  avoiding need to use multiple ports to support multiple clients.
+
+
+Nits
+
+* Current HTTP server logic doesn't check the request URI path
+
+* Rename test case event source values to distinguish handler context 
+  more clearly from event origin.
+
+* Review interfaces to simplify pub/sub application code.
+  Introduce helpers and simplify test code?
+
+* EventHandler.initSubscription and EventHandler.endSubscription:
+  consider also providing event type/source values as arguments.
+  Status argument is arguably redundant - but it allows the method 
+  to return the supplied status.

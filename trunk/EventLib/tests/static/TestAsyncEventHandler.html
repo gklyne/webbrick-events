@@ -1,0 +1,32 @@
+<!-- $Id$ -->
+<!-- To run this test, just load it into a browser -->
+<html>
+
+  <head>
+    <title>Asynchronous Test Suite for event handler functions</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../MiscLib/static/SimpleTest/test.css">
+    <script type="text/javascript">MochiKit = {__export__: false};</script>
+    <script type="text/javascript" src="../../../MiscLib/static/mochikit/lib/MochiKit/MochiKit.js"></script>
+    <script type="text/javascript" src="../../../MiscLib/static/javascript/Namespace.js"></script>
+    <script type="text/javascript" src="../../../MiscLib/static/SimpleTest/SimpleTest.js"></script>
+    <script type="text/javascript" src="../../../MiscLib/static/javascript/AsyncUnitTest.js"></script>
+    <script type="text/javascript" src="../../../MiscLib/static/javascript/DeferredMonad.js"></script>
+
+    <script type="text/javascript" src="../../static/javascript/URI.js"></script>
+    <script type="text/javascript" src="../../static/javascript/Status.js"></script>
+    <script type="text/javascript" src="../../static/javascript/Event.js"></script>
+    <script type="text/javascript" src="../../static/javascript/EventAgent.js"></script>
+    <script type="text/javascript" src="../../static/javascript/EventHandler.js"></script>
+    <script type="text/javascript" src="javascript/TestEventHandler.js"></script>
+  </head>
+
+  <body>
+    <pre id="test">
+    <script type="text/javascript">
+    runTestSuite(TestEventHandler);
+    </script>
+    </pre>
+  </body>
+
+</html>

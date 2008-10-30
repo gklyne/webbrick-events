@@ -1,0 +1,29 @@
+<!-- $Id$ -->
+<!-- To run these tests, just load this file into a browser -->
+<html>
+<head>
+    <!-- Test all functions in Mochikit asynchronous test runner -->
+    <!-- Run all EventLib tests asynchronously
+    -->
+    <link rel="stylesheet" type="text/css" href="../../../MiscLib/static/SimpleTest/test.css">
+    <script type="text/javascript">MochiKit = {__export__: false};</script>
+    <script type="text/javascript" src="../../../MiscLib/static/mochikit/lib/MochiKit/MochiKit.js"></script>
+    <script type="text/javascript" src="../../../MiscLib/static/javascript/Namespace.js"></script>
+    <script type="text/javascript" src="../../../MiscLib/static/SimpleTest/TestRunner.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+TestRunner.runTests(
+    'TestAsyncURI.html',
+    'TestAsyncEvent.html',
+    'TestAsyncStatus.html',
+    'TestAsyncEventAgent.html',
+    'TestAsyncEventHandler.html',
+    'TestAsyncEventEnvelope.html',
+    'TestAsyncEventSerializer.html',
+    'TestAsyncEventPubSub.html',
+    'TestAsyncEventRouter.html'
+);
+</script>
+</body>
+</html>
