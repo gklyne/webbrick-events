@@ -1,0 +1,11 @@
+#summary TODO development tasks
+#labels todo,test,documentation
+
+= TODO =
+
+ * Test documentation, especially for running server-based tests
+ * API documentation (currently all in code comments)
+ * Complete refactoring of widgets to new MVC framework
+ * Implement more widgets as required; esp. composites
+ * Think about widgets for overall panel layout (widget composition again)
+ 
