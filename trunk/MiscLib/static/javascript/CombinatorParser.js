@@ -1,6 +1,6 @@
 // $Id$
 //
-// Copyright (c) 2008 O2M8 Limited
+// Copyright (c) 2008 WebBrick Systems Limited
 // Released under the MIT licence
 // See LICENCE.TXT included with these files,
 // or http://www.opensource.org/licenses/mit-license.php
