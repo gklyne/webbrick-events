@@ -26,10 +26,10 @@ from EventLib.EventHandler      import EventHandler, makeEventHandler
 from EventLib.EventRouterHTTPS  import EventRouterHTTPS
 from EventLib.URI               import EventBaseUri
 
-from widgets.SimpleButton.SimpleButton import SimpleButton
-from widgets.SimpleButton.SimpleButton import ButtonClickEvent, SetButtonStateEvent, SetButtonTextEvent
-from widgets.NumericDisplay     import NumericDisplay
-from widgets.NumericDisplay     import SetNumericDisplayValueEvent, SetNumericDisplayStateEvent
+from widgets.SimpleButton.SimpleButton      import SimpleButton
+from widgets.SimpleButton.SimpleButton      import ButtonClickEvent, SetButtonStateEvent, SetButtonTextEvent
+from widgets.NumericDisplay.NumericDisplay  import NumericDisplay
+from widgets.NumericDisplay.NumericDisplay  import SetNumericDisplayValueEvent, SetNumericDisplayStateEvent
 from widgets.CountdownDisplay   import CountdownDisplay
 from widgets.TempSetPoint       import TempSetPoint
 from widgets.ModeSelector       import ModeSelector
