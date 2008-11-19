@@ -114,7 +114,7 @@ webbrick.widgets.TestSimpleButton.prototype.setUp = function() {
         logError("setUp: elem is null");
     }
     try {
-        this.button = SimpleButton_Init(elem);
+        this.button = webbrick.widgets.SimpleButton_Init(elem);
         this.model  = this.button._model;
         this.elem   = elem; // this.button._elem;
     } catch (e) {
