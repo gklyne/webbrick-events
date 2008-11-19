@@ -16,8 +16,8 @@
     <script type="text/javascript" src="/eventlib/static/javascript/EventHandler.js"></script>
     <script type="text/javascript" src="/eventlib/static/javascript/EventRouter.js"></script>
     <script type="text/javascript" src="/eventlib/static/javascript/EventRouterHTTPC.js"></script>
-    <script type="text/javascript" src="/widgets/CountdownDisplay.js"></script>
-    <link type="text/css" href="/widgets/CountdownDisplay.css" rel="stylesheet" />
+    <script type="text/javascript" src="/widgets/CountdownDisplay/CountdownDisplay.js"></script>
+    <link type="text/css" href="/widgets/CountdownDisplay/CountdownDisplay.css" rel="stylesheet" />
 </head>
 
 <body>

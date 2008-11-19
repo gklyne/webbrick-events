@@ -17,7 +17,7 @@
     <script type="text/javascript" src="/eventlib/static/javascript/EventRouter.js"></script>
     <script type="text/javascript" src="/eventlib/static/javascript/EventRouterHTTPC.js"></script>
     <script type="text/javascript" src="/widgets/SimpleButton/SimpleButton.js"></script>
-    <script type="text/javascript" src="/widgets/NumericDisplay.js"></script>
+    <script type="text/javascript" src="/widgets/NumericDisplay/NumericDisplay.js"></script>
     <link type="text/css"         href="/widgets/SimpleButton/SimpleButton.css" rel="stylesheet" />
 </head>
 
