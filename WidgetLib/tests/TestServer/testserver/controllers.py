@@ -47,6 +47,15 @@ def makePath(path):
     """
     return "/".join(path)
 
+def inhibitCacheResponse():
+    """
+    Inhibit caching of the next response
+    """
+    cherrypy.response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    cherrypy.response.headers['Pragma']        = 'no-cache'
+    cherrypy.response.headers['Expires']       = 0 
+    return
+
 class TestButtonClickResponder(object):
     """
     Test class to respond to incoming button-click events
@@ -169,6 +178,7 @@ class Tests:
     def TestSimpleButton(self, *args, **kwargs):
         kwargs['name'] = kwargs.get("name","sbname")
         sb = SimpleButton(**kwargs)
+        inhibitCacheResponse()
         return dict(
             now=time.ctime(), 
             simplebutton=sb)
@@ -177,6 +187,7 @@ class Tests:
     def TestNumericDisplay(self, *args, **kwargs):
         kwargs['name'] = kwargs.get("name","ndname")
         nd = NumericDisplay(**kwargs)
+        inhibitCacheResponse()
         return dict(
             now=time.ctime(), 
             numericdisplay=nd
@@ -201,6 +212,7 @@ class Tests:
             })
         nd = NumericDisplay(**kwargs)
         # Return values for page construction by template
+        inhibitCacheResponse()
         return dict(
             now=time.ctime(), 
             simplebutton=sb,
@@ -211,6 +223,7 @@ class Tests:
     def TestCountdownDisplay(self, *args, **kwargs):
         kwargs['name'] = kwargs.get("name","cdname")
         cd = CountdownDisplay(**kwargs)
+        inhibitCacheResponse()
         return dict(
             now=time.ctime(), 
             countdowndisplay=cd
@@ -221,6 +234,7 @@ class Tests:
         # Force id, name to 'spname' ...
         kwargs['name'] = kwargs.get("name","spname")
         sp = TempSetPoint(**kwargs)
+        inhibitCacheResponse()
         return dict(
             now=time.ctime(), 
             tempsetpoint=sp
@@ -230,6 +244,7 @@ class Tests:
     def TestTempSetPointParameterized(self, *args, **kwargs):
         # Allow URI query parameters to override page template and widget values
         sp = TempSetPoint(**kwargs)
+        inhibitCacheResponse()
         return dict(
             now=time.ctime(), 
             tempsetpoint=sp
@@ -239,6 +254,7 @@ class Tests:
     def TestModeSelector(self, *args, **kwargs):
         # Allow URI query parameters to override page template and widget values
         ms = ModeSelector(**kwargs)
+        inhibitCacheResponse()
         return dict(
             now=time.ctime(), 
             modeselector=ms
