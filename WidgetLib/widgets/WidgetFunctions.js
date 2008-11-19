@@ -236,7 +236,14 @@ webbrick.widgets.InitWidgetElement = function (elm) {
         // hence 'elm' accesses the argument to this function.
         logDebug( "webbrick.widgets.InitWidgetElement: ", elm.tagName, ", ", fname, ", ", elm );
         try {
-            eval( fname+"(elm)" ) ;
+            if ( eval("webbrick.widgets."+fname) != undefined ) {
+                // Try for function defined in namespace scope
+                eval( "webbrick.widgets."+fname+"(elm)" ) ;
+            } else {
+                // Else call function defined in global scope
+                // TODO: remove this when all widgets fully in namespace
+                eval( fname+"(elm)" ) ;
+            }
         }
         catch( e ) {
             logError("InitWidgetElement: ", e) ;

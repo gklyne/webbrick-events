@@ -39,9 +39,8 @@ webbrick.require("webbrick.widgets.MvcUtils");
  *   ButtonClickEvent       event type URI published when button is clicked
  *   ButtonClickSource      event source URI published when button is clicked
  */
-// TODO: use namespace for this function? - affects calling pages
 // TODO: parameterize widget constructor with model object, and create here?
-SimpleButton_Init = function (elem) {
+webbrick.widgets.SimpleButton_Init = function (elem) {
     MochiKit.Logging.logDebug("SimpleButton_Init: create renderer/collector");
     var renderer  = new webbrick.widgets.SimpleButton.renderer(elem);
     renderer.initialize();
