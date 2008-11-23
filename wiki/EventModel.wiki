@@ -16,7 +16,8 @@ An event has the following elements:
 }}}
 
  * an *event type* is a URI that identifies the type of event; e.g. the occurrence that is being signalled by the event.  This might be a user pressing a button, or a temperature sensor threshold crossing.
-   * The event framework predefines just one event type:  that used to notify that an event handler has subscribed to an event.  All other event types are for the calling application to define and interpret.
+   * the event framework predefines just one event type:  that used to notify that an event handler has subscribed to an event.
+   * any other event types are for the calling application to define and interpret.
  * an *event subject* (sometimes referred to as an *event source*, though this turns out to be a misnomer) is a URI that identifies the subject of an event.  For example, if the event type indicates the user pressing a button, the event subject would identify the system component that is intended to be activated by the button press;  or if the event indicates a temperature threshold crossing, the event subject might identify a particular temperature sensor.  The combination of *event type* and *event subject* should be chosen by the application designer to provide just sufficient information for effective event subscriptions and routing.
  * the *payload* is any additional data about the event that may be used by the subscriber to an event.  The payload is treated as completely opaque by the event distribution system (except in the case of subscription events).  The intent is that the format of the payload is determined by the event type; only those application components that know about the event type should have any need to examine the payload.
 
