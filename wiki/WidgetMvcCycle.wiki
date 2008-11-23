@@ -32,6 +32,10 @@ Initialization     External events <--+
 == Notes ==
 
  * All external inputs to the widget come via the controller element.  Initial values are passed directly to Javascript code that instantiates the widget;  other values are obtained via subscriptions to an external event distribution mechanism.  Values are provided to external components by publishing new events, to which other components may subscribe.
+ * Widget initialization performs the following steps:
+   * set initial model values
+   * connect the various elements (create subscriptions as needed)
+   * build the initial user interface display
  * All information flows within the widget strictly follow the cycle illustrated (e.g. the controller _never_ invokes the renderer directly.
  * The current state of the widget is reflected in the model.
  * The model is a generic object, with direct APIs for updating model values. The controller updates values in the model in response to external inputs of user inputs.
