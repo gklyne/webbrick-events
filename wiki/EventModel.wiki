@@ -2,7 +2,9 @@
 
 = Introduction =
 
-This page describes the model of events used by webbrick-events.  The event model was designed primarily to support real-time control and monitoring functions for web-based home control and building management applications, but is quite generic and designed to assume as possible about the applications that may use the framework.
+This page describes the model of events used by webbrick-events.  The term "event" is used here in the sense of an occurrence that happens at a particular point in time, often in response to something that happens in the real world, such as a a computer being switched on, a user entering input to an application, or a sensor being activated.
+
+The event model was designed primarily to support real-time control and monitoring functions for web-based home control and building management applications, but is quite generic and designed to assume as possible about the applications that may use the framework.
 
 *Soapbox*
 
