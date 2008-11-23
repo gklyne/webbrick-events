@@ -10,6 +10,8 @@ This page describes the model of events used by webbrick-events.  The event mode
 
   This webbrick-events framework represents some of the steps that I outline in that note as an alternative approach to web-display synchronization.
 
+  _(Graham Klyne)_
+
 
 = Event details =
 
