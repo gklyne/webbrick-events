@@ -8,7 +8,7 @@ This page describes the model of events used by webbrick-events.  The event mode
 
   Separately from the work on web-based real-time control and monitoring, I was involved briefly in developments of web portal software, which led me to a deeply held distaste for the proposed Web Services for Remore Portlet (WSRP) protocols and many unnecessary complexities that they introduce.  One of the goals of WSRP is to allow one portlet to respond to changes made in another portlet, and the WSRP solution is to introduce a complete new layer of inter-process communication.  I believe that what is really required is a simple mechanism for delivering events to a browser, and that this webbrick-events framework could be a candidate for such a mechanism.  For more commentary, see [http://wiki.oss-watch.ac.uk/InterPortletCommunicationConsideredHarmful Inter-portlet communication considered harmful].
 
-  This webbrick-events framework represents some of the steps that I outline in that note as an alternative approach to web-display synchronization.
+  This webbrick-events framework represents some of the steps that I believe are required to support multiple concurrent web page display synchronization.
 
   _(Graham Klyne)_
 
