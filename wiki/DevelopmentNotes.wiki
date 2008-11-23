@@ -1,6 +1,6 @@
 #summary Development and TODO notes
 
-= Work in progress
+= Work in progress =
 
  * Complete refactoring of widgets to new MVC framework
 
