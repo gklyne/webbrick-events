@@ -1,8 +1,12 @@
-#summary One-sentence summary of this page.
+#summary This page describes the model of events used by the webbrick-events framework
 
 = Introduction =
 
-This page describes the model of events used by this framework.
+This page describes the model of events used by webbrick-events.  The model was designed primarily to support real-time control and monitoring functions for home control and building management applications, but is quite general purpose and designed to be as lightweight as possible.
+
+*Soapbox*
+
+  Separately from the work on web-based real-time control and monitoring, I have been involved in developments of web portal software, which led to a deeply held distaste for the proposed WSRP protocols and the many unnecessary complexities that they introduce.  One of the goals of WSRP is to allow one portlet to respond to changes made in another portlet, and the WSRP solution is to introduce a complete new layer of inter-process communication.  I believe that what is really required is a simple mechanism for delivering events to a browser, and that this webbrick-events framework could be a candidate for such a mechanism.  For more commentary, see [http://wiki.oss-watch.ac.uk/InterPortletCommunicationConsideredHarmful Inter-portlet communication considered harmful].  This webbrick-events framework represents some of the steps that I outline in that note as an alternative approach to web-display synchronization.
 
 
 = Event details =
