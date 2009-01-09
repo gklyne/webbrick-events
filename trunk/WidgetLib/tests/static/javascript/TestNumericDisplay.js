@@ -162,22 +162,13 @@ webbrick.widgets.TestNumericDisplay.prototype.testInitialModel = function() {
  *  Compare display class with supplied value, ensuring that other display classes
  *  are not present.
  */
-//TODO: factor code to MvcUtils?
 webbrick.widgets.TestNumericDisplay.prototype.compareElementClass = function(expected) {
-    var cmpClass = function (elem, trial) {
-        //logDebug("cmpClass: expected; "+expected+", trial: "+trial+", elem: "+elem.className);
-        var cmp = MochiKit.DOM.hasElementClass(elem, trial);
-        //logDebug("cmpClass: hasElementClass: "+cmp);
-        if (expected != trial) {
-            cmp = !cmp;
-        }
-        return cmp;
-    };
-    return(
-        cmpClass(this.elem, "numericdisplay_normal") &&
-        cmpClass(this.elem, "numericdisplay_depressed") &&
-        cmpClass(this.elem, "numericdisplay_pending") &&
-        cmpClass(this.elem, "numericdisplay_unknown") );
+    return webbrick.widgets.testClassValues(this.elem, expected, 
+        [ "numericdisplay_normal"
+        , "numericdisplay_depressed"
+        , "numericdisplay_pending"
+        , "numericdisplay_unknown"
+        ] );
 }
 
 /** 
@@ -188,8 +179,8 @@ webbrick.widgets.TestNumericDisplay.prototype.testInitialElem = function() {
     logDebug("testInitialElem: class: "+this.elem.className);
     logDebug("testInitialElem: value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
     logDebug("testInitialElem: text:  "+webbrick.widgets.getElementText(this.elem));
-    assertEq("testInitialElem",  webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testInitialElem", "numericdisplay_normal", this.compareElementClass("numericdisplay_normal"));
+    assertEq("testInitialElem", webbrick.widgets.getElementText(this.elem), "Numeric value here");
+    assertEq("testInitialElem", null, this.compareElementClass("numericdisplay_normal"));
 };
 
 /** 
@@ -203,7 +194,7 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetState = function() {
     // Test initial element class
     logDebug("test initial element class: "+this.elem.className);
     assertEq("testSetState: Initial state", this.model.get("STATE"), "up");
-    assertTrue("testSetState", "numericdisplay_normal", this.compareElementClass("numericdisplay_normal"));
+    assertEq("testSetState", null, this.compareElementClass("numericdisplay_normal"));
 
     // Test for invalid state
     logDebug("test invalid state raises error");
@@ -223,32 +214,28 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetState = function() {
     this.model.set("STATE", "up");
     assertEq("testSetState: state", this.model.get("STATE"), "up");
     assertEq("testSetState: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetState: class", "numericdisplay_normal", 
-        this.compareElementClass("numericdisplay_normal"));
+    assertEq("testSetState", null, this.compareElementClass("numericdisplay_normal"));
 
     // Test setting state to "down"
     logDebug("test setting state to 'down'");
     this.model.set("STATE", "down");
     assertEq("testSetState: state", this.model.get("STATE"), "down");
     assertEq("testSetState: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetState: class", "numericdisplay_depressed", 
-        this.compareElementClass("numericdisplay_depressed"));
+    assertEq("testSetState", null, this.compareElementClass("numericdisplay_depressed"));
 
     // Test setting state to "waiting"
     logDebug("test setting state to 'waiting'");
     this.model.set("STATE", "waiting");
     assertEq("testSetState: state", this.model.get("STATE"), "waiting");
     assertEq("testSetState: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetState: class", "numericdisplay_pending", 
-        this.compareElementClass("numericdisplay_pending"));
+    assertEq("testSetState", null, this.compareElementClass("numericdisplay_pending"));
 
     // Test setting state to "unknown"
     logDebug("test setting state to 'unknown'");
     this.model.set("STATE", "unknown");
     assertEq("testSetState: state", this.model.get("STATE"), "unknown");
     assertEq("testSetState: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetState: class", "numericdisplay_unknown",
-        this.compareElementClass("numericdisplay_unknown"));
+    assertEq("testSetState", null, this.compareElementClass("numericdisplay_unknown"));
 
     logDebug("testSetState complete");
 };
@@ -302,7 +289,7 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetStateEvent = function() {
     // Test initial element class
     logDebug("test initial element class: "+this.elem.className);
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "up");
-    assertTrue("testSetStateEvent", "numericdisplay_normal", this.compareElementClass("numericdisplay_normal"));
+    assertEq("testInitialElem", null, this.compareElementClass("numericdisplay_normal"));
 
     // Test for invalid state
     logDebug("test invalid state raises error");
@@ -317,7 +304,7 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetStateEvent = function() {
     // Retest initial element class - should be set to unknown after invalid value
     logDebug("test initial element class: "+this.elem.className);
     assertEq("testSetStateEvent: invalid", this.model.get("STATE"), "unknown");
-    assertTrue("testSetStateEvent", "expect: numericdisplay_unknown", this.compareElementClass("numericdisplay_unknown"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("numericdisplay_unknown"));
 
     // Test setting state to "up"
     logDebug("test setting state to 'up'");
@@ -325,8 +312,7 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetStateEvent = function() {
     assertEquals("publishEvent(up) sts", sts, StatusVal.OK);
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "up");
     assertEq("testSetStateEvent: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetStateEvent: class", "numericdisplay_normal", 
-        this.compareElementClass("numericdisplay_normal"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("numericdisplay_normal"));
 
     // Test setting state to "down"
     logDebug("test setting state to 'down'");
@@ -334,8 +320,7 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetStateEvent = function() {
     assertEquals("publishEvent(down) sts", sts, StatusVal.OK);
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "down");
     assertEq("testSetStateEvent: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetStateEvent: class", "numericdisplay_depressed", 
-        this.compareElementClass("numericdisplay_depressed"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("numericdisplay_depressed"));
 
     // Test setting state to "waiting"
     logDebug("test setting state to 'waiting'");
@@ -343,8 +328,7 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetStateEvent = function() {
     assertEquals("publishEvent(waiting) sts", sts, StatusVal.OK);
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "waiting");
     assertEq("testSetStateEvent: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetStateEvent: class", "numericdisplay_pending", 
-        this.compareElementClass("numericdisplay_pending"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("numericdisplay_pending"));
 
     // Test setting state to "unknown"
     logDebug("test setting state to 'unknown'");
@@ -352,8 +336,7 @@ webbrick.widgets.TestNumericDisplay.prototype.testSetStateEvent = function() {
     assertEquals("publishEvent(unknown) sts", sts, StatusVal.OK);
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "unknown");
     assertEq("testSetStateEvent: value", webbrick.widgets.getElementText(this.elem), "Numeric value here");
-    assertTrue("testSetStateEvent: class", "numericdisplay_unknown",
-        this.compareElementClass("numericdisplay_unknown"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("numericdisplay_unknown"));
 
     logDebug("testSetStateEvent complete");
 };
