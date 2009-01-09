@@ -542,4 +542,27 @@ webbrick.widgets.getWidgetValues = function(valueDefs, elem) {
     return modelvals;
 }; 
 
+/**
+ *  Helper function for confirming that exactly a specified one of a list of
+ *  class values is present on an element.
+ *
+ * @param   {Object} elem       DOM element to be tested
+ * @param   {String} exected    expected class value
+ * @param   (String*} trials    list of class values to test
+ * @return  (String*}           null if only the expected value is present, 
+ *                              or a list of unexpected class values found.
+ */
+webbrick.widgets.testClassValues = function(elem,expected,trials) {
+    var mismatch = [];
+    var result   = null;
+    for (var i = 0 ; i <trials.length ; i++) {
+        var c = MochiKit.DOM.hasElementClass(elem, trials[i]);
+        if (c != ( trials[i] == expected ) ) {
+            mismatch.push(trials[i]);
+            result = mismatch;
+        }
+    }
+    return result;
+};
+
 // End.
