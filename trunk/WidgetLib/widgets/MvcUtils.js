@@ -350,8 +350,25 @@ webbrick.widgets.GenericDomRenderer.prototype.connectModel = function (model) {
  */
 webbrick.widgets.GenericDomRenderer.prototype.setAttributeValue = function 
         (attribute, model, propname, oldvalue, newvalue) {
-    logDebug("SimpleButton.renderer.SetTextModelListener: "+newvalue);
+    logDebug("GenericDomRenderer.setAttributeValue: "+newvalue);
     MochiKit.DOM.setNodeAttribute(this._elem, attribute, newvalue);
+};
+
+/**
+ *  Listener sets element text to new value of model element.
+ *
+ * @param   {GenericModel} model    the widget model being rendered
+ * @param   {String} propname       name of the changed model property
+ * @param   {any} oldvalue          previous value of the changed model property
+ * @param   {any} newvalue          new value of the changed model property
+ *
+ *  This function should be partially applied to name of attribute to yield a usable
+ *  model listener function.
+ */
+webbrick.widgets.GenericDomRenderer.prototype.setElementText = function 
+        (unused, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.setElementText: "+newvalue);
+    webbrick.widgets.setElementText(this._elem, newvalue);
 };
 
 /**
@@ -372,8 +389,8 @@ webbrick.widgets.GenericDomRenderer.prototype.setClassMapped = function
         (valuemap, model, propname, oldvalue, newvalue) {
     MochiKit.Logging.logDebug(
         "GenericDomRenderer.setClassMapped: newvalue: "+newvalue+", oldvalue: "+oldvalue);
-    var oldclass = webbrick.widgets.SimpleButton.StateClass[oldvalue];
-    var newclass = webbrick.widgets.SimpleButton.StateClass[newvalue];
+    var oldclass = valuemap[oldvalue];
+    var newclass = valuemap[newvalue];
     MochiKit.Logging.logDebug(
         "GenericDomRenderer.setClassMapped: newclass: "+newclass+", oldclass: "+oldclass);
     MochiKit.DOM.removeElementClass(this._elem, oldclass);
@@ -473,8 +490,20 @@ webbrick.widgets.getWidgetAttribute = function(attrname, element) {
     return null;
 };
 
+/** 
+ *  Retrieve widget value from the textual content of the supplied DOM element.
+ *
+ * @param   {HTMLElement} element   the element whose textual content is retrieved.
+ * @return  {String}                the element textual content, which may be an empty string
+ */
+webbrick.widgets.getWidgetContent = function(element) {
+    return element.innerHTML;
+    // or null if there is no element content?
+};
+
 /**
- *  Extract widget parameters from a DOM element.
+ *  Helper function to extract widget parameters from a DOM element.
+ *  Used when initializing a widget with values in the DOM.
  *
  * @param   {Object} valueDefs      an object used as a dictionary of value definitions
  *                                  in the form used by GenericModel.initializeValues

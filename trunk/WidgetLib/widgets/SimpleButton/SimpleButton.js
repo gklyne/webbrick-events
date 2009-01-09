@@ -29,25 +29,26 @@ webbrick.require("webbrick.widgets.MvcUtils");
 /**
  * Function to create and return a new SimpleButton object.
  *
- * @param   {HTMLElement}   elem    HTML element that constitutes the button.
- * @return  A simpleButton object - can be discarded
- * @type    {webbrick.widgets.SimpleButton}
- *
- * Widget attributes:
+ * Widget element attributes:
  *   SetButtonTextEvent     event type URI for setting button text
  *   SetButtonStateEvent    event type URI for setting button state
  *   ButtonClickEvent       event type URI published when button is clicked
  *   ButtonClickSource      event source URI published when button is clicked
+ *
+ * @param   {HTMLElement}   element HTML element that constitutes the button.
+ * @return  A SimpleButton object - can be discarded
+ * @type    {webbrick.widgets.SimpleButton}
  */
-// TODO: parameterize widget constructor with model object, and create here?
-webbrick.widgets.SimpleButton_Init = function (elem) {
+// TODO: parameterize widget constructor with model object, 
+//       create here, and pass in to constructor?
+webbrick.widgets.SimpleButton_Init = function (element) {
     MochiKit.Logging.logDebug("SimpleButton_Init: create renderer/collector");
-    var renderer  = new webbrick.widgets.SimpleButton.renderer(elem);
+    var renderer  = new webbrick.widgets.SimpleButton.renderer(element);
     renderer.initialize();
 
     MochiKit.Logging.logDebug("SimpleButton_Init: extract parameters from DOM");
     var modelvals = webbrick.widgets.getWidgetValues
-        (webbrick.widgets.SimpleButton.initializeValues, elem);
+        (webbrick.widgets.SimpleButton.initializeValues, element);
 
     MochiKit.Logging.logDebug("SimpleButton: create widget");
     var button    = new webbrick.widgets.SimpleButton(modelvals, renderer, renderer);
