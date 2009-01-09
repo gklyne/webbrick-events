@@ -169,7 +169,7 @@ webbrick.widgets.TestNumericDisplay.prototype.compareElementClass = function(exp
         , "numericdisplay_pending"
         , "numericdisplay_unknown"
         ] );
-}
+};
 
 /** 
  *  Test initial NumericDisplay element values

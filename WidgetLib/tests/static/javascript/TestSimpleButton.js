@@ -161,25 +161,17 @@ webbrick.widgets.TestSimpleButton.prototype.testInitialModel = function() {
 };
 
 /**
- *  Compare button class with supplied value, ensuring that other button classes
+ *  Compare button class with supplied value, ensuring that other display classes
  *  are not present.
  */
-webbrick.widgets.TestSimpleButton.prototype.compareButtonClass = function(expected) {
-    var cmpClass = function (elem, trial) {
-        //logDebug("cmpClass: expected; "+expected+", trial: "+trial+", elem: "+elem.className);
-        var cmp = MochiKit.DOM.hasElementClass(elem, trial);
-        //logDebug("cmpClass: hasElementClass: "+cmp);
-        if (expected != trial) {
-            cmp = !cmp;
-        }
-        return cmp;
-    };
-    return(
-        cmpClass(this.elem, "button_normal") &&
-        cmpClass(this.elem, "button_depressed") &&
-        cmpClass(this.elem, "button_pending") &&
-        cmpClass(this.elem, "button_unknown") );
-}
+webbrick.widgets.TestSimpleButton.prototype.compareElementClass = function(expected) {
+    return webbrick.widgets.testClassValues(this.elem, expected, 
+        [ "button_normal"
+        , "button_depressed"
+        , "button_pending"
+        , "button_unknown"
+        ] );
+};
 
 /** 
  *  Test initial SimpleButton element values
@@ -190,7 +182,7 @@ webbrick.widgets.TestSimpleButton.prototype.testInitialElem = function() {
     logDebug("testInitialElem: value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
     logDebug("testInitialElem: text:  "+webbrick.widgets.getElementText(this.elem));
     assertEq("testInitialElem",  MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testInitialElem", "button_normal", this.compareButtonClass("button_normal"));
+    assertEq("testInitialElem", null, this.compareElementClass("button_normal"));
 };
 
 /** 
@@ -204,7 +196,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetState = function() {
     // Test initial element class
     logDebug("test initial element class: "+this.elem.className);
     assertEq("testSetState: Initial state", this.model.get("STATE"), "up");
-    assertTrue("testSetState", "button_normal", this.compareButtonClass("button_normal"));
+    assertEq("testSetState", null, this.compareElementClass("button_normal"));
 
     // Test for invalid state
     logDebug("test invalid state raises error");
@@ -225,8 +217,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetState = function() {
     assertEq("testSetState: state", this.model.get("STATE"), "up");
     assertEq("testSetState: value", 
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetState: class", "button_normal", 
-        this.compareButtonClass("button_normal"));
+    assertEq("testSetState", null, this.compareElementClass("button_normal"));
 
     // Test setting state to "down"
     logDebug("test setting state to 'down'");
@@ -234,8 +225,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetState = function() {
     assertEq("testSetState: state", this.model.get("STATE"), "down");
     assertEq("testSetState: value", 
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetState: class", "button_depressed", 
-        this.compareButtonClass("button_depressed"));
+    assertEq("testSetState", null, this.compareElementClass("button_depressed"));
 
     // Test setting state to "waiting"
     logDebug("test setting state to 'waiting'");
@@ -243,8 +233,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetState = function() {
     assertEq("testSetState: state", this.model.get("STATE"), "waiting");
     assertEq("testSetState: value", 
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetState: class", "button_pending", 
-        this.compareButtonClass("button_pending"));
+    assertEq("testSetState", null, this.compareElementClass("button_pending"));
 
     // Test setting state to "unknown"
     logDebug("test setting state to 'unknown'");
@@ -252,8 +241,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetState = function() {
     assertEq("testSetState: state", this.model.get("STATE"), "unknown");
     assertEq("testSetState: value", 
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetState: class", "button_unknown",
-        this.compareButtonClass("button_unknown"));
+    assertEq("testSetState", null, this.compareElementClass("button_unknown"));
 
     logDebug("testSetState complete");
 };
@@ -309,7 +297,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetStateEvent = function() {
     // Test initial element class
     logDebug("test initial element class: "+this.elem.className);
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "up");
-    assertTrue("testSetStateEvent", "button_normal", this.compareButtonClass("button_normal"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("button_normal"));
 
     // Test for invalid state
     logDebug("test invalid state raises error");
@@ -324,7 +312,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetStateEvent = function() {
     // Retest initial element class - should be set to unknown after invalid value
     logDebug("test initial element class: "+this.elem.className);
     assertEq("testSetStateEvent: invalid", this.model.get("STATE"), "unknown");
-    assertTrue("testSetStateEvent", "expect: button_unknown", this.compareButtonClass("button_unknown"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("button_unknown"));
 
     // Test setting state to "up"
     logDebug("test setting state to 'up'");
@@ -333,8 +321,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetStateEvent = function() {
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "up");
     assertEq("testSetStateEvent: value",  
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetStateEvent: class", "button_normal", 
-        this.compareButtonClass("button_normal"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("button_normal"));
 
     // Test setting state to "down"
     logDebug("test setting state to 'down'");
@@ -343,8 +330,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetStateEvent = function() {
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "down");
     assertEq("testSetStateEvent: value",  
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetStateEvent: class", "button_depressed", 
-        this.compareButtonClass("button_depressed"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("button_depressed"));
 
     // Test setting state to "waiting"
     logDebug("test setting state to 'waiting'");
@@ -353,8 +339,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetStateEvent = function() {
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "waiting");
     assertEq("testSetStateEvent: value",  
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetStateEvent: class", "button_pending", 
-        this.compareButtonClass("button_pending"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("button_pending"));
 
     // Test setting state to "unknown"
     logDebug("test setting state to 'unknown'");
@@ -363,8 +348,7 @@ webbrick.widgets.TestSimpleButton.prototype.testSetStateEvent = function() {
     assertEq("testSetStateEvent: state", this.model.get("STATE"), "unknown");
     assertEq("testSetStateEvent: value",  
         MochiKit.DOM.getNodeAttribute(this.elem, "value"), "A simple button");
-    assertTrue("testSetStateEvent: class", "button_unknown",
-        this.compareButtonClass("button_unknown"));
+    assertEq("testSetStateEvent", null, this.compareElementClass("button_unknown"));
 
     logDebug("testSetStateEvent complete");
 };
