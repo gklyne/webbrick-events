@@ -88,7 +88,7 @@ webbrick.widgets.getElementText = function (elem) {
  */
 webbrick.widgets.setElementText = function (elem, text) {
     logDebug("setElementText: ", elem, ", ", text) ;
-    replaceChildNodes(elem, text);
+    MochiKit.DOM.replaceChildNodes(elem, text);
     return elem ;
 };
 
