@@ -13,7 +13,8 @@ A number of test environments are provided:
 
 = Stand-alone python unit tests =
 
-...
+ * MiscLib/tests/TestAll.py
+ * EventLib/tests/TestAll.py
 
 = Stand-alone Javascript unit tests =
 
