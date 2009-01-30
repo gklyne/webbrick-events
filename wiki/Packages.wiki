@@ -9,7 +9,7 @@ This project defines the following packages:
 
 = !MiscLib =
 
-Miscellaneous support functions for Python and javascript code.
+Miscellaneous support functions for Python and Javascript code.
 
 = !EventLib =
 
