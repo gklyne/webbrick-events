@@ -1,0 +1,32 @@
+#summary Summary of test regimes provided
+
+= Introduction =
+
+The code in the project consists of server- and client- Python code, and client Javascript code for browser access.
+
+A number of test environments are provided:
+ * Stand-alone python unit tests
+ * Stand-alone Javascript unit tests, run in browser
+ * Integrated Python client/Python server tests
+ * Integrated Javascript client/Python server tests
+ * Selenium user interface tests
+
+= Stand-alone python unit tests =
+
+...
+
+= Stand-alone Javascript unit tests =
+
+...
+
+= Python client/Python server tests =
+
+...
+
+= Javascript client/Python server tests =
+
+...
+
+= Selenium user interface tests =
+
+...
