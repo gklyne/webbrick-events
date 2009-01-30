@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary An overview of the packages that make up this project
 
 = Introduction =
 
