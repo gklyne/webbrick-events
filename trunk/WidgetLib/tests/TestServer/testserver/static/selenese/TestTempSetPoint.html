@@ -9,7 +9,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">TestCountdownDisplay</td></tr>
+<tr><td rowspan="1" colspan="3">TestTempSetPoint</td></tr>
 </thead><tbody>
 <tr>
     <td>open</td>
@@ -53,6 +53,11 @@
 </tr>
 <!-- Set up to use the widget event router -->
 <tr>
+    <td>log</td>
+    <td>Set up to use the widget event router</td>
+    <td></td>
+</tr>
+<tr>
     <td>getWidgetEventRouter</td>
     <td>http://id.webbrick.co.uk/source/TempSetPoint_Subject</td>
     <td></td>
@@ -62,11 +67,21 @@
     <td>1000</td>
     <td></td>
 </tr>
-<!-- Set current value event -->
+<!-- Set current value to 15.0 -->
+<tr>
+    <td>log</td>
+    <td>Set current value to 15.0</td>
+    <td></td>
+</tr>
 <tr>
     <td>publishEvent</td>
     <td>http://id.webbrick.co.uk/events/TempSetPoint_SetCurrentEvent</td>
     <td>javascript{15.0}</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>250</td>
+    <td></td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -93,11 +108,21 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-current</td>
 </tr>
-<!-- Show target for 1 second event -->
+<!-- Show target for 2 seconds event -->
+<tr>
+    <td>log</td>
+    <td>Show target for 2 seconds event</td>
+    <td></td>
+</tr>
 <tr>
     <td>publishEvent</td>
     <td>http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent</td>
-    <td>1</td>
+    <td>2</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>250</td>
+    <td></td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -124,9 +149,15 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-unknown</td>
 </tr>
+<!-- Wait, and check display reverts to current (15.0) -->
+<tr>
+    <td>log</td>
+    <td>Wait, and check display reverts to current (15.0)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
-    <td>1200</td>
+    <td>2250</td>
     <td></td>
 </tr>
 <tr>
@@ -154,12 +185,21 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-current</td>
 </tr>
-<!-- Set target value -->
-<!-- Set current value event -->
+<!-- Set target value 19.5 -->
+<tr>
+    <td>log</td>
+    <td>Set target value 19.5</td>
+    <td></td>
+</tr>
 <tr>
     <td>publishEvent</td>
     <td>http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent</td>
     <td>19.5</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>250</td>
+    <td></td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -186,11 +226,21 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-current</td>
 </tr>
-<!-- Show target for 1 second event -->
+<!-- Show target for 2 seconds -->
+<tr>
+    <td>log</td>
+    <td>Show target for 2 seconds</td>
+    <td></td>
+</tr>
 <tr>
     <td>publishEvent</td>
     <td>http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent</td>
-    <td>1</td>
+    <td>2</td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>250</td>
+    <td></td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -217,9 +267,15 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-target</td>
 </tr>
+<!-- Wait, and check that display reverts to current (15.0) -->
+<tr>
+    <td>log</td>
+    <td>Wait, and check that display reverts to current (15.0)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
-    <td>1200</td>
+    <td>2250</td>
     <td></td>
 </tr>
 <tr>
@@ -249,12 +305,22 @@
 </tr>
 <!-- Create, subscribe and set target event listener -->
 <tr>
+    <td>log</td>
+    <td>Create, subscribe and set target event listener</td>
+    <td></td>
+</tr>
+<tr>
     <td>storeEventListener</td>
     <td>http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent</td>
     <td>settargetlistener</td>
 </tr>
-<!-- Click button to bump up target value -->
+<!-- Click button to bump up target value to 20.0 -->
 <!-- (first click activates display, second changes the value) -->
+<tr>
+    <td>log</td>
+    <td>Click button to bump up target value to 20.0</td>
+    <td></td>
+</tr>
 <tr>
     <td>click</td>
     <td>//setpointwidget//setpointup</td>
@@ -302,7 +368,12 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-target</td>
 </tr>
-<!-- Wait for display to revert -->
+<!-- Check the new display persists (1.75s) -->
+<tr>
+    <td>log</td>
+    <td>Check the new display persists (1.75s)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
     <td>1750</td>
@@ -318,9 +389,15 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
+<!-- Check the new display persists (3.5s) -->
+<tr>
+    <td>log</td>
+    <td>Check the new display persists (3.5s)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
-    <td>2000</td>
+    <td>1750</td>
     <td></td>
 </tr>
 <tr>
@@ -333,9 +410,15 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
+<!-- Wait for display to revert to current (6.0s, 15.0) -->
+<tr>
+    <td>log</td>
+    <td>Wait for display to revert to current (6.0s, 15.0)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
-    <td>2000</td>
+    <td>2500</td>
     <td></td>
 </tr>
 <tr>
@@ -348,8 +431,13 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-current</td>
 </tr>
-<!-- Bump down target value twice -->
+<!-- Bump down target value twice to 19.0 -->
 <!-- (again, 1st click activates the setpoint display) -->
+<tr>
+    <td>log</td>
+    <td>Bump down target value twice to 19.0</td>
+    <td></td>
+</tr>
 <tr>
     <td>click</td>
     <td>//setpointwidget//setpointdown</td>
@@ -387,7 +475,12 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
-<!-- Wait for display to revert -->
+<!-- Ensure display persists (3.75s) -->
+<tr>
+    <td>log</td>
+    <td>Ensure display persists (3.75s)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
     <td>3750</td>
@@ -403,9 +496,15 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
+<!-- Wait for display to revert to current (6s, 15.0) -->
+<tr>
+    <td>log</td>
+    <td>Wait for display to revert to current (6s, 15.0)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
-    <td>2000</td>
+    <td>2250</td>
     <td></td>
 </tr>
 <tr>
@@ -419,6 +518,11 @@
     <td>tempsetpoint-current</td>
 </tr>
 <!-- Bump down target value 3 times at 2-second intervals -->
+<tr>
+    <td>log</td>
+    <td>Bump down target value 3 times at 2-second intervals</td>
+    <td></td>
+</tr>
 <tr>
     <td>click</td>
     <td>//setpointwidget//setpointdown</td>
@@ -479,7 +583,12 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
-<!-- Wait for display to revert -->
+<!-- Check display persists (3.75s) -->
+<tr>
+    <td>log</td>
+    <td>Check display persists (3.75s)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
     <td>3750</td>
@@ -495,9 +604,15 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
+<!-- Wait for display to revert -->
+<tr>
+    <td>log</td>
+    <td>Wait for display to revert (6s)</td>
+    <td></td>
+</tr>
 <tr>
     <td>pause</td>
-    <td>2000</td>
+    <td>2250</td>
     <td></td>
 </tr>
 <tr>

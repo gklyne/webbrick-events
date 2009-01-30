@@ -1,4 +1,4 @@
-#!C:\Dev\Python252\python.exe
+#!/usr/bin/python
 #
 # $Id$
 
@@ -6,10 +6,18 @@
 import sys
 import glob
 from os.path import *
-cpfile = glob.glob(sys.prefix+"\\Lib\\site-packages\\cherrypy-2.*")
-sys.path.insert(1, cpfile[0])
-#print "path insert: ", cpfile[0]
+
+# If this fails, check Turbogears in installed!
+#For Windows:
+#cpfile = glob.glob(sys.prefix+"/lib/site-packages/CherryPy-2.*")
+#For Linux (Ubuntu):
+cpfile = glob.glob(sys.prefix+"/lib/python2.5/site-packages/CherryPy-2.*")
+###
+#print "sys.prefix: ", sys.prefix
+#print "path insert: ", cpfile
 #print '\n'.join(sys.path)
+###
+sys.path.insert(1, cpfile[0])
 
 # Now can import TurboGears, etc.
 
