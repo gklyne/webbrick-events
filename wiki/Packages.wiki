@@ -3,19 +3,19 @@
 = Introduction =
 
 This project defines the following packages:
- * MiscLib
- * EventLib
- * WidgetLib
+ * !MiscLib
+ * !EventLib
+ * !WidgetLib
 
-= MiscLib =
+= !MiscLib =
 
 Miscellaneous support functions for Python and javascript code.
 
-= EventLib =
+= !EventLib =
 
 The main event distribution libraries, in Python and Javascript.
 
-= WidgetLib =
+= !WidgetLib =
 
 A library of user-interface widgets that interact wityh the event distribution system to provide real-time control and monitoring functions in web pages;  all written in pure Javascript.
 
