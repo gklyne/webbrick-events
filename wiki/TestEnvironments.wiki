@@ -20,7 +20,11 @@ The test framework recognizes command line options to select tests to run, verbo
 
 = Stand-alone Javascript unit tests =
 
-...
+ * `.../tests/static/testRunner.html` - jsUnit test runner: load into browser to run jsUnit tests.  Note that the test suites use relative paths, and must be run using the jsUnit test runner loaded from the same directory.
+
+ * `MiscLib/tests/static/TestAll.html` - run in jsUnit test runner
+ * `EventLib/tests/static/TestAll.html` - run in jsUnit test runner
+
 
 = Python client/Python server tests =
 
