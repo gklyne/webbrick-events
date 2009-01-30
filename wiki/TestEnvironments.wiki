@@ -20,10 +20,20 @@ The test framework recognizes command line options to select tests to run, verbo
 
 = Stand-alone Javascript unit tests =
 
+Tests consist of synchronous tests that must be run in the jsUnit test runner, and asynchronous tests that are loaded directly into a browser.  (This is for historical reasons:  initially, testing was done using jsUnit, but this can't handle tests with asynchronous completion, so I switched to using the variant of SimpleTest provide by the MochiKit libraries.)
+
  * `.../tests/static/testRunner.html` - jsUnit test runner: load into browser to run jsUnit tests.  Note that the test suites use relative paths, and must be run using the jsUnit test runner loaded from the same directory.
 
  * `MiscLib/tests/static/TestAll.html` - run in jsUnit test runner
  * `EventLib/tests/static/TestAll.html` - run in jsUnit test runner
+
+ * `MiscLib/tests/static/TestAsyncAll.html` - run directly in browser
+ * `EventLib/tests/static/TestAsyncAll.html` - run directly in browser
+ * Widget component tests - run directly in browser:
+   * `WidgetLib/tests/static/TestMvcUtils.html`
+   * `WidgetLib/tests/static/TestSimpleButton.html`
+   * `WidgetLib/tests/static/TestNumericDisplay.html`
+   * (etc.)
 
 
 = Python client/Python server tests =
