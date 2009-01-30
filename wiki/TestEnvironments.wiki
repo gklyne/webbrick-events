@@ -13,6 +13,8 @@ A number of test environments are provided:
 
 = Stand-alone python unit tests =
 
+The test framework recognizes command line options to select tests to run, verbosity and log output: use `--help` to see the options.
+
  * `MiscLib/tests/TestAll.py`
  * `EventLib/tests/TestAll.py`
 
