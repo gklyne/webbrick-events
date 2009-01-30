@@ -38,12 +38,28 @@ Tests consist of synchronous tests that must be run in the jsUnit test runner, a
 
 = Python client/Python server tests =
 
-...
+See source code for usage notes.
+
+ * `EventLib/tests/TestEventHTTPClientServer.py`
+ * `EventLib/tests/TestEventHTTPServer.py`
+ * `EventLib/tests/TestEventHTTPClient.py`
+
 
 = Javascript client/Python server tests =
 
-...
+ * `EventLib/tests/TestEventHTTPServer.py`
+ * `EventLib/tests/JSProxy/start-jsproxy.py`
+ * `EventLib/tests/static/TestAsyncEventRouterHTTP.html` - see source code for usage notes.
+
 
 = Selenium user interface tests =
+
+Selenium tests are run from `TestServer`.
+
+ * `WidgetLib/tests/TestServer/start-testserver.py`
+ * `WidgetLib/tests/TestServer/testserver/static/selenese/Test_Quick.html`
+ * `WidgetLib/tests/TestServer/testserver/static/selenese/Test_All.html`
+
+
 
 ...
