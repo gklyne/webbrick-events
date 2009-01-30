@@ -56,7 +56,7 @@ See source code for usage notes.
 
 Selenium tests are run from `TestServer`:  edit `app.cfg` as necessary, run `start-testserver.py`, browse to http://localhost:8080/, select "Selenium test suite for widgets" or "Quick selenium test suite for widgets", run tests using Selenium interface.
 
-NOTE: the Selenium tests often fail due to timing variations, or some race condition between Selenium and then underlying event system - if a small number of failures are reported, try reloading the browser page and running the failed test again.  If each test passes at least once, the logic is working as intended.  Such failures usually follow a pattern indicative that an updated value on the web page is not yet visible to the test code.  Tests are more likely (but not certain) to succeed if the browser is freshly started.
+NOTE: the Selenium tests often fail due to timing variations, or some race condition between Selenium and then underlying event system - if a small number of failures are reported, try reloading the browser page and running the failed test again.  If each test passes at least once, the logic is working as intended.  Such failures usually follow a pattern indicative that an updated value on the web page is not yet visible to the test code, often with the exected value displayed on the web page.  Tests are more likely (but not certain) to succeed if the browser is freshly started.
 
  * `WidgetLib/tests/TestServer/testserver/config/app.cfg`
  * `WidgetLib/tests/TestServer/start-testserver.py`
