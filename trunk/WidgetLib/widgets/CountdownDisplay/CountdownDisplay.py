@@ -17,7 +17,7 @@ from turbogears.widgets.base  import Widget, CompoundWidget, WidgetsList
 from turbogears.widgets.forms import FormField, Button
 from EventLib.URI             import EventBaseUri
 
-SetCountdownDisplayValueEvent = urljoin(EventBaseUri, "SetCountdownDisplayValue")
+SetCounterEvent = urljoin(EventBaseUri, "SetCountdownDisplayValue")
 
 class CountdownDisplay(FormField):
     template = """
@@ -39,7 +39,7 @@ class CountdownDisplay(FormField):
         if self.is_named:
             d['attrs']['name'] = d["name"]
             d['attrs']['id']   = d["field_id"]
-        d['attrs']['SetCountdownDisplayValueEvent'] = SetCountdownDisplayValueEvent
+        d['attrs']['SetCounterEvent'] = SetCounterEvent
         if d.get('count', None):
             d['value'] = d['count']
 
