@@ -213,10 +213,11 @@ webbrick.widgets.TestCountdownDisplay.prototype.testSetState = function() {
     // Test setting state to "done"
     logDebug("test setting state to 'done'");
     this.model.set("STATE", "done");
-    assertEq("testSetState: state", this.model.get("STATE"), "done");
-    assertEq("testSetState: value", webbrick.widgets.getElementText(this.elem), "Countdown value here");
-    assertEq("testSetState", null, this.compareElementClass("countdown_done"));
-
+    assertEq("testSetState: state: ", this.model.get("STATE"), "done");
+    assertEq("testSetState: value: ", this.model.get("VALUE"), "Countdown value here");
+    assertEq("testSetState: text:  ", webbrick.widgets.getElementText(this.elem), "Countdown value here");
+    assertEq("testSetState: class: ", null, this.compareElementClass("countdown_done"));
+      
     // Test setting state to "pending"
     logDebug("test setting state to 'pending'");
     this.model.set("STATE", "pending");
@@ -246,7 +247,7 @@ webbrick.widgets.TestCountdownDisplay.prototype.testSetValue = function() {
 
     // Test set new element value
     this.model.set("VALUE", "new value");
-    logDebug("set new element value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
+    logDebug("testSetValue: new element value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
     assertEq("testSetValue: value", webbrick.widgets.getElementText(this.elem), "new value");
 
     logDebug("testSetValue complete");

@@ -1,0 +1,64 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- $Id: -->
+<!-- To run this test, just load it into a browser -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>webbrick.widgets.NumericDisplay controller Test Runner </title>
+
+        <!-- basic style foundations -->
+        <link type="text/css"
+              href="../../../MiscLib/static/SimpleTest/test.css" rel="stylesheet">
+
+        <!-- MochiKit dependencies -->
+        <script type="text/javascript">MochiKit = {__export__: false};</script>
+        <script type="text/javascript"
+                src="../../../MiscLib/static/javascript/MochiKit.js">
+        </script>
+
+        <!-- MiscLib dependencies -->
+        <script type="text/javascript" src="../../../MiscLib/static/javascript/Namespace.js"></script>
+        <script type="text/javascript" src="../../../MiscLib/static/javascript/DeferredMonad.js"></script>
+
+        <!-- Testing dependencies -->
+        <script type="text/javascript" src="../../../MiscLib/static/SimpleTest/SimpleTest.js"></script>
+        <script type="text/javascript" src="../../../MiscLib/static/javascript/AsyncUnitTest.js"></script>
+
+        <!-- EventLib dependencies -->
+        <script type="text/javascript" src="../../../EventLib/static/javascript/URI.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/Status.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/Event.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/EventEnvelope.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/EventSerializer.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/EventAgent.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/EventHandler.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/EventRouter.js"></script>
+        <script type="text/javascript" src="../../../EventLib/static/javascript/EventRouterHTTPC.js"></script>
+
+        <!-- Module under test -->
+        <script type="text/javascript" src="../MvcUtils.js"></script>
+        <script type="text/javascript" src="../WidgetFunctions.js"></script>
+        <script type="text/javascript" src="NumericDisplay.js"></script>
+
+        <!-- Test script -->
+        <script type="text/javascript" src="TestNumericDisplay.js"></script>
+
+    </head>
+
+    <body>
+        <!-- containing page and invoke test suite -->
+        <h1>TestNumericDisplay.html</h1>
+
+        <pre id="test">
+          <script type="text/javascript">
+          runTestSuite(webbrick.widgets.TestNumericDisplay);
+          </script>
+        </pre>
+
+        <h2>
+          <a href="javascript:MochiKit.Logging.logger.debuggingBookmarklet()">Logging pane</a>
+        </h2>
+
+    </body>
+
+</html>

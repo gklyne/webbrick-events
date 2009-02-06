@@ -30,8 +30,7 @@ webbrick.require("webbrick.widgets.MvcUtils");
  * Function to create and return a new CountdownDisplay object.
  *
  * Widget element attributes:
- *   SetCounterEvent    event type URI for setting numeric value to display
- *   SetCountdownDisplayStateEvent    event type URI for setting numeric display state
+ *   SetCounterEvent        event type URI for setting numeric value to display
  *
  * @param   {HTMLElement}   element HTML element that contains the countdown display
  * @return  A CountdownDisplay object - can be discarded
@@ -98,7 +97,7 @@ webbrick.widgets.CountdownDisplay = function (modelvals, renderer, collector) {
      *   the name of the event handler method of this object to be subscribed.
      */
     this._subscribes = [
-        ["SetCounterEvent", null, "SetValueEventHandler" ],
+        ["SetCounterEvent", null, "SetCounterEventHandler" ],
         ["ClockTickEvent",  null, "ClockTickEventHandler"],
     ];
 
@@ -178,8 +177,8 @@ webbrick.widgets.CountdownDisplay.prototype.SetCounter = function (value) {
 /**
  *  Set value incoming event handler
  */ 
-webbrick.widgets.CountdownDisplay.prototype.SetValueEventHandler = function (handler, event) {
-    MochiKit.Logging.logDebug("CountdownDisplay.SetValueEventHandler: "+event);
+webbrick.widgets.CountdownDisplay.prototype.SetCounterEventHandler = function (handler, event) {
+    MochiKit.Logging.logDebug("CountdownDisplay.SetCounterEventHandler: "+event);
     value = event.getPayload();
     this.SetCounter(value);
 }
@@ -270,9 +269,6 @@ webbrick.widgets.CountdownDisplay.rendererDefinition = {
         VALUE: 'SetValueModelListener',
         STATE: 'SetStateModelListener'
     },
-    // Define DOM input event connections
-    collectDomInputs: {
-    }
 };
 
 /**
