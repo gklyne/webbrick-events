@@ -39,8 +39,6 @@ webbrick.require("webbrick.widgets.MvcUtils");
  * @return  A SimpleButton object - can be discarded
  * @type    {webbrick.widgets.SimpleButton}
  */
-// TODO: parameterize widget constructor with model object, 
-//       create here, and pass in to constructor?
 webbrick.widgets.SimpleButton_Init = function (element) {
     MochiKit.Logging.logDebug("SimpleButton_Init: create renderer/collector");
     var renderer  = new webbrick.widgets.SimpleButton.renderer(element);
@@ -147,10 +145,13 @@ webbrick.widgets.SimpleButton = function (modelvals, renderer, collector) {
 // Input collector event handlers
 // ------------------------------
 
-// Function called when button is clicked - down, up, clicked
-//
-// event is a MochiKit.Signal.event object
-//
+/**
+ *  Function called when the button is clicked
+ *
+ * @param {String}      inputtype   a string value that indicates the type of 
+ *                      click event (e.g. 'up', 'down', etc.).  See also
+ *                      the DOM event mapping table at 'EventTypeMap' below. 
+ */
 webbrick.widgets.SimpleButton.prototype.Clicked = function (inputtype) {
     MochiKit.Logging.logDebug("SimpleButton.Clicked: "+inputtype);
     var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
