@@ -74,12 +74,12 @@ webbrick.widgets.TestWIDGETZZZ = function() {
 // Specify order of tests: 
 webbrick.widgets.TestWIDGETZZZ.exposeTestFunctionNames = function() {
     return [ 'testModuleContents'
-           , 'testInitialModel'
-           , 'testInitialElem'
-           , 'testSetState'
-           , 'testSetValue'
-           , 'testSetStateEvent'
-           , 'testSetValueEvent'
+           //, 'testInitialModel'
+           //, 'testInitialElem'
+           //, 'testSetState'
+           //, 'testSetValue'
+           //, 'testSetStateEvent'
+           //, 'testSetValueEvent'
            ];
 }
 

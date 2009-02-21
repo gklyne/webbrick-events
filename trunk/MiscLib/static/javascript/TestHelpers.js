@@ -44,7 +44,7 @@ function assertEq(msg,a,b) {
     assert(msg+": expected <"+a+">, found <"+b+">.", a===b);
 }
 
-// Assert equality function using array alement comparison and eq method if defined
+// Assert equality function using array element comparison and eq method if defined
 function assertEquals(msg,a,b) {
     if ((a instanceof Array) && (b instanceof Array)) {
         if (a.length != b.length) {

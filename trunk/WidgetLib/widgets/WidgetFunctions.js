@@ -72,6 +72,8 @@ webbrick.widgets.getElementText = function (elem) {
     logDebug("getElementText: ", elem.childNodes) ;
     var txt = "" ;
     for ( var i = 0 ; i < elem.childNodes.length ; i++ ) {
+        //logDebug("getElementText (node type): ", elem.childNodes[i].nodeType) ;
+        //logDebug("getElementText (node value): ", elem.childNodes[i].nodeValue) ;
         if ( elem.childNodes[i].nodeType == 3 ) {
             txt += elem.childNodes[i].nodeValue ;
         };
@@ -93,13 +95,58 @@ webbrick.widgets.setElementText = function (elem, text) {
 };
 
 /**
+ * Locate the first node reached by following the supplied path of elements 
+ * descending from the supplied element node.
+ * 
+ * pathnames is a list of element names.
+ */
+webbrick.widgets.getElementByTagPath = function (elem, pathnames) {
+    logDebug("getElementByTagPath: "+elem+", "+pathnames);
+    var nodes = elem.getElementsByTagName(pathnames[0]);
+    if ( nodes.length > 0 ) {
+        if (pathnames.length == 1) {
+            return nodes[0];
+        } else {
+            return webbrick.widgets.getElementByTagPath(nodes[0], pathnames.slice(1));
+        }
+    } else {
+        return null;
+    }
+};
+
+/**
+ * Get text from the first node reached by following the supplied 
+ * path of elements descending from the supplied element node.
+ * 
+ * pathnames is a list of element names.
+ */
+webbrick.widgets.getAttributeByTagPath = function (elem, pathnames, attr) {
+    var node = webbrick.widgets.getElementByTagPath(elem, pathnames);
+    if (node == null) return null; 
+    return node.getAttribute(attr); 
+};
+
+/**
+ * Get attribute value from the first node reached by following the supplied 
+ * path of elements descending from the supplied element node.
+ * 
+ * pathnames is a list of element names.
+ */
+webbrick.widgets.getElementTextByTagPath = function (elem, pathnames) {
+    var node = webbrick.widgets.getElementByTagPath(elem, pathnames);
+    if (node == null) return null; 
+    return webbrick.widgets.getElementText(node); 
+};
+
+/**
  * Extract the text from the first child node with the given name
  */
+// TODO: refactor this to use path function above
 webbrick.widgets.getElementTextByTagName = function (elem, elemname) {
     var txt = "" ;
     var nodes = elem.getElementsByTagName(elemname);
     if ( nodes.length > 0 ) {
-        txt = getElementText(nodes[0]);
+        txt = webbrick.widgets.getElementText(nodes[0]);
     };
     return txt ;
 };

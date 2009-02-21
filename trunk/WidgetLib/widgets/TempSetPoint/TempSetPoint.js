@@ -1,160 +1,401 @@
-// $Id$
-//
-// Module providing logic for temperature set point widget to generate and respond to events.
-//
-// Outgoing events:
-//   TempSetPoint_SetTargetValue - temperature set point
-//
-// Incoming events:
-//   TempSetPoint_SetCurrentValue
-//   TempSetPoint_SetTargetValue
-//   TempSetPoint_ShowTarget(N) - show target for N seconds before 
-//                                reverting to current value
-//   
+/**
+ * @fileoverview
+ * Module providing logic for TempSetPoint widget to generate and respond to events.
+ *
+ * @version $Id$
+ * @author Graham Klyne
+ *
+ * @requires MochiKit.Base
+ * @requires MochiKit.DOM
+ * @requires MochiKit.Logging
+ * @requires MochiKit.Signal
+ * @requires webbrick.widgets.MvcUtils
+ */
 
-// -------------------------------------
-// Temperate set point widget logic
-// -------------------------------------
+// -----
+// Setup
+// -----
 
-// Initialize simple button: set up event subscriptions
-// Note that event URIs are obtained from the server via widget attributes
-function TempSetPoint_Init(element) {
+// Create a namespace (if not already defined)
+webbrick.namespace("webbrick.widgets");
 
-    // Internal values
-    element.currentValue  = null ;  // unknown
-    element.targetValue   = null ;  // unknown
-    element.targetDisplay = 0;      // Seconds to show target
-    element.agentUri      = makeEventAgentUri(EventUriSourceBase);
+// Check dependencies
+webbrick.require("MochiKit.Base");
+webbrick.require("MochiKit.DOM");
+webbrick.require("MochiKit.Logging");
+webbrick.require("MochiKit.Signal");
+webbrick.require("webbrick.widgets.MvcUtils");
 
-    // If defined, set default target value
-    var deftgt = webbrick.widgets.getWidgetValue(element, "@DefaultTarget");
-    if (deftgt != null && deftgt != "") {
-        element.targetValue   = parseFloat(deftgt);
-    }
-    TempSetPoint_UpdateDisplay(element);
+/**
+ * Function to create and return a new TempSetPoint object.
+ *
+ * Widget element attributes:
+ *  [[[see initializeValues below]]]
+ *
+ * @param   {HTMLElement}   element     HTML element that constitutes the widget.
+ * @return  A WIDGETSAMPLE widget object - can be discarded
+ * @type    {webbrick.widgets.TempSetPoint}
+ */
+webbrick.widgets.TempSetPoint_Init = function (element) {
+    MochiKit.Logging.logDebug("TempSetPoint_Init: create renderer/collector");
+    var renderer  = new webbrick.widgets.TempSetPoint.renderer(element);
+    renderer.initialize();
+
+    MochiKit.Logging.logDebug("TempSetPoint_Init: extract parameters from DOM");
+    var modelvals = webbrick.widgets.getWidgetValues
+        (webbrick.widgets.TempSetPoint.initializeValues, element);
+
+    MochiKit.Logging.logDebug("TempSetPoint: create widget");
+    var widget = new webbrick.widgets.TempSetPoint(modelvals, renderer, renderer);
+    return widget;
+};
+
+// ------------------------------
+// Widget main class (controller)
+// ------------------------------
+
+/**
+ * @class
+ * Class for a TempSetPoint widget, implementing the controller functions for the widget.
+ *
+ * @constructor
+ * @param {Object}      modelvals   object that supplies values to initialize the model
+ * @param {Object}      renderer    object used to render the widget
+ * @param {Object}      collecter   object used to collect and deliver input events
+ */
+webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
+   
+    /**
+     * @private
+     * @type Object
+     * Widget renderer object.
+     */
+    this._renderer = renderer;
+    
+    /**
+     * @private
+     * @type Object
+     * Widget input collector object.
+     */
+    this._collector = collector;
+    
+    /**
+     * @private
+     * @type webbrick.widgets.GenericModel
+     * Model for this TempSetPoint widget
+     */
+    this._model = null;
+
+    /**
+     * @private
+     * Table of event subscriptions for this widget.
+     *
+     * Each entry is a triple consisting of:
+     *   the name of the model property that defines the event type URI
+     *   the name of the model property that defines the event source URI, or null
+     *   the name of the event handler method of this object to be subscribed.
+     */
+    this._subscribes = [
+        ["SetCurrentEvent", null, "SetCurrentEventHandler"],
+        ["SetTargetEvent",  null, "SetTargetEventHandler"],
+        ["SetModeEvent",    null, "SetModeEventHandler"],
+        ////["ClockTickEvent",  null, "ClockTickEventHandler"],
+        ////["SetYYYEvent",  null, "SetYYYEventHandler"],
+    ];    
+
+    // ---- Initialize ----
+
+    // Create the model
+    MochiKit.Logging.logDebug(
+        "TempSetPoint: create model: "+webbrick.widgets.TempSetPoint.modelDefinition);
+    this._model = new webbrick.widgets.GenericModel(
+        webbrick.widgets.TempSetPoint.modelDefinition);
+
+    // Populate the model attributes
+    MochiKit.Logging.logDebug("TempSetPoint: populate model");
+    this._model.swap(modelvals);
+
+    // Connect model change listeners to renderer methods
+    MochiKit.Logging.logDebug("TempSetPoint: connect model listeners");
+    this._renderer.connectModel(this._model);
+
+    ////////////////////
+    // TODO: delete or enable this as appropriate
+    // Connect controller input listeners to input collector
+    ////MochiKit.Logging.logDebug("TempSetPoint: connect input collector listeners");
+    ////MochiKit.Signal.connect(this._collector, 'Clicked', this, this.Clicked);
+    ////////////////////
 
     // Access widget event router
     var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
 
-    // Set up handler for set value events
-    webbrick.widgets.subscribeWidgetEventHandler
-        (element, "@SetCurrentEvent", "@Subject", TempSetPoint_SetCurrentHandler);
-    webbrick.widgets.subscribeWidgetEventHandler
-        (element, "@SetTargetEvent",  "@Subject", TempSetPoint_SetTargetHandler);
-    webbrick.widgets.subscribeWidgetEventHandler
-        (element, "@ShowTargetEvent", "@Subject", TempSetPoint_ShowTargetHandler);
+    // TODO: Refactor this to common support code, with checks to catch non-existing methods 
+    // Subscribe handlers for incoming controller events
+    MochiKit.Logging.logDebug("TempSetPoint: subscribe controller events");
+    //for (var i = 0 ; i<this._subscribes.length ; i++) {
+    //    var evtyp = this._model.get(this._subscribes[i][0]);
+    //    var evsrc = this._model.getDefault(this._subscribes[i][1], null);
+    //    // makeEventHandler  arguments are (handlerUri,handlerFunc,initFunc,endFunc)
+    //    var handler = makeEventHandler(
+    //        evtyp+"_handler", MochiKit.Base.bind(this._subscribes[i][2],this), null, null);
+    //    MochiKit.Logging.logDebug("TempSetPoint: subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
+    //    WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
+    //}
 
-    // Set handlers for up, down buttons clicked, and connect to local timer...
-    MochiKit.Signal.connect(
-        webbrick.widgets.getSubElement(element,"SetPointUp"),   'onclick', 
-        MochiKit.Base.partial(TempSetPoint_IncreaseTarget, element));
-    MochiKit.Signal.connect(
-        webbrick.widgets.getSubElement(element,"SetPointDown"), 'onclick',
-        MochiKit.Base.partial(TempSetPoint_DecreaseTarget, element));
-    var clockevent = webbrick.widgets.startClock();
-    webbrick.widgets.subscribeWidgetEventHandler
-        (element, clockevent[0], clockevent[1], TempSetPoint_ClockTickEventHandler);
+    MochiKit.Logging.logDebug("TempSetPoint: initialized");
+};
+
+// ------------------------------
+// Input collector event handlers
+// ------------------------------
+
+////////////////////
+// TODO: delete this function if there are no user input events.
+////////////////////
+
+/**
+ *  Function called when widget is clicked (down, up, clicked)
+ *
+ * @param {String}      inputtype   a string value that indicates the type of 
+ *                      click event (e.g. 'up', 'down', etc.).  See also
+ *                      the DOM event mapping table at 'ClickTypeMap' below. 
+ */
+webbrick.widgets.TempSetPoint.prototype.Clicked = function (inputtype) {
+    MochiKit.Logging.logDebug("TempSetPoint.Clicked: "+inputtype);
+    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
+    var Event  = makeEvent(this._model.get("YYYClickEvent"), 
+                           this._model.get("YYYClickSource"), 
+                           inputtype);
+    var Source = makeEventAgent(this._model.get("YYYClickSource"));
+    MochiKit.Logging.logDebug("TempSetPoint.Clicked: Source: "+Source+", Event: "+Event);
+    WidgetEventRouter.publish(Source, Event);
+};
+
+// ----------------------------------
+// Incoming controller event handlers
+// ----------------------------------
+
+////////////////////
+// TODO: These functions will need removing or adjusting to match the widget capabilities
+// These functions support a common pattern of simple VALUE and STATE values in themodel
+////////////////////
+
+/**
+ *  Incoming event handler for setting the current value
+ */
+webbrick.widgets.TempSetPoint.prototype.SetValueEventHandler = function (handler, event) {
+    MochiKit.Logging.logDebug("TempSetPoint.SetValueEventHandler: "+event.getPayload());
+    this._model.set("VALUE", event.getPayload());
+};
+
+/**
+ *  Incoming event handler for setting the widget state.
+ */
+webbrick.widgets.TempSetPoint.prototype.SetStateEventHandler = function (handler, event) {
+    MochiKit.Logging.logDebug("TempSetPoint.SetStateEventHandler: "+event.getPayload());
+    try {
+        this._model.set("STATE", event.getPayload());
+    } catch(e) {
+        if (e.name == "InvalidPropertyValuePairError") {
+            this._model.set("STATE", "unknown");
+        };
+        throw e;
+    };
 }
 
-// Function sets the current value, and updates the display
-function TempSetPoint_SetCurrentValue(element, val) {
-    logDebug("TempSetPoint_SetCurrentValue: val: "+val+", ",typeof val);
-    element.currentValue = val;
-    TempSetPoint_UpdateDisplay(element);
-}
+// ----------------
+// Model definition
+// ----------------
 
-// Function sets the target value, and updates the display
-function TempSetPoint_SetTargetValue(element,val) {
-    element.targetValue = val;
-    TempSetPoint_UpdateDisplay(element);
-}
-
-// Function switches display to target value for 5 seconds
-function TempSetPoint_ShowTargetValue(element, val) {
-    element.targetDisplay = val;      // Seconds to show target
-    TempSetPoint_UpdateDisplay(element);
-}
-
-// Update the display to reflect current values:
-function TempSetPoint_UpdateDisplay(element) {
-    var displayvalue      = null;
-    var displaystatetext  = "unknown";
-    var displaystateclass = "tempsetpoint-unknown";
-    if (element.targetDisplay == 0) {
-        displayvalue      = element.currentValue;
-        displaystatetext  = "current";
-        displaystateclass = "tempsetpoint-current";
+/**
+ *  Definition of TempSetPoint model, with dynamic values determined by widget
+ *  behaviour and interactions, and static values initialized with parameters
+ *  provided when the widget is created.
+ */
+webbrick.widgets.TempSetPoint.modelDefinition = {
+    propertyNames : [ 
+        // Dynamic values:
+        "DISPLAY",                  // display temperature value
+        "DISPLAYSTATE",             // state of displayed temperature value
+        "CURRENT",                  // current temperature value
+        "CURRENTSTATE",             // state of current temperature value
+        "TARGET",                   // target temperature value
+        "TARGETSTATE",              // target temperature value
+        "MODETIMER",                // seconds to display target value, or zero 
+        "MODE",                     // display mode: current or target 
+        // Static parameters:
+        "SetCurrentEvent",          // event type URI for setting current value
+        "SetTargetEvent",           // event type URI for setting target value
+        "SetModeEvent",             // event type URI for setting widget mode
+        "TargetChangeEvent",        // event type URI published when target is changed
+        "TargetChangeSource",       // event source URI published when target is changed
+        "ClockTickEvent"            // event type URI for clock tick
+    ],
+    controlledValues : {
+        "DISPLAYSTATE" : [ "current", "target",  "unknown" ],
+        "CURRENTSTATE" : [ "current", "unknown" ],
+        "TARGETSTATE"  : [ "target",  "unknown" ],
+        "MODE"         : [ "current", "target" ]
+    },
+    defaultValues : {
+        DISPLAY:                "(unknown)",
+        DISPLAYSTATE:           "unknown",
+        CURRENT:                "(unknown)",
+        CURRENTSTATE:           "unknown",
+        TARGET:                 "(unknown)",
+        TARGETSTATE:            "unknown",
+        MODE:                   "current",
+        MODETIMER:              0,
+        SetCurrentEvent:        "_TempSetPoint.SetCurrentEvent",
+        SetTargetEvent:         "_TempSetPoint.SetTargetEvent",
+        SetModeEvent:           "_TempSetPoint.SetModeEvent",
+        TargetChangeEvent:      "_TempSetPoint.TargetChangeEvent",
+        TargetChangeSource:     "_TempSetPoint.TargetChangeSource",
+        ClockTickEvent:         "_TempSetPoint.ClockTickEvent_OverrideMe"
     }
-    if (element.targetDisplay > 0) {
-        displayvalue      = element.targetValue;
-        displaystatetext  = "set point";
-        displaystateclass = "tempsetpoint-target";
+};
+
+// -------------------------
+// Model initialization data
+// -------------------------
+
+/**
+ * Table for mapping model STATE value to CSS class.
+ *
+ * See also modelDefinition.controlledValues above.
+ *
+ * As well as for initialization, this is used by the DOM renderer below.
+ */
+webbrick.widgets.TempSetPoint.StateClass = {
+        current:    'tempsetpoint-current',
+        target:     'tempsetpoint-target',
+        unknown:    'tempsetpoint-unknown'
+    };
+
+/**
+ *  Dictionary used to initialize a model from DOM element, used with
+ *  function webbrick.widgets.getWidgetValues (defined in MvcUtils).     
+ *  
+ *  Each entry initializes a single model value with the same name as
+ *  the dictionary key value.  The value initializer is obtained by
+ *  calling the indicated function with the supplied value and the DOM
+ *  element as parameters.  Module webbrick.widgets.MvcUtils defines some
+ *  commonly used functions in the webbrick.widgets namespace.
+ */
+webbrick.widgets.TempSetPoint.initializeValues = {
+    DISPLAY:                  
+        [ webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+    DISPLAYSTATE:                  
+        [ webbrick.widgets.getWidgetPathClass, webbrick.widgets.TempSetPoint.StateClass, 
+          ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+    CURRENT:                  
+        [webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+    CURRENTSTATE:                  
+        [ webbrick.widgets.getWidgetPathClass, webbrick.widgets.TempSetPoint.StateClass, 
+          ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+    TARGET:                  
+        [webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+    TARGETSTATE:                  
+        [ webbrick.widgets.getWidgetPathClass, webbrick.widgets.TempSetPoint.StateClass, 
+          ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+    SetValueEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetValueEvent"],
+    SetStateEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetStateEvent"],
+    ClickEvent:
+        [webbrick.widgets.getWidgetAttribute, "ClickEvent"],
+    ClickSource:
+        [webbrick.widgets.getWidgetAttribute, "ClickSource"]
+};
+
+// --------------------------------------------
+// Renderer and user input collector definition
+// --------------------------------------------
+
+/**
+ *  Table to map DOM event types to signal parameter values for Input collector
+ */
+webbrick.widgets.TempSetPoint.ClickTypeMap = {
+    click:      'click',
+    mousedown:  'down',
+    keydown:    'down',
+    mouseup:    'up',
+    keyup:      'up'
+};
+
+/**
+ *  Definitions for the TempSetPoint DOM renderer and input collector
+ *
+ *  The renderer responds to model changes to 'VALUE' and 'STATE'.
+ *
+ *  The collector class generates the following input events via MochiKit.Signal:
+ *    'Clicked', with parameter 'click', 'down', or 'up' to indicate the type of input event.
+ */
+webbrick.widgets.TempSetPoint.rendererDefinition = {
+    // Define functions used by other parts of the renderer definition
+    renderFunctions: {
+        SetDisplayModelListener:  
+            [ 'setWidgetPathText', 
+              ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+        SetDisplayStateModelListener: 
+            [ 'setWidgetPathClass', webbrick.widgets.TempSetPoint.StateClass, 
+              ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ]
+        //SetValueModelListener:  
+        //    ['setElementText', null],
+        ////////////////////
+        //SetStateModelListener: 
+        //    ['setClassMapped', webbrick.widgets.TempSetPoint.StateClass],
+        //WidgetClicked: 
+        //    ['domEventClicked', 'Clicked', webbrick.widgets.TempSetPoint.ClickTypeMap]
+        },
+    // Define model listener connections
+    ////////////////////
+    // TODO: Adjust as appropriate
+    ////////////////////
+    renderModel: {
+        DISPLAY:        'SetDisplayModelListener',
+        DISPLAYSTATE:   'SetDisplayStateModelListener',
+        //CURRENT:        'SetCurrentModelListener',
+        //TARGET:         'SetTargetModelListener',
+        //MODE:           'SetModeModelListener',
+        //CURRENTSTATE:   'SetCurrentStateModelListener',
+        //CURRENTSTATE:   'SetTargetStateModelListener',
+        //STATE:          'SetStateModelListener'
+    },
+    // Define DOM input event connections
+    collectDomInputs: {
+        //onclick:        'WidgetClicked',
+        //onmousedown:    'WidgetClicked',
+        //onmouseup:      'WidgetClicked',
+        //onkeydown:      'WidgetClicked',
+        //onkeyup:        'WidgetClicked'
     }
-    var displayvaluetext  = "??.?";
-    var displayvalueclass = "tempsetpoint-unknown";
-    logDebug("TempSetPoint_UpdateDisplay: targetDisplay: "+element.targetDisplay+
-        ", displayvalue: ", displayvalue, ", ", typeof displayvalue);
-    if (displayvalue != null) {
-        displayvaluetext  = displayvalue.toFixed(1);
-        displayvalueclass = displaystateclass;
-    }
-    webbrick.widgets.setSubElementValue
-        (element, "SetPointDisplay" , 0, null,            displayvalueclass);
-    webbrick.widgets.setSubElementValue
-        (element, "SetPointValue",   0, displayvaluetext, displayvalueclass);
-    webbrick.widgets.setSubElementValue
-        (element, "SetPointState",   0, displaystatetext, displaystateclass);
-}
+};
 
-// Button click handlers: 
-// these generate events that can be picked up by other parts of the system
-function TempSetPoint_IncreaseTarget(element, event) {
-    TempSetPoint_BumpTarget(element, +0.5);
-}
+/**
+ * @class
+ *  TempSetPoint renderer and input collector, 
+ *  based on webbrick.widgets.GenericDomRenderer
+ *
+ * @param {HTMLElement} element HTML element that constitutes the widget.
+ */
+webbrick.widgets.TempSetPoint.renderer = function(element) {
+    /**
+     * @private
+     * @type HTMLElement
+     * DOM element for rendering to
+     */
+    this._element = element;
+};
 
-function TempSetPoint_DecreaseTarget(element, event) {
-    TempSetPoint_BumpTarget(element, -0.5);
-}
+webbrick.widgets.TempSetPoint.renderer.prototype = 
+    new webbrick.widgets.GenericDomRenderer();
 
-function TempSetPoint_BumpTarget(element, delta) {
-    var target = element.targetValue;
-    if (target != null && element.targetDisplay > 0) { target += delta; }
-    TempSetPoint_SetTarget(element, target);
-}
-
-function TempSetPoint_SetTarget(element, target) {
-    var router       = webbrick.widgets.getWidgetEventRouter();
-    var showtargetev = webbrick.widgets.makeWidgetEvent(element, "@ShowTargetEvent", "@Subject", 5);
-    router.publish(element.agentUri, showtargetev);
-    var settargetev  = webbrick.widgets.makeWidgetEvent(element, "@SetTargetEvent", "@Subject", target);
-    router.publish(element.agentUri, settargetev);
-}
-
-// Set current value incoming event handler
-function TempSetPoint_SetCurrentHandler(handler, event) {
-    TempSetPoint_SetCurrentValue
-        (handler.element, webbrick.widgets.getEventData(event, parseFloat));
-}
-
-// Set target value incoming event handler
-function TempSetPoint_SetTargetHandler(handler, event) {
-    TempSetPoint_SetTargetValue
-        (handler.element, webbrick.widgets.getEventData(event, parseFloat));
-}
-
-// Show target value incoming event handler
-function TempSetPoint_ShowTargetHandler(handler, event) {
-    TempSetPoint_ShowTargetValue
-        (handler.element, webbrick.widgets.getEventData(event, parseInt));
-}
-
-// Clock tick incoming event handler
-function TempSetPoint_ClockTickEventHandler(handler, event) {
-    var elm = handler.element;
-    if (elm.targetDisplay > 0) {
-        elm.targetDisplay -= 1;
-        TempSetPoint_UpdateDisplay(elm);
-    }
-}
+/**
+ *  Initialize the renderer object by processing the renderer/collector definition.
+ */
+webbrick.widgets.TempSetPoint.renderer.prototype.initialize = function() {
+    this.processDefinition(webbrick.widgets.TempSetPoint.rendererDefinition, this._element);
+};
 
 // End.

@@ -22,8 +22,10 @@ if (typeof webbrick == "undefined" || !webbrick) {
      * If already defined, the existing value will not be overwritten 
      * so that defined namespaces are preserved.
      */
-    function webbrick() {
+    webbrick = function () {
     };
+    webbrick._namespaces = [];
+    webbrick._globalobj  = this;
 }
 
 if (typeof webbrick._namespaces == "undefined" ) {
