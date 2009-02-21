@@ -292,6 +292,11 @@ webbrick.widgets.GenericDomRenderer.prototype.processDefinition = function
     logDebug("GenericDomRenderer.processDefinition: create new function definitions");
     for (var fn in this._defn.renderFunctions) {
         var fd = this._defn.renderFunctions[fn];
+        if (this[fd[0]] == undefined) {
+            var msg = "GenericDomRenderer.processDefinition: renderer function "+fd[0]+" not defined" 
+            logError(msg);
+            throw Error("ValueDefinitionError", msg);
+        }
         if (fd.length == 2) {
             this[fn] = MochiKit.Base.bind(fd[0],this,fd[1]);
         }
@@ -387,14 +392,60 @@ webbrick.widgets.GenericDomRenderer.prototype.setElementText = function
  */
 webbrick.widgets.GenericDomRenderer.prototype.setClassMapped = function 
         (valuemap, model, propname, oldvalue, newvalue) {
-    MochiKit.Logging.logDebug(
-        "GenericDomRenderer.setClassMapped: newvalue: "+newvalue+", oldvalue: "+oldvalue);
+    logDebug("GenericDomRenderer.setClassMapped: newvalue: "+newvalue+", oldvalue: "+oldvalue);
     var oldclass = valuemap[oldvalue];
     var newclass = valuemap[newvalue];
-    MochiKit.Logging.logDebug(
-        "GenericDomRenderer.setClassMapped: newclass: "+newclass+", oldclass: "+oldclass);
+    logDebug("GenericDomRenderer.setClassMapped: newclass: "+newclass+", oldclass: "+oldclass);
     MochiKit.DOM.removeElementClass(this._elem, oldclass);
     MochiKit.DOM.addElementClass(this._elem, newclass);
+};
+
+/**
+ *  Listener sets content of element located by a path of tag names from
+ *  the widget base element.
+ *
+ * @param   {Array} path            a list of tag names defining a path from the
+ *                                  widget base to the required sub-element.
+ * @param   {GenericModel} model    the widget model being rendered
+ * @param   {String} propname       name of the changed model property
+ * @param   {any} oldvalue          previous value of the changed model property
+ * @param   {any} newvalue          new value of the changed model property
+ *
+ *  This function should be partially applied to the path parameter 
+ *  to yield a model listener function.
+ */
+webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathText = function 
+        (path, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.setWidgetPathText: newvalue: "+newvalue+", oldvalue: "+oldvalue);
+    elem = webbrick.widgets.getElementByTagPath(this._elem, path);
+    webbrick.widgets.setElementText(elem, newvalue);
+};
+
+/**
+ *  Listener sets class element located by a path of tag names from
+ *  the widget base element.
+ *
+ * @param   {Object} valuemap       an object used as a dictionary to map model values
+ *                                  to DOM class values
+ * @param   {Array} path            a list of tag names defining a path from the
+ *                                  widget base to the required sub-element.
+ * @param   {GenericModel} model    the widget model being rendered
+ * @param   {String} propname       name of the changed model property
+ * @param   {any} oldvalue          previous value of the changed model property
+ * @param   {any} newvalue          new value of the changed model property
+ *
+ *  This function should be partially applied to the path parameter 
+ *  to yield a model listener function.
+ */
+webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathClass = function 
+        (valuemap, path, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.setWidgetPathClass: newvalue: "+newvalue+", oldvalue: "+oldvalue);
+    elem = webbrick.widgets.getElementByTagPath(this._elem, path);
+    var oldclass = valuemap[oldvalue];
+    var newclass = valuemap[newvalue];
+    logDebug("GenericDomRenderer.setWidgetPathClass: newclass: "+newclass+", oldclass: "+oldclass);
+    MochiKit.DOM.removeElementClass(elem, oldclass);
+    MochiKit.DOM.addElementClass(elem, newclass);
 };
 
 // TODO - define more renderer base methods as required
@@ -465,13 +516,37 @@ webbrick.widgets.hide = function( element ) {
  * @return  {String}                A widget state value, or null of none of the class
  *                                  values are applied to the widget element.
  */
-webbrick.widgets.getMappedClass = function(statemap, element) {
-    for (var s in statemap) {
-        if (MochiKit.DOM.hasElementClass(element, statemap[s])) {
+webbrick.widgets.getMappedClass = function(classmap, element) {
+    for (var s in classmap) {
+        if (MochiKit.DOM.hasElementClass(element, classmap[s])) {
             return s;
         };
     };
     return null;
+};
+
+/** 
+ *  Get sub-element of widget by following supplied element path
+ *
+ * @param   {String*} path          a list of element names that define a path from
+ *                                  the widget's root element to the desired inner
+ *                                  element.
+ * @param   {HTMLElement} element   the element whose textual content is retrieved.
+ * @return  {HTMLElement}           the element designated by the given path. 
+ */
+webbrick.widgets.getWidgetPathElement = function(path, element) {
+    for (var i in path) {
+        var n = path[i];
+        e = element.getElementsByTagName(n);
+        if (e.length == 0) {
+            throw "ValueError", "DOM element contains no <"+n+"> child";
+        };
+        if (e.length > 1) {
+            throw "ValueError", "DOM element contains more than one <"+n+"> child";
+        };
+        element = e[0];
+    };
+    return element;
 };
 
 /** 
@@ -501,6 +576,38 @@ webbrick.widgets.getWidgetContent = function(element) {
     // or null if there is no element content?
 };
 
+/** 
+ *  Retrieve the textual content of the supplied element at at the end of
+ *  the supplied path from the supplied element.
+ *
+ * @param   {String*} path          a list of element names that define a path from
+ *                                  the widget's root element to the desired inner
+ *                                  element.
+ * @param   {HTMLElement} element   the element whose textual content is retrieved.
+ * @return  {String}                the element textual content, which may be an empty string
+ */
+webbrick.widgets.getWidgetPathContent = function(path, element) {
+    var e = webbrick.widgets.getWidgetPathElement(path, element);
+    return webbrick.widgets.getWidgetContent(e);
+};
+
+/** 
+ *  Retrieve the class of the supplied element at at the end of
+ *  the supplied path from the supplied element.
+ *
+ * @param   {Object} classmap       an object that maps widget state to a corresponding
+ *                                  DOM element class.
+ * @param   {String*} path          a list of element names that define a path from
+ *                                  the widget's root element to the desired inner
+ *                                  element.
+ * @param   {HTMLElement} element   the element whose textual content is retrieved.
+ * @return  {String}                the element textual content, which may be an empty string
+ */
+webbrick.widgets.getWidgetPathClass = function(classmap, path, element) {
+    var e = webbrick.widgets.getWidgetPathElement(path, element);
+    return webbrick.widgets.getMappedClass(classmap, e);
+};
+
 /**
  *  Helper function to extract widget parameters from a DOM element.
  *  Used when initializing a widget with values in the DOM.
@@ -519,7 +626,7 @@ webbrick.widgets.getWidgetContent = function(element) {
  */
 // TODO - generalize multiple parameter support
 webbrick.widgets.getWidgetValues = function(valueDefs, elem) {
-    MochiKit.Logging.logDebug("webbrick.widgets.getWidgetValues: extract widget parameters from DOM");
+    logDebug("webbrick.widgets.getWidgetValues: extract widget parameters from DOM");
     var modelvals = {};
     for (var vname in valueDefs) {
         var vfunc = valueDefs[vname];
@@ -530,8 +637,11 @@ webbrick.widgets.getWidgetValues = function(valueDefs, elem) {
         else if (vfunc.length == 2) {
             vval = vfunc[0](vfunc[1], elem);
         }
+        else if (vfunc.length == 3) {
+            vval = vfunc[0](vfunc[1], vfunc[2], elem);
+        }
         else {
-            throw Error("ValueDefinitionError", 
+            throw Error( 
                 "ValueDefinitionError: Unexpected entry length in getWidgetValues definition: "+
                 vfunc.length);
         }

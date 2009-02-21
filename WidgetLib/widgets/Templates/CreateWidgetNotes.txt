@@ -1,0 +1,31 @@
+1. Take copy of template files.
+2. Rename and global edit to reflect name of new widget.
+3. Ensure that testModuleContents test passes (load TestWidgetZZZ.html file into browser).
+4. Design external interface and internal model.  
+   Try to reflect all calculations and complex logic in the internal model, 
+   with direct mappings from there to the renderer.  
+   Avoid requiring the renderer to perform any complex logic.  
+   This ensures that most of the logic is unit-testable. 
+5. Create and enable test cases for the initial model.
+6. Define widget model and initializer.  Ensure tests pass.
+7. Create and enable test cases for initial element content.  
+   This will include an HTML template in the test setup.
+8. Implement any required element initialization logic.
+   Ensure test cases pass.
+9. For each of the internal model values:
+   (a) create a test case for responding to changes to the model
+   (b) implement the logic to respond to model changes
+   (c) ensure test cases pass
+10. For each of the external control interfaces:
+    (a) create a test case against the model
+    (b) implement the interface to update the model
+    (c) ensure test cases pass
+11. For each of the external control interfaces:
+    (a) create a test case against the rendered element
+    (b) implement the logic to render the element when the model changes
+    (c) ensure test cases pass
+12. For each of the external control events:
+    (a) create a test case for response to the event
+    (b) implement the logic to respond to the event
+    (c) ensure test cases pass
+  

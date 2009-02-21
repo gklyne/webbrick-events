@@ -199,7 +199,7 @@ Selenium.decorateFunctionWithTimeout = function(f, timeout) {
         }
         return f();
     };
-}
+};
 
 Selenium.createForWindow = function(window, proxyInjectionMode) {
     if (!window.location) {
@@ -1984,7 +1984,7 @@ Selenium.prototype.doSetCursorPosition = function(locator, position) {
       range.moveStart('character',position);
       range.select();
    }
-}
+};
 
 Selenium.prototype.getElementIndex = function(locator) {
     /**
@@ -2004,7 +2004,7 @@ Selenium.prototype.getElementIndex = function(locator) {
         element = previousSibling;
     }
     return index;
-}
+};
 
 Selenium.prototype.isOrdered = function(locator1, locator2) {
     /**
@@ -2027,11 +2027,11 @@ Selenium.prototype.isOrdered = function(locator1, locator2) {
         element2 = previousSibling;
     }
     return false;
-}
+};
 
 Selenium.prototype._isCommentOrEmptyTextNode = function(node) {
     return node.nodeType == 8 || ((node.nodeType == 3) && !(/[^\t\n\r ]/.test(node.data)));
-}
+};
 
 Selenium.prototype.getElementPositionLeft = function(locator) {
    /**
@@ -2207,7 +2207,7 @@ Selenium.prototype.getCursorPosition = function(locator) {
         }
     }
     throw new Error("Couldn't detect cursor position on this browser!");
-}
+};
 
 
 Selenium.prototype.getExpression = function(expression) {
@@ -2221,7 +2221,7 @@ Selenium.prototype.getExpression = function(expression) {
      * @return string the value passed in
      */
     return expression;
-}
+};
 
 Selenium.prototype.getXpathCount = function(xpath) {
     /**
@@ -2233,7 +2233,7 @@ Selenium.prototype.getXpathCount = function(xpath) {
     */
     var result = this.browserbot.evaluateXPathCount(xpath, this.browserbot.getDocument());
     return result;
-}
+};
 
 Selenium.prototype.doAssignId = function(locator, identifier) {
     /**
@@ -2245,7 +2245,7 @@ Selenium.prototype.doAssignId = function(locator, identifier) {
     */
     var element = this.browserbot.findElement(locator);
     element.id = identifier;
-}
+};
 
 Selenium.prototype.doAllowNativeXpath = function(allow) {
     /**
@@ -2261,7 +2261,7 @@ Selenium.prototype.doAllowNativeXpath = function(allow) {
         allow = false;
     }
     this.browserbot.allowNativeXpath = allow;
-}
+};
 
 Selenium.prototype.doIgnoreAttributesWithoutValue = function(ignore) {
     /**
@@ -2283,7 +2283,7 @@ Selenium.prototype.doIgnoreAttributesWithoutValue = function(ignore) {
         ignore = false;
     }
     this.browserbot.ignoreAttributesWithoutValue = ignore;
-}
+};
 
 Selenium.prototype.doWaitForCondition = function(script, timeout) {
     /**
@@ -2319,7 +2319,7 @@ Selenium.prototype.doSetTimeout = function(timeout) {
         timeout = Selenium.DEFAULT_TIMEOUT;
     }
     this.defaultTimeout = timeout;
-}
+};
 
 Selenium.prototype.doWaitForPageToLoad = function(timeout) {
     /**
@@ -2433,7 +2433,7 @@ Selenium.prototype.isCookiePresent = function(name) {
     var v = this.browserbot.getCookieByName(name);
     var absent = (v === null);
     return !absent;
-}   
+};  
 
 Selenium.prototype.doCreateCookie = function(nameValuePair, optionsString) {
     /**
@@ -2474,7 +2474,7 @@ Selenium.prototype.doCreateCookie = function(nameValuePair, optionsString) {
     }
     LOG.debug("Setting cookie to: " + cookie);
     this.browserbot.getDocument().cookie = cookie;
-}
+};
 
 Selenium.prototype.doDeleteCookie = function(name,optionsString) {
     /**
@@ -2537,7 +2537,7 @@ Selenium.prototype.doDeleteCookie = function(name,optionsString) {
     } else {
         this.browserbot.deleteCookie(cookieName, domain, path);
     }
-}
+};
 
 Selenium.prototype.doDeleteAllVisibleCookies = function() {
     /** Calls deleteCookie with recurse=true on all cookies visible to the current page.
@@ -2552,7 +2552,7 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
     for (var i = 0; i < cookieNames.length; i++) {
         this.browserbot.recursivelyDeleteCookie(cookieNames[i], domain, path, win);
     }
-}
+};
 
 Selenium.prototype.doSetBrowserLogLevel = function(logLevel) {
     /**
@@ -2571,7 +2571,7 @@ Selenium.prototype.doSetBrowserLogLevel = function(logLevel) {
         throw new SeleniumError("Invalid log level: " + logLevel);
     }
     LOG.setLogLevelThreshold(logLevel);
-}
+};
 
 Selenium.prototype.doRunScript = function(script) {
     /**
@@ -2587,10 +2587,10 @@ Selenium.prototype.doRunScript = function(script) {
     var win = this.browserbot.getCurrentWindow();
     var doc = win.document;
     var scriptTag = doc.createElement("script");
-    scriptTag.type = "text/javascript"
+    scriptTag.type = "text/javascript";
     scriptTag.text = script;
     doc.body.appendChild(scriptTag);
-}
+};
 
 Selenium.prototype.doAddLocationStrategy = function(strategyName, functionDefinition) {
     /**
@@ -2629,9 +2629,9 @@ Selenium.prototype.doAddLocationStrategy = function(strategyName, functionDefini
         } catch (ex) {
             throw new SeleniumError("Error executing strategy function " + strategyName + ": " + extractExceptionMessage(ex));
         }
-    }
+    };
     this.browserbot.locationStrategies[strategyName] = safeStrategyFunction;
-}
+};
 
 Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
     /**
@@ -2680,7 +2680,7 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
             if (exceptionMessage) {
                 if (exceptionMessage ==
                     "Automation server can't create object") {
-                    msg += 'Is it installed? Does it have permission to run '
+                    msg += 'Is it installed? Does it have permission to run '+
                         'as an add-on? See http://snapsie.sourceforge.net/';
                 }
                 else {
@@ -3115,7 +3115,7 @@ OptionLocatorFactory.prototype.OptionLocatorByLabel = function(label) {
 
     this.assertSelected = function(element) {
         var selectedLabel = element.options[element.selectedIndex].text;
-        Assert.matches(this.label, selectedLabel)
+        Assert.matches(this.label, selectedLabel);
     };
 };
 
@@ -3136,7 +3136,7 @@ OptionLocatorFactory.prototype.OptionLocatorByValue = function(value) {
 
     this.assertSelected = function(element) {
         var selectedValue = element.options[element.selectedIndex].value;
-        Assert.matches(this.value, selectedValue)
+        Assert.matches(this.value, selectedValue);
     };
 };
 
@@ -3178,7 +3178,7 @@ OptionLocatorFactory.prototype.OptionLocatorById = function(id) {
 
     this.assertSelected = function(element) {
         var selectedId = element.options[element.selectedIndex].id;
-        Assert.matches(this.id, selectedId)
+        Assert.matches(this.id, selectedId);
     };
 };
 
