@@ -339,12 +339,10 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
               ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
         SetDisplayStateModelListener: 
             [ 'setWidgetPathClass', webbrick.widgets.TempSetPoint.StateClass, 
-              ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ]
-        //SetValueModelListener:  
-        //    ['setElementText', null],
-        ////////////////////
-        //SetStateModelListener: 
-        //    ['setClassMapped', webbrick.widgets.TempSetPoint.StateClass],
+              ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+        SetModeModelListener:  
+            [ 'setWidgetPathTextClass', webbrick.widgets.TempSetPoint.StateClass, 
+              ["SetPointBody", "SetPointDisplay", "SetPointState", "span"] ]
         //WidgetClicked: 
         //    ['domEventClicked', 'Clicked', webbrick.widgets.TempSetPoint.ClickTypeMap]
         },
@@ -355,12 +353,7 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
     renderModel: {
         DISPLAY:        'SetDisplayModelListener',
         DISPLAYSTATE:   'SetDisplayStateModelListener',
-        //CURRENT:        'SetCurrentModelListener',
-        //TARGET:         'SetTargetModelListener',
-        //MODE:           'SetModeModelListener',
-        //CURRENTSTATE:   'SetCurrentStateModelListener',
-        //CURRENTSTATE:   'SetTargetStateModelListener',
-        //STATE:          'SetStateModelListener'
+        MODE:           'SetModeModelListener'
     },
     // Define DOM input event connections
     collectDomInputs: {

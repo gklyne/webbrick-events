@@ -79,18 +79,15 @@ webbrick.widgets.TestTempSetPoint.exposeTestFunctionNames = function() {
            , 'testInitialElem'
            , 'testModelSetDISPLAY'
            , 'testModelSetDISPLAYSTATE'
-           //, 'testModelSetCURRENT'
-           //, 'testModelSetCURRENTSTATE'
-           //, 'testModelSetTARGET'
-           //, 'testModelSetTARGETSTATE'
-           //, 'testModelSetMODE'
-           //, 'testModelSetMODETIMER'
-           //, 'testModelSetMODESTATE'
-           //, 'testSetCurrentElem'
-           //, 'testSetTargetModel'
-           //, 'testSetTargetElem'
-           //, 'testSetModeModel'
-           //, 'testSetModeElem'
+           , 'testModelSetCURRENT'
+           , 'testModelSetCURRENTSTATE'
+           , 'testModelSetTARGET'
+           , 'testModelSetTARGETSTATE'
+           , 'testModelSetMODE'
+           , 'testModelSetMODETIMER'
+           //, 'testSetCurrent'
+           //, 'testSetTarget'
+           //, 'testSetMode'
            //, 'testSetCurrentEvent'
            //, 'testSetTargetEvent'
            //, 'testSetModeEvent'
@@ -122,7 +119,7 @@ webbrick.widgets.TestTempSetPoint.prototype.setUp = function() {
                   "<span class='tempsetpoint-unknown'>??.?</span>"+
                 "</SetPointValue>"+
                 "<SetPointState>"+
-                  "<span class='tempsetpoint-unknown'>current</span>"+
+                  "<span class='tempsetpoint-current'>current</span>"+
                 "</SetPointState>"+
               "</SetPointDisplay>"+
               "<SetPointButtons>"+
@@ -214,9 +211,9 @@ webbrick.widgets.TestTempSetPoint.prototype.testInitialModel = function() {
  */
 webbrick.widgets.TestTempSetPoint.prototype.compareElementClass = function(elem, expected) {
     return webbrick.widgets.testClassValues(elem, expected, 
-        [ "TempSetPoint_normal"
-        , "TempSetPoint_pending"
-        , "TempSetPoint_unknown"
+        [ "tempsetpoint-normal"
+        , "tempsetpoint-pending"
+        , "tempsetpoint-unknown"
         ] );
 };
 
@@ -262,7 +259,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testInitialElem = function() {
     
     var spstat = spdisp.childNodes[1];
     assertEq("testInitialElem", spstat.nodeName, "SetPointState".toUpperCase());    
-    assertEq("testInitialElem", null, this.compareElementClass(spstat.childNodes[0], "tempsetpoint-unknown"));
+    assertEq("testInitialElem", null, this.compareElementClass(spstat.childNodes[0], "tempsetpoint-current"));
     assertEq("testInitialElem", spstat.childNodes[0].childNodes[0].nodeValue, "current");
     
     var spbutt = spbody.childNodes[1];
@@ -287,7 +284,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testInitialElem = function() {
 };
 
 /** 
- *  Test set current value by direct setting of model
+ *  Test set displayed value by direct setting of model
  */
 webbrick.widgets.TestTempSetPoint.prototype.testModelSetDISPLAY = function() {
     logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetDISPLAY ====");
@@ -306,7 +303,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testModelSetDISPLAY = function() {
 };
 
 /** 
- *  Test set current value by direct setting of model
+ *  Test set displayed value state by direct setting of model
  */
 webbrick.widgets.TestTempSetPoint.prototype.testModelSetDISPLAYSTATE = function() {
     logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetDISPLAYSTATE ====");
@@ -316,15 +313,15 @@ webbrick.widgets.TestTempSetPoint.prototype.testModelSetDISPLAYSTATE = function(
     assertEq("testModelSetDISPLAYSTATE: ", cls, "tempsetpoint-unknown");
 
     // Test setting invalid state
-    logDebug("testSetState: test invalid state raises error");
+    logDebug("testModelSetDISPLAYSTATE: test invalid state raises error");
     try {
         this.model.set("DISPLAYSTATE", "invalid");
-        assertFail("testSetState: Set invalid state - exception expected");
+        assertFail("testModelSetDISPLAYSTATE: Set invalid state - exception expected");
     } catch (e) {
         if (e.name == "InvalidPropertyValuePairError") {
-            logDebug("testSetState: Set invalid state OK");
+            logDebug("testModelSetDISPLAYSTATE: Set invalid state OK");
         } else {
-            assertFail("testSetState: Set invalid state - wrong exception: "+e.name+", "+e.message);
+            assertFail("testModelSetDISPLAYSTATE: Set invalid state - wrong exception: "+e.name+", "+e.message);
         }
     }
     cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
@@ -334,8 +331,6 @@ webbrick.widgets.TestTempSetPoint.prototype.testModelSetDISPLAYSTATE = function(
     this.model.set("DISPLAYSTATE", "current");
     cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
     assertEq("testModelSetDISPLAYSTATE: ", cls, "tempsetpoint-current");
-
-    return;
 
     // Set value state to "target"
     this.model.set("DISPLAYSTATE", "target");
@@ -347,25 +342,243 @@ webbrick.widgets.TestTempSetPoint.prototype.testModelSetDISPLAYSTATE = function(
     cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
     assertEq("testModelSetDISPLAYSTATE: ", cls, "tempsetpoint-unknown");
 
-    // Set state back to normal, check updated element
-    
     logDebug("testModelSetDISPLAYSTATE: complete");
+};
+
+/** 
+ *  Test set current value by direct setting of model.  
+ *  This is an internal value, and the renderer should not update.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testModelSetCURRENT = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetCURRENT ====");
+
+    // Confirm initial display value
+    var spvalutxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span'])
+    assertEq("testModelSetCURRENT: ", spvalutxt, "??.?");
+    
+    // Test set new current value
+    this.model.set("CURRENT", "new value");
+    spvalutxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span'])
+    assertEq("testModelSetCURRENT: ", spvalutxt, "??.?");
+
+    logDebug("testModelSetCURRENT: complete");
+};
+
+/** 
+ *  Test set current state by direct setting of model
+ *  This is an internal value, and the renderer should not update.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testModelSetCURRENTSTATE = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetCURRENTSTATE ====");
+
+    // Confirm initial value display state
+    var cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetCURRENTSTATE: ", cls, "tempsetpoint-unknown");
+
+    // Test setting invalid state
+    logDebug("testModelSetCURRENTSTATE: test invalid state raises error");
+    try {
+        this.model.set("CURRENTSTATE", "invalid");
+        assertFail("testModelSetCURRENTSTATE: Set invalid state - exception expected");
+    } catch (e) {
+        if (e.name == "InvalidPropertyValuePairError") {
+            logDebug("testModelSetCURRENTSTATE: Set invalid state OK");
+        } else {
+            assertFail("testModelSetCURRENTSTATE: Set invalid state - wrong exception: "+e.name+", "+e.message);
+        }
+    }
+    cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetCURRENTSTATE: ", cls, "tempsetpoint-unknown");
+
+    // Test setting target state
+    logDebug("testModelSetCURRENTSTATE: test invalid state raises error");
+    try {
+        this.model.set("CURRENTSTATE", "target");
+        assertFail("testModelSetCURRENTSTATE: Set invalid state - exception expected");
+    } catch (e) {
+        if (e.name == "InvalidPropertyValuePairError") {
+            logDebug("testModelSetCURRENTSTATE: Set invalid state OK");
+        } else {
+            assertFail("testModelSetCURRENTSTATE: Set invalid state - wrong exception: "+e.name+", "+e.message);
+        }
+    }
+    cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetCURRENTSTATE: ", cls, "tempsetpoint-unknown");
+    
+    // Set value state to "current"
+    this.model.set("CURRENTSTATE", "current");
+    cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetCURRENTSTATE: ", cls, "tempsetpoint-unknown");
+    
+    logDebug("testModelSetCURRENTSTATE: complete");
+};
+
+/** 
+ *  Test set target value by direct setting of model.  
+ *  This is an internal value, and the renderer should not update.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testModelSetTARGET = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetTARGET ====");
+
+    // Confirm initial display value
+    var spvalutxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span'])
+    assertEq("testModelSetTARGET: ", spvalutxt, "??.?");
+    
+    // Test set new current value
+    this.model.set("TARGET", "new value");
+    spvalutxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span'])
+    assertEq("testModelSetTARGET: ", spvalutxt, "??.?");
+
+    logDebug("testModelSetTARGET: complete");
+};
+
+/** 
+ *  Test set target state by direct setting of model
+ *  This is an internal value, and the renderer should not update.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testModelSetTARGETSTATE = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetTARGETSTATE ====");
+
+    // Confirm initial value display state
+    var cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetTARGETSTATE: ", cls, "tempsetpoint-unknown");
+
+    // Test setting invalid state
+    logDebug("testModelSetTARGETSTATE: test invalid state raises error");
+    try {
+        this.model.set("TARGETSTATE", "invalid");
+        assertFail("testSetState: Set invalid state - exception expected");
+    } catch (e) {
+        if (e.name == "InvalidPropertyValuePairError") {
+            logDebug("testModelSetTARGETSTATE: Set invalid state OK");
+        } else {
+            assertFail("testModelSetTARGETSTATE: Set invalid state - wrong exception: "+e.name+", "+e.message);
+        }
+    }
+    cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetTARGETSTATE: ", cls, "tempsetpoint-unknown");
+
+    // Test setting target state
+    logDebug("testSetState: test invalid state raises error");
+    try {
+        this.model.set("TARGETSTATE", "current");
+        assertFail("testModelSetTARGETSTATE: Set invalid state - exception expected");
+    } catch (e) {
+        if (e.name == "InvalidPropertyValuePairError") {
+            logDebug("testModelSetTARGETSTATE: Set invalid state OK");
+        } else {
+            assertFail("testModelSetTARGETSTATE: Set invalid state - wrong exception: "+e.name+", "+e.message);
+        }
+    }
+    cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetTARGETSTATE: ", cls, "tempsetpoint-unknown");
+    
+    // Set value state to "current"
+    this.model.set("TARGETSTATE", "target");
+    cls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class')
+    assertEq("testModelSetTARGETSTATE: ", cls, "tempsetpoint-unknown");
+    
+    logDebug("testModelSetTARGETSTATE: complete");
+};
+
+/** 
+ *  Test set display mode by direct setting of model
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testModelSetMODE = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetMODE ====");
+
+    // Confirm initial mode value and class
+    var modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "current");
+    var modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-current");
+
+    // Test setting invalid state
+    logDebug("testModelSetMODE: test invalid mode raises error");
+    try {
+        this.model.set("MODE", "invalid");
+        assertFail("testModelSetMODE: Set invalid mode - exception expected");
+    } catch (e) {
+        if (e.name == "InvalidPropertyValuePairError") {
+            logDebug("testModelSetMODE: Set invalid state OK");
+        } else {
+            assertFail("testModelSetMODE: Set invalid state - wrong exception: "+e.name+", "+e.message);
+        }
+    }
+    modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "current");
+    modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-current");
+    
+    // Test setting target state
+    logDebug("testModelSetMODE: test invalid mode raises error");
+    try {
+        this.model.set("MODE", "unknown");
+        assertFail("testModelSetMODE: Set invalid state - exception expected");
+    } catch (e) {
+        if (e.name == "InvalidPropertyValuePairError") {
+            logDebug("testModelSetMODE: Set invalid state OK");
+        } else {
+            assertFail("testModelSetMODE: Set invalid state - wrong exception: "+e.name+", "+e.message);
+        }
+    }
+    modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "current");
+    modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-current");
+    
+    // Set value state to "target"
+    this.model.set("MODE", "target");
+    modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "target");
+    modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-target");
+    
+    // Set value state to "current"
+    this.model.set("MODE", "current");
+    modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "current");
+    modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-current");
+    
+    logDebug("testModelSetMODE: complete");
+};
+
+/** 
+ *  Test set mode timer by direct setting of model.  
+ *  This is an internal value, and the renderer should not update.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testModelSetMODETIMER = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testModelSetMODETIMER ====");
+
+    // Confirm initial mode value and class
+    var modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "current");
+    var modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-current");
+    
+    // Test set new current value
+    this.model.set("MODETIMER", 5);
+    modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "current");
+    modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-current");
+    
+    // Test set new current value
+    this.model.set("MODETIMER", 0);
+    modetxt = webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span'])
+    assertEq("testModelSetMODE: ", modetxt, "current");
+    modecls = webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class')
+    assertEq("testModelSetMODE: ", modecls, "tempsetpoint-current");
+
+    logDebug("testModelSetMODETIMER: complete");
 };
 
 // ------------------------------------------------------------------------
 // TODO:
-//, 'testModelSetCURRENT'
-//, 'testModelSetCURRENTSTATE'
-//, 'testModelSetTARGET'
-//, 'testModelSetTARGETSTATE'
-//, 'testModelSetMODE'
-//, 'testModelSetMODETIMER'
-//, 'testModelSetMODESTATE'
-//, 'testSetCurrentElem'
-//, 'testSetTargetModel'
-//, 'testSetTargetElem'
-//, 'testSetModeModel'
-//, 'testSetModeElem'
+//, 'testSetCurrent'
+//, 'testSetTarget'
+//, 'testSetMode'
 //, 'testSetCurrentEvent'
 //, 'testSetTargetEvent'
 //, 'testSetModeEvent'

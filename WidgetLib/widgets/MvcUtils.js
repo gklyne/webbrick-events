@@ -448,6 +448,12 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathClass = function
     MochiKit.DOM.addElementClass(elem, newclass);
 };
 
+webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathTextClass = function 
+        (valuemap, path, model, propname, oldvalue, newvalue) {
+   this.setWidgetPathText(path, model, propname, oldvalue, newvalue);
+   this.setWidgetPathClass(valuemap, path, model, propname, oldvalue, newvalue);
+};
+
 // TODO - define more renderer base methods as required
 
 // --- collector methods ---
