@@ -145,6 +145,28 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
     MochiKit.Logging.logDebug("TempSetPoint: initialized");
 };
 
+// ------------------
+// Controller methods
+// ------------------
+
+webbrick.widgets.TempSetPoint.prototype.setCurrentValue = function (val) {
+    MochiKit.Logging.log("TempSetPoint.setCurrentValue: "+val);
+    if (typeof val == "number") {
+        val = val.toFixed(1);
+    }
+    var state = "unknown";
+    if (val.match(/^\s*\d+(.\d+)?\s*$/) != null) {
+        state = "current";        
+    } else {
+    }
+    this._model.set("CURRENT",      val);
+    this._model.set("CURRENTSTATE", state);        
+    if (this._model.get("MODE") == "current") {
+        this._model.set("DISPLAY",      val);
+        this._model.set("DISPLAYSTATE", state);        
+    }
+};
+
 // ------------------------------
 // Input collector event handlers
 // ------------------------------
@@ -347,9 +369,6 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
         //    ['domEventClicked', 'Clicked', webbrick.widgets.TempSetPoint.ClickTypeMap]
         },
     // Define model listener connections
-    ////////////////////
-    // TODO: Adjust as appropriate
-    ////////////////////
     renderModel: {
         DISPLAY:        'SetDisplayModelListener',
         DISPLAYSTATE:   'SetDisplayStateModelListener',
