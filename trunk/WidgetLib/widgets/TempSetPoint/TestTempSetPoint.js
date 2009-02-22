@@ -85,7 +85,8 @@ webbrick.widgets.TestTempSetPoint.exposeTestFunctionNames = function() {
            , 'testModelSetTARGETSTATE'
            , 'testModelSetMODE'
            , 'testModelSetMODETIMER'
-           , 'testSetCurrentValue'
+           , 'testSetCurrentValueModel'
+           , 'testSetCurrentValueRender'
            //, 'testSetTarget'
            //, 'testSetMode'
            //, 'testSetCurrentEvent'
@@ -575,123 +576,143 @@ webbrick.widgets.TestTempSetPoint.prototype.testModelSetMODETIMER = function() {
 };
 
 /** 
- *  Test set current value through widget controller method.
+ *  Test set current value in model through widget controller method.
  */
-webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValue = function() {
-    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetCurrentValue ====");
+webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueModel = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetCurrentValueModel ====");
 
     // Confirm initial values in model
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAY"),      "??.?");
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAYSTATE"), "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENT"),      "??.?");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENTSTATE"), "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGET"),       "??.?");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGETSTATE"),  "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("MODE"),         "current");
-    assertEq("testSetCurrentValue: ", this.model.get("MODETIMER"),    0);
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAY"),      "??.?");
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAYSTATE"), "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGETSTATE"),  "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODETIMER"),    0);
+
+    // Set new current value
+    this.widget.setCurrentValue("11.1")
+
+    // Confirm updated values in model
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAY"),      "11.1");
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAYSTATE"), "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENT"),      "11.1");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENTSTATE"), "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGETSTATE"),  "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODETIMER"),    0);
+
+    // Set new current value as floating point number
+    this.widget.setCurrentValue(22.2)
+
+    // Confirm updated values in model
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAY"),      "22.2");
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAYSTATE"), "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENT"),      "22.2");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENTSTATE"), "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGETSTATE"),  "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODETIMER"),    0);
+
+    // Set invalid current value
+    this.widget.setCurrentValue("xx.x")
+
+    // Confirm updated values in model
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAY"),      "xx.x");
+    assertEq("testSetCurrentValueModel: ", this.model.get("DISPLAYSTATE"), "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENT"),      "xx.x");
+    assertEq("testSetCurrentValueModel: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueModel: ", this.model.get("TARGETSTATE"),  "unknown");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetCurrentValueModel: ", this.model.get("MODETIMER"),    0);
+
+    logDebug("testSetCurrentValueModel: complete");
+};
+
+/** 
+ *  Test set current value in renderer through widget controller method.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueRender = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetCurrentValueRender ====");
 
     // Confirm initial values in renderer
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
             "??.?");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
             "tempsetpoint-unknown");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
             "current");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
             "tempsetpoint-current");
 
     // Set new current value
     this.widget.setCurrentValue("11.1")
 
-    // Confirm updated values in model
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAY"),      "11.1");
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAYSTATE"), "current");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENT"),      "11.1");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENTSTATE"), "current");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGET"),       "??.?");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGETSTATE"),  "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("MODE"),         "current");
-    assertEq("testSetCurrentValue: ", this.model.get("MODETIMER"),    0);
-
     // Confirm updated values in renderer
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
             "11.1");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
             "tempsetpoint-current");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
             "current");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
             "tempsetpoint-current");
 
     // Set new current value as floating point number
     this.widget.setCurrentValue(22.2)
 
-    // Confirm updated values in model
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAY"),      "22.2");
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAYSTATE"), "current");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENT"),      "22.2");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENTSTATE"), "current");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGET"),       "??.?");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGETSTATE"),  "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("MODE"),         "current");
-    assertEq("testSetCurrentValue: ", this.model.get("MODETIMER"),    0);
-
     // Confirm updated values in renderer
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
             "22.2");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
             "tempsetpoint-current");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
             "current");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
             "tempsetpoint-current");
 
     // Set invalid current value
     this.widget.setCurrentValue("xx.x")
 
-    // Confirm updated values in model
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAY"),      "xx.x");
-    assertEq("testSetCurrentValue: ", this.model.get("DISPLAYSTATE"), "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENT"),      "xx.x");
-    assertEq("testSetCurrentValue: ", this.model.get("CURRENTSTATE"), "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGET"),       "??.?");
-    assertEq("testSetCurrentValue: ", this.model.get("TARGETSTATE"),  "unknown");
-    assertEq("testSetCurrentValue: ", this.model.get("MODE"),         "current");
-    assertEq("testSetCurrentValue: ", this.model.get("MODETIMER"),    0);
-
     // Confirm updated values in renderer
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
             "xx.x");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
             "tempsetpoint-unknown");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
             "current");
-    assertEq("testSetCurrentValue: ", 
+    assertEq("testSetCurrentValueRender: ", 
             webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
             "tempsetpoint-current");
 
-    logDebug("testSetCurrent: complete");
+    logDebug("testSetCurrentValueRender: complete");
 };
 
 // ------------------------------------------------------------------------
 // TODO:
-//, 'testSetTarget'
-//, 'testSetMode'
+//, 'testSetTargetModel'
+//, 'testSetTargetRender'
+//, 'testSetModeModel'
+//, 'testSetModeRender'
 //, 'testSetCurrentEvent'
 //, 'testSetTargetEvent'
 //, 'testSetModeEvent'

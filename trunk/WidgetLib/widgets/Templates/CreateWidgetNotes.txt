@@ -25,7 +25,6 @@
     (b) implement the logic to render the element when the model changes
     (c) ensure test cases pass
 12. For each of the external control events:
-    (a) create a test case for response to the event
+    (a) create a test case for rendered response to the event
     (b) implement the logic to respond to the event
     (c) ensure test cases pass
-  
