@@ -22,10 +22,11 @@ webbrick.namespace("webbrick.widgets.MvcUtils");
 /**
  *  Add logging functions to global namespace, for convenience
  */
-logDebug   = MochiKit.Logging.logDebug;
-logInfo    = MochiKit.Logging.log;
-logWarning = MochiKit.Logging.logWarning;
-logError   = MochiKit.Logging.logError;
+//These are defined in "WidgetFunctions"
+//logDebug   = MochiKit.Logging.logDebug;
+//logInfo    = MochiKit.Logging.log;
+//logWarning = MochiKit.Logging.logWarning;
+//logError   = MochiKit.Logging.logError;
 
 // -------------------
 // Create error object
@@ -41,6 +42,53 @@ webbrick.Error = function(nam, msg) {
     e = new Error(msg);
     e.name = nam;
     return e;
+};
+
+//-----------------------------------------------
+//Widget configuration functions
+//-----------------------------------------------
+
+/**
+ *  Subscribe handlers for incoming controller events
+ *  
+ * @param {Object} widget       widget whose event handlers are to be subscribed
+ * @param {Object} model        a model object from which event type and/or source
+ *                              values may be extrcated.
+ * @param {Array*} subscribes   a list of event subscription descriptors, 
+ *                              each of indicates an event type and event source
+ *                              to be subscribed to (either but not both may be null)
+ *                              and the name of a method on the widget object that is
+ *                              called to handle these events.  The event type and source
+ *                              values name fields of the sup0plied model that provide
+ *                              the required URI values.   
+ */
+webbrick.widgets.SubscribeWidgetEvents = function(widget, model, subscribes) {
+    MochiKit.Logging.logDebug("webbrick.widgets.SubscribeWidgetEvents");
+
+    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
+   
+    for (var i = 0 ; i<subscribes.length ; i++) {
+        var evtyp = model.getDefault(subscribes[i][0], null);
+        var evsrc = model.getDefault(subscribes[i][1], null);
+        MochiKit.Logging.logDebug("subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
+        //
+        if (evtyp == null && evscrc == null) {
+            throw "ValueError", 
+                "SubscribeWidgetEvents: either event type of event source must be specified";
+        }
+        // Check method exists
+        var handlername = subscribes[i][2];
+        MochiKit.Logging.logDebug("subscribe: method: "+handlername);
+        if (typeof widget[handlername] != "function") {
+            throw "ValueError", 
+                "SubscribeWidgetEvents: no widget method called "+handlername;
+        };
+        // makeEventHandler:  arguments are (handlerUri, handlerFunc, initFunc, endFunc)
+        var handler = makeEventHandler(
+            evtyp+"_handler", MochiKit.Base.bind(handlername, widget), null, null);
+        WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
+    };
+
 };
 
 // --------------------
@@ -459,7 +507,7 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathTextClass = function
 // --- collector methods ---
 
 /**
- *  Function called when button is clicked - down, up, clicked.
+ *  Function called when widget is clicked - down, up, clicked.
  *
  *  The input is propagated as a MochiKit non-DOM signal.
  *
@@ -475,10 +523,10 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathTextClass = function
  */
 webbrick.widgets.GenericDomRenderer.prototype.domEventClicked = function 
         (signalname, eventmap, event) {
-    MochiKit.Logging.logDebug("SimpleButton.collector.domEventClicked");
+    MochiKit.Logging.logDebug("GenericDomRenderer.collector.domEventClicked");
     var eventtype = event.type();
     pubevent = eventmap[eventtype];
-    MochiKit.Logging.logDebug("SimpleButton.collector.domEventClicked: "+pubevent);
+    MochiKit.Logging.logDebug("GenericDomRenderer.collector.domEventClicked: "+pubevent);
     if (pubevent !== null) {
         MochiKit.Signal.signal(this, signalname, pubevent);
     };
@@ -486,9 +534,8 @@ webbrick.widgets.GenericDomRenderer.prototype.domEventClicked = function
 
 // TODO - define more collector base methods as required
 
-
 // -----------------------------------------------
-// Additional widget functions
+// Additional widget DOM renderer functions
 // -----------------------------------------------
 
 /**

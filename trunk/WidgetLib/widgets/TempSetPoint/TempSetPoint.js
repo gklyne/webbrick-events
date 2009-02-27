@@ -44,9 +44,17 @@ webbrick.widgets.TempSetPoint_Init = function (element) {
     MochiKit.Logging.logDebug("TempSetPoint_Init: extract parameters from DOM");
     var modelvals = webbrick.widgets.getWidgetValues
         (webbrick.widgets.TempSetPoint.initializeValues, element);
-
+    
     MochiKit.Logging.logDebug("TempSetPoint: create widget");
     var widget = new webbrick.widgets.TempSetPoint(modelvals, renderer, renderer);
+
+    // If defined, set default target value from attribute
+    // TODO: is there a better way to handle this as part of the initialize-from-DOM logic?
+    var deftgt = webbrick.widgets.getWidgetValue(element, "@DefaultTarget");
+    if (deftgt != null && deftgt != "") {
+        widget.setTargetValue(deftgt);
+    }
+    
     return widget;
 };
 
@@ -118,28 +126,12 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
     MochiKit.Logging.logDebug("TempSetPoint: connect model listeners");
     this._renderer.connectModel(this._model);
 
-    ////////////////////
-    // TODO: delete or enable this as appropriate
     // Connect controller input listeners to input collector
-    ////MochiKit.Logging.logDebug("TempSetPoint: connect input collector listeners");
-    ////MochiKit.Signal.connect(this._collector, 'Clicked', this, this.Clicked);
-    ////////////////////
+    // (DOM events are mapped to MochiKit signals by the input collector)
+    MochiKit.Logging.logDebug("TempSetPoint: connect input collector listeners");
+    MochiKit.Signal.connect(this._collector, 'BumpTarget', this, this.bumpTarget);
 
-    // Access widget event router
-    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
-
-    // TODO: Refactor this to common support code, with checks to catch non-existing methods 
-    // Subscribe handlers for incoming controller events
-    MochiKit.Logging.logDebug("TempSetPoint: subscribe controller events");
-    for (var i = 0 ; i<this._subscribes.length ; i++) {
-        var evtyp = this._model.get(this._subscribes[i][0]);
-        var evsrc = this._model.getDefault(this._subscribes[i][1], null);
-        // makeEventHandler  arguments are (handlerUri,handlerFunc,initFunc,endFunc)
-        var handler = makeEventHandler(
-            evtyp+"_handler", MochiKit.Base.bind(this._subscribes[i][2],this), null, null);
-        MochiKit.Logging.logDebug("TempSetPoint: subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
-        WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
-    };
+    webbrick.widgets.SubscribeWidgetEvents(this, this._model, this._subscribes);
 
     MochiKit.Logging.logDebug("TempSetPoint: initialized");
 };
@@ -234,6 +226,7 @@ webbrick.widgets.TempSetPoint.prototype.setModeTimer = function (val) {
  */
 webbrick.widgets.TempSetPoint.prototype.bumpTarget = function (delta) {
     MochiKit.Logging.logDebug("TempSetPoint.bumpTarget: "+delta);
+
     // If current displayed, switch to target
     if (this._model.get("MODE") == "current") {
         this.setModeTimer(5);
@@ -400,14 +393,11 @@ webbrick.widgets.TempSetPoint.initializeValues = {
 // --------------------------------------------
 
 /**
- *  Table to map DOM event types to signal parameter values for Input collector
+ *  Table to map button values to signal parameter values for the Input collector
  */
-webbrick.widgets.TempSetPoint.ClickTypeMap = {
-    click:      'click',
-    mousedown:  'down',
-    keydown:    'down',
-    mouseup:    'up',
-    keyup:      'up'
+webbrick.widgets.TempSetPoint.ButtonValueMap = {
+    Up:     +0.5,
+    Down:   -0.5
 };
 
 /**
@@ -429,9 +419,9 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
               ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
         SetModeModelListener:  
             [ 'setWidgetPathTextClass', webbrick.widgets.TempSetPoint.StateClass, 
-              ["SetPointBody", "SetPointDisplay", "SetPointState", "span"] ]
-        //WidgetClicked: 
-        //    ['domEventClicked', 'Clicked', webbrick.widgets.TempSetPoint.ClickTypeMap]
+              ["SetPointBody", "SetPointDisplay", "SetPointState", "span"] ],
+        ButtonClicked: 
+            ['domButtonClicked', 'BumpTarget', webbrick.widgets.TempSetPoint.ButtonValueMap]
         },
     // Define model listener connections
     renderModel: {
@@ -440,12 +430,14 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
         MODE:           'SetModeModelListener'
     },
     // Define DOM input event connections
+    // These map DOM events to renderer handler methods (cf. GenericDomRenderer),
+    // which may direct methods or indirectly defined via renderFundtions (above).
     collectDomInputs: {
-        //onclick:        'WidgetClicked',
-        //onmousedown:    'WidgetClicked',
-        //onmouseup:      'WidgetClicked',
-        //onkeydown:      'WidgetClicked',
-        //onkeyup:        'WidgetClicked'
+        onclick:        'ButtonClicked',
+        onmousedown:    'ButtonClicked',
+        onmouseup:      'ButtonClicked',
+        onkeydown:      'ButtonClicked',
+        onkeyup:        'ButtonClicked'
     }
 };
 
@@ -474,5 +466,49 @@ webbrick.widgets.TempSetPoint.renderer.prototype =
 webbrick.widgets.TempSetPoint.renderer.prototype.initialize = function() {
     this.processDefinition(webbrick.widgets.TempSetPoint.rendererDefinition, this._element);
 };
+
+/**
+ *  Button-click handler: need to determine which button was clicked
+ *
+ *  The input is propagated as a MochiKit non-DOM signal.
+ *
+ * @param   {String} signalname Name of signal to raise when event click occurs
+ * @param   {Object} valuemap   Maps button values to parameters that
+ *                              are provided with the propagated signal.
+ *                              No signal is generated for button values that
+ *                              do not appear in this table.
+ * @param   {Object} event      MochiKit custom event object corresponding to the
+ *                              incoming DOM event.
+ *
+ *  This function should be partially applied to name of signal to generate, an 
+ *  event type mapping table and a button mapping table to yield a usable DOM event 
+ *  handler function.
+ */
+webbrick.widgets.TempSetPoint.renderer.prototype.domButtonClicked = function 
+        (signalname, valuemap, event) {
+    MochiKit.Logging.logDebug("TempSetPoint.collector.domButtonClicked");
+
+    var eventtype = event.type();
+    MochiKit.Logging.logDebug("eventtype: "+eventtype);
+    if (eventtype == 'click') {
+        var elem = event.target();
+        var name = elem.nodeName;
+        MochiKit.Logging.logDebug("node name: "+name);
+        if (elem.nodeName.toLowerCase() == "button") {
+            var value = MochiKit.DOM.getNodeAttribute(elem, 'value');
+            MochiKit.Logging.logDebug("button value: "+value);
+            var sigparam = valuemap[value];
+            MochiKit.Logging.logDebug("signal parameter: "+sigparam);
+            if (sigparam != null) {
+                MochiKit.Signal.signal(this, signalname, sigparam);
+                event.stop();
+            };
+        }
+    };
+
+    // Allow event to propagate...
+};
+
+// TODO: hook up clock events
 
 // End.
