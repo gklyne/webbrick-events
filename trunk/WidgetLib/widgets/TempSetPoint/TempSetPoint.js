@@ -149,22 +149,40 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
 // Controller methods
 // ------------------
 
-webbrick.widgets.TempSetPoint.prototype.setCurrentValue = function (val) {
-    MochiKit.Logging.log("TempSetPoint.setCurrentValue: "+val);
+webbrick.widgets.TempSetPoint.prototype.convertValue = function(val, state) {
+    MochiKit.Logging.log("TempSetPoint.convertValue: "+val);
     if (typeof val == "number") {
         val = val.toFixed(1);
     }
-    var state = "unknown";
-    if (val.match(/^\s*\d+(.\d+)?\s*$/) != null) {
-        state = "current";        
-    } else {
+    if (val.match(/^\s*\d+(.\d+)?\s*$/) == null) {
+        state = "unknown";
     }
-    this._model.set("CURRENT",      val);
-    this._model.set("CURRENTSTATE", state);        
-    if (this._model.get("MODE") == "current") {
+    return {val:val, state:state};
+};
+
+webbrick.widgets.TempSetPoint.prototype.updateDisplay = function(mode, val, state) {
+    // Mode corresponds to a value that has changed
+    MochiKit.Logging.log("TempSetPoint.updateDisplay: "+val);
+    if (this._model.get("MODE") == mode) {
         this._model.set("DISPLAY",      val);
         this._model.set("DISPLAYSTATE", state);        
     }
+};
+
+webbrick.widgets.TempSetPoint.prototype.setCurrentValue = function (val) {
+    MochiKit.Logging.log("TempSetPoint.setCurrentValue: "+val);
+    var vs = this.convertValue(val, "current");
+    this._model.set("CURRENT",      vs.val);
+    this._model.set("CURRENTSTATE", vs.state);
+    this.updateDisplay("current", vs.val, vs.state);
+};
+
+webbrick.widgets.TempSetPoint.prototype.setTargetValue = function (val) {
+    MochiKit.Logging.log("TempSetPoint.setTargetValue: "+val);
+    var vs = this.convertValue(val, "target");
+    this._model.set("TARGET",      vs.val);
+    this._model.set("TARGETSTATE", vs.state);
+    this.updateDisplay("target", vs.val, vs.state);
 };
 
 // ------------------------------
