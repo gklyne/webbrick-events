@@ -87,8 +87,10 @@ webbrick.widgets.TestTempSetPoint.exposeTestFunctionNames = function() {
            , 'testModelSetMODETIMER'
            , 'testSetCurrentValueModel'
            , 'testSetCurrentValueRender'
-           //, 'testSetTarget'
+           , 'testSetTargetValueModel'
+           , 'testSetTargetValueRender'
            //, 'testSetMode'
+           //, 'testsetModeAndValues
            //, 'testSetCurrentEvent'
            //, 'testSetTargetEvent'
            //, 'testSetModeEvent'
@@ -707,10 +709,106 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueRender = function
     logDebug("testSetCurrentValueRender: complete");
 };
 
+/** 
+ *  Test set current value in model through widget controller method.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testSetTargetValueModel = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetTargetValueModel ====");
+
+    // Confirm initial values in model
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAY"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAYSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGETSTATE"),  "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODETIMER"),    0);
+
+    // Set new target value
+    this.widget.setTargetValue("11.1")
+
+    // Confirm updated values in model
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAY"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAYSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGET"),       "11.1");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGETSTATE"),  "target");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODETIMER"),    0);
+
+    // Set new target value as floating point number
+    this.widget.setTargetValue(22.2)
+
+    // Confirm updated values in model
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAY"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAYSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGET"),       "22.2");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGETSTATE"),  "target");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODETIMER"),    0);
+
+    // Set invalid target value
+    this.widget.setTargetValue("xx.x")
+
+    // Confirm updated values in model
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAY"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("DISPLAYSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueModel: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGET"),       "xx.x");
+    assertEq("testSetTargetValueModel: ", this.model.get("TARGETSTATE"),  "unknown");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODE"),         "current");
+    assertEq("testSetTargetValueModel: ", this.model.get("MODETIMER"),    0);
+
+    logDebug("testSetTargetValueModel: complete");
+};
+
+/** 
+ *  Test set current value in renderer through widget controller method.
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testSetTargetValueRender = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetTargetValueRender ====");
+
+    // Confirm initial values in renderer
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "??.?");
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-unknown");
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
+
+    // Set new current value
+    this.widget.setTargetValue("11.1")
+
+    // Confirm unchanged values in renderer
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "??.?");
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-unknown");
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetValueRender: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
+
+    logDebug("testSetTargetValueRender: complete");
+};
+
 // ------------------------------------------------------------------------
 // TODO:
-//, 'testSetTargetModel'
-//, 'testSetTargetRender'
 //, 'testSetModeModel'
 //, 'testSetModeRender'
 //, 'testSetCurrentEvent'
