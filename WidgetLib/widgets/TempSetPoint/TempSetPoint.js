@@ -149,7 +149,7 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
 // Controller methods
 // ------------------
 
-webbrick.widgets.TempSetPoint.prototype.convertValue = function(val, state) {
+webbrick.widgets.TempSetPoint.prototype.convertFloatToString = function(val, state) {
     MochiKit.Logging.log("TempSetPoint.convertValue: "+val);
     if (typeof val == "number") {
         val = val.toFixed(1);
@@ -157,7 +157,20 @@ webbrick.widgets.TempSetPoint.prototype.convertValue = function(val, state) {
     if (val.match(/^\s*\d+(.\d+)?\s*$/) == null) {
         state = "unknown";
     }
-    return {val:val, state:state};
+    return {value:val, state:state};
+};
+
+webbrick.widgets.TempSetPoint.prototype.convertStringToInt = function(val, state) {
+    MochiKit.Logging.log("TempSetPoint.convertValue: "+val);
+    if (typeof val == "string") {
+        if (val.match(/^\s*\d+\s*$/) != null) {
+            val = parseInt(val, 10);
+        };
+    };
+    if (typeof val != "integer") {
+            state = "unknown";
+    };
+    return {value:val, state:state};
 };
 
 webbrick.widgets.TempSetPoint.prototype.updateDisplay = function(mode, val, state) {
@@ -171,18 +184,42 @@ webbrick.widgets.TempSetPoint.prototype.updateDisplay = function(mode, val, stat
 
 webbrick.widgets.TempSetPoint.prototype.setCurrentValue = function (val) {
     MochiKit.Logging.log("TempSetPoint.setCurrentValue: "+val);
-    var vs = this.convertValue(val, "current");
-    this._model.set("CURRENT",      vs.val);
+    var vs = this.convertFloatToString(val, "current");
+    this._model.set("CURRENT",      vs.value);
     this._model.set("CURRENTSTATE", vs.state);
-    this.updateDisplay("current", vs.val, vs.state);
+    this.updateDisplay("current", vs.value, vs.state);
 };
 
 webbrick.widgets.TempSetPoint.prototype.setTargetValue = function (val) {
     MochiKit.Logging.log("TempSetPoint.setTargetValue: "+val);
-    var vs = this.convertValue(val, "target");
-    this._model.set("TARGET",      vs.val);
+    var vs = this.convertFloatToString(val, "target");
+    this._model.set("TARGET",      vs.value);
     this._model.set("TARGETSTATE", vs.state);
-    this.updateDisplay("target", vs.val, vs.state);
+    this.updateDisplay("target", vs.value, vs.state);
+};
+
+webbrick.widgets.TempSetPoint.prototype.setMode = function (val) {
+    MochiKit.Logging.log("TempSetPoint.setMode: "+val);
+    this._model.set("MODE", val);
+    var valmap = {
+        current: {valuename:"CURRENT", statename:"CURRENTSTATE"},
+        target:  {valuename:"TARGET",  statename:"TARGETSTATE"}
+        }
+    this.updateDisplay(val, 
+        this._model.get(valmap[val].valuename), 
+        this._model.get(valmap[val].statename)
+        );
+};
+
+webbrick.widgets.TempSetPoint.prototype.setModeTimer = function (val) {
+    MochiKit.Logging.log("TempSetPoint.setModeTimer: "+val);
+    this._model.set("MODETIMER", val);
+    var vs = this.convertStringToInt(val, "timer");
+    if (vs.value > 0 ) {
+        this.setMode("target");
+    } else {
+        this.setMode("current");
+    };
 };
 
 // ------------------------------
@@ -264,9 +301,9 @@ webbrick.widgets.TempSetPoint.modelDefinition = {
         "MODETIMER",                // seconds to display target value, or zero 
         "MODE",                     // display mode: current or target 
         // Static parameters:
-        "SetCurrentEvent",          // event type URI for setting current value
-        "SetTargetEvent",           // event type URI for setting target value
-        "SetModeEvent",             // event type URI for setting widget mode
+        "SetCurrentValueEvent",     // event type URI for setting current value
+        "SetTargetValueEvent",      // event type URI for setting target value
+        "SetTargetModeEvent",       // event type URI for setting widget mode
         "TargetChangeEvent",        // event type URI published when target is changed
         "TargetChangeSource",       // event source URI published when target is changed
         "ClockTickEvent"            // event type URI for clock tick
@@ -286,9 +323,9 @@ webbrick.widgets.TempSetPoint.modelDefinition = {
         TARGETSTATE:            "unknown",
         MODE:                   "current",
         MODETIMER:              0,
-        SetCurrentEvent:        "_TempSetPoint.SetCurrentEvent",
-        SetTargetEvent:         "_TempSetPoint.SetTargetEvent",
-        SetModeEvent:           "_TempSetPoint.SetModeEvent",
+        SetCurrentValueEvent:   "_TempSetPoint.SetCurrentValueEvent",
+        SetTargetValueEvent:    "_TempSetPoint.SetTargetValueEvent",
+        SetTargetModeEvent:     "_TempSetPoint.SetTargetModeEvent",
         TargetChangeEvent:      "_TempSetPoint.TargetChangeEvent",
         TargetChangeSource:     "_TempSetPoint.TargetChangeSource",
         ClockTickEvent:         "_TempSetPoint.ClockTickEvent_OverrideMe"
@@ -338,10 +375,12 @@ webbrick.widgets.TempSetPoint.initializeValues = {
     TARGETSTATE:                  
         [ webbrick.widgets.getWidgetPathClass, webbrick.widgets.TempSetPoint.StateClass, 
           ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
-    SetValueEvent:
-        [webbrick.widgets.getWidgetAttribute, "SetValueEvent"],
-    SetStateEvent:
-        [webbrick.widgets.getWidgetAttribute, "SetStateEvent"],
+    SetCurrentValueEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetCurrentValueEvent"],
+    SetTargetValueEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetTargetValueEvent"],
+    SetModeEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetModeEvent"],
     ClickEvent:
         [webbrick.widgets.getWidgetAttribute, "ClickEvent"],
     ClickSource:
