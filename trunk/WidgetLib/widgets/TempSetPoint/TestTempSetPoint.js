@@ -93,9 +93,9 @@ webbrick.widgets.TestTempSetPoint.exposeTestFunctionNames = function() {
            , 'testSetModeRender'
            , 'testSetModeTimerModel'
            , 'testSetModeTimerRender'
-           //, 'testSetCurrentValueEvent'
-           //, 'testSetTargetValueEvent'
-           //, 'testSetModeEvent'
+           , 'testSetCurrentValueEvent'
+           , 'testSetTargetValueEvent'
+           , 'testSetTargetModeEvent'
            ];
 }
 
@@ -1003,42 +1003,19 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetModeTimerRender = function() 
     logDebug("testSetModeTimerRender: complete");
 };
 
-
-// ------------------------------------------------------------------------
-// TODO:
-//, 'testSetCurrentEvent'
-//, 'testSetTargetEvent'
-//, 'testSetModeEvent'
-//------------------------------------------------------------------------
-
 /** 
- *  Publish event helper function
- *
- *  Returns a deferred status value.
- */
-// TODO: refactor this to common library code
-webbrick.widgets.TestTempSetPoint.prototype.publishEvent = function 
-        (evtype, payload) {
-    logDebug("publishEvent: evtype: "+evtype+", payload: "+payload);
-    var source = makeEventAgent("testSetStateEvent");
-    logDebug("publishEvent: source: "+source);
-    var event  = makeEvent(evtype, "testSetStateEvent", payload);
-    logDebug("publishEvent: event: "+event);
-    var sts = this.router.publish(source, event);
-    logDebug("publishEvent: sts: "+sts);
-    var sts = syncDeferred(sts);
-    logDebug("publishEvent: syncDeferred(sts): "+sts);
-    return sts;
-}
-
-
-
-/** 
- *  Test set current value in renderer through widget controller method.
+ *  Test set current value in renderer through event publication
  */
 webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function() {
     logInfo("==== webbrick.widgets.TestTempSetPoint.testSetCurrentValueEvent ====");
-    var setValueEvent = this.model.get("SetValueEvent");
+    var setValueEvent = this.model.get("SetCurrentValueEvent");
+    var sourceIdent   = "testSetCurrentValueEvent";
+    
+    // Confirm initial values in model
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGETSTATE"),  "unknown");
     
     // Confirm initial values in renderer
     assertEq("testSetCurrentValueEvent: ", 
@@ -1055,9 +1032,15 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
             "tempsetpoint-current");
 
     // Set new current value
-    logDebug("testSetValueEvent: setting current value to '11.1'");
-    var sts = this.publishEvent(setValueEvent, "11.1");
-
+    logDebug("testSetCurrentValueEvent: setting current value to '11.1'");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "11.1");
+    
+    // Confirm updated values in model
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENT"),      "11.1");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENTSTATE"), "current");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGETSTATE"),  "unknown");
+    
     // Confirm updated values in renderer
     assertEq("testSetCurrentValueEvent: ", 
             webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
@@ -1073,7 +1056,14 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
             "tempsetpoint-current");
 
     // Set new current value as floating point number
-    this.widget.setCurrentValue(22.2);
+    logDebug("testSetCurrentValueEvent: setting current value to 22.2");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, 22.2);
+    
+    // Confirm updated values in model
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENT"),      "22.2");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENTSTATE"), "current");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGETSTATE"),  "unknown");
 
     // Confirm updated values in renderer
     assertEq("testSetCurrentValueEvent: ", 
@@ -1090,7 +1080,14 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
             "tempsetpoint-current");
 
     // Set invalid current value
-    this.widget.setCurrentValue("xx.x");
+    logDebug("testSetCurrentValueEvent: setting current value to 'xx.x'");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "xx.x");
+    
+    // Confirm updated values in model
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENT"),      "xx.x");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetCurrentValueEvent: ", this.model.get("TARGETSTATE"),  "unknown");
 
     // Confirm updated values in renderer
     assertEq("testSetCurrentValueEvent: ", 
@@ -1109,117 +1106,169 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
     logDebug("testSetCurrentValueEvent: complete");
 };
 
-
-
-
-
-
-
-
 /** 
- *  Test set state by publishing event
- *
- *  Expect model and element class to be updated each time.
+ *  Test set target value in renderer through event publication
  */
-webbrick.widgets.TestTempSetPoint.prototype.testSetStateEvent = function() {
-    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetStateEvent ====");
-    var setStateEvent = this.model.get("SetStateEvent");
+webbrick.widgets.TestTempSetPoint.prototype.testSetTargetValueEvent = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetTargetValueEvent ====");
+    var setValueEvent = this.model.get("SetTargetValueEvent");
+    var sourceIdent   = "testSetTargetValueEvent";
+    
+    // Confirm initial values in model
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGET"),       "??.?");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGETSTATE"),  "unknown");
+    
+    // Confirm initial values in renderer
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "??.?");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-unknown");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
 
-    // Confirm initial element class
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "unknown");
-    assertEq("testSetStateEvent", null, this.compareElementClass("TempSetPoint_unknown"));
+    // Set new target value
+    logDebug("testSetTargetValueEvent: setting current value to '11.1'");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "11.1");
+    
+    // Confirm updated values in model
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGET"),       "11.1");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGETSTATE"),  "target");
+    
+    // Confirm unchanged values in renderer
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "??.?");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-unknown");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
 
-    // Test for invalid state
-    logDebug("test invalid state raises error");
-    var sts = this.publishEvent(setStateEvent, "invalid");
-    logDebug("testSetStateEvent: Set invalid state");
-    logDebug("sts "+sts);
-    assertEquals("testSetStateEvent: publishEvent", typeof(sts), "object");
-    assertEquals("testSetStateEvent: publishEvent", sts.constructor, Error);
-    assertEquals("testSetStateEvent: publishEvent", sts.name, "InvalidPropertyValuePairError");
-    assertEquals("testSetStateEvent: publishEvent", sts.message, "Invalid property-value pair, property name: STATE, property value: invalid");
+    // Set new target value as floating point number
+    logDebug("testSetTargetValueEvent: setting current value to 22.2");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, 22.2);
+    
+    // Confirm updated values in model
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGET"),       "22.2");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGETSTATE"),  "target");
 
-    // Retest initial element class - should be set to unknown after invalid value
-    assertEq("testSetStateEvent: invalid", this.model.get("STATE"), "unknown");
-    assertEq("testSetStateEvent", null, this.compareElementClass("TempSetPoint_unknown"));
+    // Confirm unchanged values in renderer
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "??.?");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-unknown");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
 
-    // Test setting state to "normal"
-    logDebug("testSetStateEvent: setting state to 'normal'");
-    var sts = this.publishEvent(setStateEvent, "normal");
-    assertEquals("testSetStateEvent: publishEvent(normal) sts", sts, StatusVal.OK);
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "normal");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "TempSetPoint value here");
-    assertEq("testSetStateEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "TempSetPoint value here");
-    //////////////////////////
-    assertEq("testSetStateEvent", null, this.compareElementClass("TempSetPoint_normal"));
+    // Set invalid current value
+    logDebug("testSetValueEvent: setting current value to 'xx.x'");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "xx.x");
+    
+    // Confirm updated values in model
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENT"),      "??.?");
+    assertEq("testSetTargetValueEvent: ", this.model.get("CURRENTSTATE"), "unknown");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGET"),       "xx.x");
+    assertEq("testSetTargetValueEvent: ", this.model.get("TARGETSTATE"),  "unknown");
 
-    // Test setting state to "pending"
-    logDebug("testSetStateEvent: setting state to 'pending'");
-    var sts = this.publishEvent(setStateEvent, "pending");
-    assertEquals("testSetStateEvent: publishEvent(pending) sts", sts, StatusVal.OK);
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "pending");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "TempSetPoint value here");
-    assertEq("testSetStateEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "TempSetPoint value here");
-    //////////////////////////
-    assertEq("testSetStateEvent", null, this.compareElementClass("TempSetPoint_pending"));
+    // Confirm unchanged values in renderer
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "??.?");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-unknown");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetValueEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
 
-    // Test setting state to "unknown"
-    logDebug("testSetStateEvent: setting state to 'unknown'");
-    var sts = this.publishEvent(setStateEvent, "unknown");
-    assertEquals("testSetStateEvent: publishEvent(unknown) sts", sts, StatusVal.OK);
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "unknown");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "TempSetPoint value here");
-    assertEq("testSetStateEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "TempSetPoint value here");
-    //////////////////////////
-    assertEq("testSetStateEvent", null, this.compareElementClass("TempSetPoint_unknown"));
-
-    logDebug("testSetStateEvent: complete");
+    logDebug("testSetTargetValueEvent: complete");
 };
 
 /** 
- *  Test set value by publishing event
+ *  Test set mode timer in renderer through widget controller method.
  */
-webbrick.widgets.TestTempSetPoint.prototype.testSetValueEvent = function() {
-    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetValueEvent ====");
-    var setValueEvent = this.model.get("SetValueEvent");
+webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() {
+    logInfo("==== webbrick.widgets.TestTempSetPoint.testSetTargetModeEvent ====");
+    var setModeEvent = this.model.get("SetTargetModeEvent");
+    var sourceIdent  = "testSetTargetModeEvent";
 
-    // Test initial element value
-    logDebug("testSetValueEvent: initial element value: "+webbrick.widgets.getElementText(this.elem));
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "TempSetPoint value here");
-    assertEq("testSetValueEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "TempSetPoint value here");
-    //////////////////////////
-
-    //////////////////////////
-    //// TODO: adjust as needed
-    // Test set new element value
-    logDebug("testSetValueEvent: setting text to 'new value'");
-    var sts = this.publishEvent(setValueEvent, "new value");
-    logDebug("testSetValueEvent: sts: "+sts);
-    logDebug("testSetValueEvent: new element value: "+webbrick.widgets.getElementText(this.elem));
-    assertEq("testSetValueEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "new value");
-    ////logDebug("set new element value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
-    ////assertEq("testSetValue: value",  
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "new value");
-    //////////////////////////
+    // Initialize and confirm initial values in renderer
+    this.widget.setCurrentValue("11.1");
+    this.widget.setTargetValue("22.2");
     
-    logDebug("testSetValueEvent: complete");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "11.1");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-current");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
+
+    // Set new mode and confirm updated values in renderer
+    logDebug("testSetTargetModeEvent: setting target mode timer to 5");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 5);
+
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "22.2");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-target");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "target");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-target");
+
+    // Set new mode and confirm updated values in renderer
+    logDebug("testSetTargetModeEvent: setting target mode timer to 0");
+    var sts = webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 0);
+
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointValue','span']), 
+            "11.1");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointValue','span'], 'class'), 
+            "tempsetpoint-current");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getElementTextByTagPath(this.elem, ['SetPointState','span']), 
+            "current");
+    assertEq("testSetTargetModeEvent: ", 
+            webbrick.widgets.getAttributeByTagPath(this.elem, ['SetPointState','span'], 'class'), 
+            "tempsetpoint-current");
+    
+    logDebug("testSetTargetModeEvent: complete");
 };
 
 //        1         2         3         4         5         6         7         8
