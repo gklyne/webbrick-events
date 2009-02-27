@@ -96,9 +96,9 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
      *   the name of the event handler method of this object to be subscribed.
      */
     this._subscribes = [
-        ["SetCurrentEvent", null, "SetCurrentEventHandler"],
-        ["SetTargetEvent",  null, "SetTargetEventHandler"],
-        ["SetModeEvent",    null, "SetModeEventHandler"],
+        ["SetCurrentValueEvent", null, "SetCurrentValueEventHandler"],
+        ["SetTargetValueEvent",  null, "SetTargetValueEventHandler"],
+        ["SetTargetModeEvent",   null, "SetTargetModeEventHandler"],
         ////["ClockTickEvent",  null, "ClockTickEventHandler"],
         ////["SetYYYEvent",  null, "SetYYYEventHandler"],
     ];    
@@ -132,15 +132,15 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
     // TODO: Refactor this to common support code, with checks to catch non-existing methods 
     // Subscribe handlers for incoming controller events
     MochiKit.Logging.logDebug("TempSetPoint: subscribe controller events");
-    //for (var i = 0 ; i<this._subscribes.length ; i++) {
-    //    var evtyp = this._model.get(this._subscribes[i][0]);
-    //    var evsrc = this._model.getDefault(this._subscribes[i][1], null);
-    //    // makeEventHandler  arguments are (handlerUri,handlerFunc,initFunc,endFunc)
-    //    var handler = makeEventHandler(
-    //        evtyp+"_handler", MochiKit.Base.bind(this._subscribes[i][2],this), null, null);
-    //    MochiKit.Logging.logDebug("TempSetPoint: subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
-    //    WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
-    //}
+    for (var i = 0 ; i<this._subscribes.length ; i++) {
+        var evtyp = this._model.get(this._subscribes[i][0]);
+        var evsrc = this._model.getDefault(this._subscribes[i][1], null);
+        // makeEventHandler  arguments are (handlerUri,handlerFunc,initFunc,endFunc)
+        var handler = makeEventHandler(
+            evtyp+"_handler", MochiKit.Base.bind(this._subscribes[i][2],this), null, null);
+        MochiKit.Logging.logDebug("TempSetPoint: subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
+        WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
+    };
 
     MochiKit.Logging.logDebug("TempSetPoint: initialized");
 };
@@ -252,33 +252,29 @@ webbrick.widgets.TempSetPoint.prototype.Clicked = function (inputtype) {
 // Incoming controller event handlers
 // ----------------------------------
 
-////////////////////
-// TODO: These functions will need removing or adjusting to match the widget capabilities
-// These functions support a common pattern of simple VALUE and STATE values in themodel
-////////////////////
-
 /**
  *  Incoming event handler for setting the current value
  */
-webbrick.widgets.TempSetPoint.prototype.SetValueEventHandler = function (handler, event) {
-    MochiKit.Logging.logDebug("TempSetPoint.SetValueEventHandler: "+event.getPayload());
-    this._model.set("VALUE", event.getPayload());
+webbrick.widgets.TempSetPoint.prototype.SetCurrentValueEventHandler = function (handler, event) {
+    MochiKit.Logging.logDebug("TempSetPoint.SetCurrentValueEventHandler: "+event.getPayload());
+    this.setCurrentValue(event.getPayload());
 };
 
 /**
- *  Incoming event handler for setting the widget state.
+ *  Incoming event handler for setting the target value
  */
-webbrick.widgets.TempSetPoint.prototype.SetStateEventHandler = function (handler, event) {
-    MochiKit.Logging.logDebug("TempSetPoint.SetStateEventHandler: "+event.getPayload());
-    try {
-        this._model.set("STATE", event.getPayload());
-    } catch(e) {
-        if (e.name == "InvalidPropertyValuePairError") {
-            this._model.set("STATE", "unknown");
-        };
-        throw e;
-    };
-}
+webbrick.widgets.TempSetPoint.prototype.SetTargetValueEventHandler = function (handler, event) {
+    MochiKit.Logging.logDebug("TempSetPoint.SetTargetValueEventHandler: "+event.getPayload());
+    this.setTargetValue(event.getPayload());
+};
+
+/**
+ *  Incoming event handler for setting the target mode timer
+ */
+webbrick.widgets.TempSetPoint.prototype.SetTargetModeEventHandler = function (handler, event) {
+    MochiKit.Logging.logDebug("TempSetPoint.SetTargetModeEventHandler: "+event.getPayload());
+    this.setModeTimer(event.getPayload());
+};
 
 // ----------------
 // Model definition
