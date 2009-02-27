@@ -99,8 +99,7 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
         ["SetCurrentValueEvent", null, "SetCurrentValueEventHandler"],
         ["SetTargetValueEvent",  null, "SetTargetValueEventHandler"],
         ["SetTargetModeEvent",   null, "SetTargetModeEventHandler"],
-        ////["ClockTickEvent",  null, "ClockTickEventHandler"],
-        ////["SetYYYEvent",  null, "SetYYYEventHandler"],
+        ["ClockTickEvent",       null, "ClockTickEventHandler"],
     ];    
 
     // ---- Initialize ----
@@ -226,26 +225,28 @@ webbrick.widgets.TempSetPoint.prototype.setModeTimer = function (val) {
 // Input collector event handlers
 // ------------------------------
 
-////////////////////
-// TODO: delete this function if there are no user input events.
-////////////////////
-
 /**
- *  Function called when widget is clicked (down, up, clicked)
+ *  Function called when widget buttons are clicked to increase or deacrease 
+ *  the target value.
  *
- * @param {String}      inputtype   a string value that indicates the type of 
- *                      click event (e.g. 'up', 'down', etc.).  See also
- *                      the DOM event mapping table at 'ClickTypeMap' below. 
+ * @param {Float}      delta    a posotove opr negative amount by which the 
+ *                              target value is to be changed.
  */
-webbrick.widgets.TempSetPoint.prototype.Clicked = function (inputtype) {
-    MochiKit.Logging.logDebug("TempSetPoint.Clicked: "+inputtype);
-    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
-    var Event  = makeEvent(this._model.get("YYYClickEvent"), 
-                           this._model.get("YYYClickSource"), 
-                           inputtype);
-    var Source = makeEventAgent(this._model.get("YYYClickSource"));
-    MochiKit.Logging.logDebug("TempSetPoint.Clicked: Source: "+Source+", Event: "+Event);
-    WidgetEventRouter.publish(Source, Event);
+webbrick.widgets.TempSetPoint.prototype.bumpTarget = function (delta) {
+    MochiKit.Logging.logDebug("TempSetPoint.bumpTarget: "+delta);
+    // If current displayed, switch to target
+    if (this._model.get("MODE") == "current") {
+        this.setModeTimer(5);
+        return;
+    };
+
+    // If target is defined, bump value
+    if (this._model.get("TARGETSTATE") == "target") {
+        var target = parseFloat(this._model.get("TARGET"));
+        if (isFinite(target)) {
+            this.setTargetValue(target+delta);
+        };
+    };
 };
 
 // ----------------------------------
@@ -274,6 +275,17 @@ webbrick.widgets.TempSetPoint.prototype.SetTargetValueEventHandler = function (h
 webbrick.widgets.TempSetPoint.prototype.SetTargetModeEventHandler = function (handler, event) {
     MochiKit.Logging.logDebug("TempSetPoint.SetTargetModeEventHandler: "+event.getPayload());
     this.setModeTimer(event.getPayload());
+};
+
+/**
+ *  Incoming event handler for clock ticks
+ */
+webbrick.widgets.TempSetPoint.prototype.ClockTickEventHandler = function (handler, event) {
+    MochiKit.Logging.logDebug("TempSetPoint.ClockTickEventHandler: ");
+    var timer = this._model.get("MODETIMER");
+    if (timer > 0) {
+        this.setModeTimer(timer-1);
+    };
 };
 
 // ----------------
