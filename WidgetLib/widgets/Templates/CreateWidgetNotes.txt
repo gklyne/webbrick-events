@@ -28,3 +28,11 @@
     (a) create a test case for rendered response to the event
     (b) implement the logic to respond to the event
     (c) ensure test cases pass
+13. For each  input events
+    (a) design a controller method to handle it
+    (b) create a test case for model and/or rendered response to the event
+    (c) implement the logic to handle the event
+    (d) ensure test cases pass
+    (e) define an input collector signal to handle the event
+    (f) connect DOM input to the collector
+    (g) connect the collector signal to the widget controller handler
