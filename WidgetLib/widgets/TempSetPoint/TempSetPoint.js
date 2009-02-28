@@ -1,6 +1,6 @@
 /**
  * @fileoverview
- * Module providing logic for TempSetPoint widget to generate and respond to events.
+ * Module providing logic for temperature set point widget to generate and respond to events.
  *
  * @version $Id$
  * @author Graham Klyne
@@ -122,6 +122,11 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
     MochiKit.Logging.logDebug("TempSetPoint: populate model");
     this._model.swap(modelvals);
 
+    // Add clock tick event value to model
+    var clockevent = webbrick.widgets.startClock();
+    MochiKit.Logging.logDebug("TempSetPoint: clockevent: "+clockevent[0]);
+    this._model.set("ClockTickEvent", clockevent[0]);
+
     // Connect model change listeners to renderer methods
     MochiKit.Logging.logDebug("TempSetPoint: connect model listeners");
     this._renderer.connectModel(this._model);
@@ -238,6 +243,7 @@ webbrick.widgets.TempSetPoint.prototype.bumpTarget = function (delta) {
         var target = parseFloat(this._model.get("TARGET"));
         if (isFinite(target)) {
             this.setTargetValue(target+delta);
+            // TODO: publish event
         };
     };
 };
@@ -508,7 +514,5 @@ webbrick.widgets.TempSetPoint.renderer.prototype.domButtonClicked = function
 
     // Allow event to propagate...
 };
-
-// TODO: hook up clock events
 
 // End.
