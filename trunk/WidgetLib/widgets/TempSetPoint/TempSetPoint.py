@@ -27,11 +27,11 @@ class TempSetPoint(FormField):
         >
           <SetPointBody>
             <SetPointDisplay class="${SetPointValue_class}">
-              <SetPointValue>
-                <span class="${SetPointValue_class}" py:content="'??.?'">??.?</span>
+              <SetPointValue class="${SetPointValue_class}" py:content="'??.?'">
+                ??.?
               </SetPointValue>
-              <SetPointState>
-                <span class="${SetPointState_class}" py:content="'current'">current</span>
+              <SetPointState class="${SetPointState_class}" py:content="'current'">
+                current
               </SetPointState>
             </SetPointDisplay>
             <SetPointButtons>

@@ -242,7 +242,7 @@ webbrick.widgets.getWidgetEventRouter = function () {
 /** 
  *  Publish event helper function
  *
- *  Returns a status value extracted from the Deferred return value from publish. 
+ *  Returns a deferred status value from publishing the event. 
  */
 webbrick.widgets.publishEvent = function(sourceid, evtype, payload) {
     logDebug("publishEvent: evtype: "+evtype+", payload: "+payload);
@@ -252,8 +252,6 @@ webbrick.widgets.publishEvent = function(sourceid, evtype, payload) {
     logDebug("publishEvent: event: "+event);
     var sts = webbrick.widgets.getWidgetEventRouter().publish(source, event);
     logDebug("publishEvent: sts: "+sts);
-    sts = syncDeferred(sts);
-    logDebug("publishEvent: syncDeferred(sts): "+sts);
     return sts;
 };
 
