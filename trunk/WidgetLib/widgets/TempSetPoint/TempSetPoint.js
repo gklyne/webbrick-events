@@ -242,8 +242,12 @@ webbrick.widgets.TempSetPoint.prototype.bumpTarget = function (delta) {
     if (this._model.get("TARGETSTATE") == "target") {
         var target = parseFloat(this._model.get("TARGET"));
         if (isFinite(target)) {
-            this.setTargetValue(target+delta);
-            // TODO: publish event
+            target += delta;
+            this.setTargetValue(target);
+            webbrick.widgets.publishEvent(
+                this._model.get("TargetChangeSource"),
+                this._model.get("TargetChangeEvent"),
+                target);
         };
     };
 };
