@@ -54,6 +54,9 @@ webbrick.widgets.TempSetPoint_Init = function (element) {
     if (deftgt != null && deftgt != "") {
         widget.setTargetValue(deftgt);
     }
+
+    // Initialize display state
+    widget.setModeTimer(0);
     
     return widget;
 };
@@ -150,9 +153,12 @@ webbrick.widgets.TempSetPoint.prototype.convertFloatToString = function(val, sta
     if (typeof val == "number") {
         val = val.toFixed(1);
     }
-    if (val.match(/^\s*\d+(.\d+)?\s*$/) == null) {
+    if (val.match(/^\s*\d+(.\d+)?\s*$/) != null) {
+        val = parseFloat(val);
+        val = val.toFixed(1);
+    } else {
         state = "unknown";
-    }
+    };
     return {value:val, state:state};
 };
 
@@ -232,11 +238,14 @@ webbrick.widgets.TempSetPoint.prototype.setModeTimer = function (val) {
 webbrick.widgets.TempSetPoint.prototype.bumpTarget = function (delta) {
     MochiKit.Logging.logDebug("TempSetPoint.bumpTarget: "+delta);
 
-    // If current displayed, switch to target
+    // If current displayed, switch to target and exit
     if (this._model.get("MODE") == "current") {
         this.setModeTimer(5);
         return;
     };
+
+    // Reset mode timer
+    this.setModeTimer(5);
 
     // If target is defined, bump value
     if (this._model.get("TARGETSTATE") == "target") {
@@ -284,7 +293,7 @@ webbrick.widgets.TempSetPoint.prototype.SetTargetModeEventHandler = function (ha
  *  Incoming event handler for clock ticks
  */
 webbrick.widgets.TempSetPoint.prototype.ClockTickEventHandler = function (handler, event) {
-    MochiKit.Logging.logDebug("TempSetPoint.ClockTickEventHandler: ");
+    //MochiKit.Logging.logDebug("TempSetPoint.ClockTickEventHandler: ");
     var timer = this._model.get("MODETIMER");
     if (timer > 0) {
         this.setModeTimer(timer-1);
@@ -361,6 +370,19 @@ webbrick.widgets.TempSetPoint.StateClass = {
     };
 
 /**
+ * Table for mapping model STATE value to display text
+ *
+ * See also modelDefinition.controlledValues above.
+ *
+ * This is used by the DOM renderer.
+ */
+webbrick.widgets.TempSetPoint.StateText = {
+        current:    'current',
+        target:     'set point',
+        unknown:    '(unknown)'
+    };
+
+/**
  *  Dictionary used to initialize a model from DOM element, used with
  *  function webbrick.widgets.getWidgetValues (defined in MvcUtils).     
  *  
@@ -390,8 +412,8 @@ webbrick.widgets.TempSetPoint.initializeValues = {
         [webbrick.widgets.getWidgetAttribute, "SetCurrentValueEvent"],
     SetTargetValueEvent:
         [webbrick.widgets.getWidgetAttribute, "SetTargetValueEvent"],
-    SetModeEvent:
-        [webbrick.widgets.getWidgetAttribute, "SetModeEvent"],
+    SetTargetModeEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetTargetModeEvent"],
     ClickEvent:
         [webbrick.widgets.getWidgetAttribute, "ClickEvent"],
     ClickSource:
@@ -422,14 +444,26 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
     // Define functions used by other parts of the renderer definition
     renderFunctions: {
         SetDisplayModelListener:  
-            [ 'setWidgetPathText', 
+            [ 'setWidgetPathText', null,
               ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
         SetDisplayStateModelListener: 
-            [ 'setWidgetPathClass', webbrick.widgets.TempSetPoint.StateClass, 
+            [ 'doMultipleListenerFunctions', 
+              ["setSetPointValueClass", "setSetPointDisplayClass"] ],
+        SetModeModelListener:
+            [ 'doMultipleListenerFunctions', 
+              ["setSetPointStateValue", "setSetPointStateClass"] ],
+        setSetPointValueClass:
+            [ 'setWidgetPathClass', webbrick.widgets.TempSetPoint.StateClass,
               ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
-        SetModeModelListener:  
-            [ 'setWidgetPathTextClass', webbrick.widgets.TempSetPoint.StateClass, 
+        setSetPointStateValue:
+            [ 'setWidgetPathText', webbrick.widgets.TempSetPoint.StateText,
               ["SetPointBody", "SetPointDisplay", "SetPointState"] ],
+        setSetPointStateClass:
+            [ 'setWidgetPathClass', webbrick.widgets.TempSetPoint.StateClass,
+              ["SetPointBody", "SetPointDisplay", "SetPointState"] ],
+        setSetPointDisplayClass:
+            [ 'setWidgetPathClass', webbrick.widgets.TempSetPoint.StateClass,
+              ["SetPointBody", "SetPointDisplay"] ],              
         ButtonClicked: 
             ['domButtonClicked', 'BumpTarget', webbrick.widgets.TempSetPoint.ButtonValueMap]
         },
@@ -443,11 +477,12 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
     // These map DOM events to renderer handler methods (cf. GenericDomRenderer),
     // which may direct methods or indirectly defined via renderFundtions (above).
     collectDomInputs: {
-        onclick:        'ButtonClicked',
-        onmousedown:    'ButtonClicked',
-        onmouseup:      'ButtonClicked',
-        onkeydown:      'ButtonClicked',
-        onkeyup:        'ButtonClicked'
+        // TODO: remove surplus events
+        onclick:        'ButtonClicked'
+        //onmousedown:    'ButtonClicked',
+        //onmouseup:      'ButtonClicked',
+        //onkeydown:      'ButtonClicked',
+        //onkeyup:        'ButtonClicked'
     }
 };
 
@@ -474,7 +509,13 @@ webbrick.widgets.TempSetPoint.renderer.prototype =
  *  Initialize the renderer object by processing the renderer/collector definition.
  */
 webbrick.widgets.TempSetPoint.renderer.prototype.initialize = function() {
+    // Initialize class values
+    webbrick.widgets.setAttributeByTagPath(this._element, ["SetPointDisplay"], "class", "");
+    webbrick.widgets.setAttributeByTagPath(this._element, ["SetPointValue"],   "class", "");
+    webbrick.widgets.setAttributeByTagPath(this._element, ["SetPointState"],   "class", "");
+    // Create functions and connect DOM events
     this.processDefinition(webbrick.widgets.TempSetPoint.rendererDefinition, this._element);
+    // Further DOM initialization is performed when the widget is initialized 
 };
 
 /**

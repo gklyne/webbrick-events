@@ -346,9 +346,11 @@ webbrick.widgets.GenericDomRenderer.prototype.processDefinition = function
             throw Error("ValueDefinitionError", msg);
         }
         if (fd.length == 2) {
+            logDebug("- bind render method "+fn+" to "+fd[0]+" with 1 arg: "+fd[1]);
             this[fn] = MochiKit.Base.bind(fd[0],this,fd[1]);
         }
         else if (fd.length == 3) {
+            logDebug("- bind render method "+fn+" to "+fd[0]+" with 2 args: "+fd[1]+", "+fd[2]);
             this[fn] = MochiKit.Base.bind(fd[0],this,fd[1],fd[2]);
         }
     };
@@ -414,9 +416,6 @@ webbrick.widgets.GenericDomRenderer.prototype.setAttributeValue = function
  * @param   {String} propname       name of the changed model property
  * @param   {any} oldvalue          previous value of the changed model property
  * @param   {any} newvalue          new value of the changed model property
- *
- *  This function should be partially applied to name of attribute to yield a usable
- *  model listener function.
  */
 webbrick.widgets.GenericDomRenderer.prototype.setElementText = function 
         (unused, model, propname, oldvalue, newvalue) {
@@ -452,6 +451,8 @@ webbrick.widgets.GenericDomRenderer.prototype.setClassMapped = function
  *  Listener sets content of element located by a path of tag names from
  *  the widget base element.
  *
+ * @param   {Object} valuemap       an object used as a dictionary to map model values
+ *                                  to displayed text values
  * @param   {Array} path            a list of tag names defining a path from the
  *                                  widget base to the required sub-element.
  * @param   {GenericModel} model    the widget model being rendered
@@ -463,11 +464,37 @@ webbrick.widgets.GenericDomRenderer.prototype.setClassMapped = function
  *  to yield a model listener function.
  */
 webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathText = function 
-        (path, model, propname, oldvalue, newvalue) {
+        (valuemap, path, model, propname, oldvalue, newvalue) {
     logDebug("GenericDomRenderer.setWidgetPathText: newvalue: "+newvalue+", oldvalue: "+oldvalue);
     elem = webbrick.widgets.getElementByTagPath(this._elem, path);
     if (elem != null) {
+        if (valuemap != null) {
+            newvalue = valuemap[newvalue];
+        };
         webbrick.widgets.setElementText(elem, newvalue);
+    };
+};
+
+/**
+ *  Listener sets content of element located by a path of tag names from
+ *  the widget base element.
+ *
+ * @param   {Array} path            a list of tag names defining a path from the
+ *                                  widget base to the required sub-element.
+ * @param   {GenericModel} model    the widget model being rendered
+ * @param   {String} propname       name of the changed model property
+ * @param   {any} oldvalue          previous value of the changed model property
+ * @param   {any} newvalue          new value of the changed model property
+ *
+ *  This function should be partially applied to the path and attribute name
+ *  parameters to yield a model listener function.
+ */
+webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathAttribute = function 
+        (path, attr, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.setWidgetPathAttribute: newvalue: "+newvalue+", oldvalue: "+oldvalue);
+    elem = webbrick.widgets.getElementByTagPath(this._elem, path);
+    if (elem != null) {
+        MochiKit.DOM.setNodeAttribute(elem, attribute, newvalue);
     };
 };
 
@@ -500,10 +527,36 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathClass = function
     };
 };
 
-webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathTextClass = function 
-        (valuemap, path, model, propname, oldvalue, newvalue) {
-   this.setWidgetPathText(path, model, propname, oldvalue, newvalue);
-   this.setWidgetPathClass(valuemap, path, model, propname, oldvalue, newvalue);
+//webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathTextClass = function 
+//        (valuemap, path, model, propname, oldvalue, newvalue) {
+//   this.setWidgetPathText(path, model, propname, oldvalue, newvalue);
+//   this.setWidgetPathClass(valuemap, path, model, propname, oldvalue, newvalue);
+//};
+
+/**
+ *  Listener function to invoke multiple listener functions for a single event
+ *
+ * @param   {Array} functions       a list of method names that are to be invoked
+ * @param   {GenericModel} model    the widget model being rendered
+ * @param   {String} propname       name of the changed model property
+ * @param   {any} oldvalue          previous value of the changed model property
+ * @param   {any} newvalue          new value of the changed model property
+ *
+ *  This function should be partially applied to the path parameter 
+ *  to yield a model listener function.
+ */
+webbrick.widgets.GenericDomRenderer.prototype.doMultipleListenerFunctions = function 
+        (functions, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.doMultipleListenerFunctions: newvalue: "+newvalue+", oldvalue: "+oldvalue);
+    for (i in functions) {
+        fnam = functions[i];
+        logDebug("- fnam: "+fnam);
+        if (typeof this[fnam] != "function") {
+            logError(fnam+" is not a renderer method"); 
+            throw "ValueError", fnam+" is not a renderer method"; 
+        }
+        this[fnam](model, propname, oldvalue, newvalue);
+    };
 };
 
 // TODO - define more renderer base methods as required
@@ -720,17 +773,16 @@ webbrick.widgets.getWidgetValues = function(valueDefs, elem) {
  * @return  (String*}           null if only the expected value is present, 
  *                              or a list of unexpected class values found.
  */
-webbrick.widgets.testClassValues = function(elem,expected,trials) {
+webbrick.widgets.testClassValues = function(elem, expected, trials) {
     var mismatch = [];
-    var result   = null;
     for (var i = 0 ; i <trials.length ; i++) {
         var c = MochiKit.DOM.hasElementClass(elem, trials[i]);
         if (c != ( trials[i] == expected ) ) {
             mismatch.push(trials[i]);
-            result = mismatch;
         }
     }
-    return result;
+    if (mismatch.length > 0) return mismatch;
+    return null;     
 };
 
 // End.

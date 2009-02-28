@@ -63,11 +63,11 @@ class TempSetPoint(FormField):
         if d.has_key('id'):
             d['attrs']['id']   = d['id']
         # Set attribute values available to the browser widget code:
-        d['attrs']['SetCurrentEvent'] = d.get('SetCurrentEvent', TempSetPoint_SetCurrentEvent)
-        d['attrs']['SetTargetEvent']  = d.get('SetTargetEvent',  TempSetPoint_SetTargetEvent)
-        d['attrs']['ShowTargetEvent'] = d.get('ShowTargetEvent', TempSetPoint_ShowTargetEvent)
-        d['attrs']['Subject']         = d.get('Subject',         TempSetPoint_Subject)
-        d['attrs']['DefaultTarget']   = d.get('DefaultTarget',   None)
+        d['attrs']['SetCurrentValueEvent'] = d.get('SetCurrentValueEvent', TempSetPoint_SetCurrentEvent)
+        d['attrs']['SetTargetValueEvent']  = d.get('SetTargetValueEvent',  TempSetPoint_SetTargetEvent)
+        d['attrs']['SetTargetModeEvent']   = d.get('SetTargetModeEvent',   TempSetPoint_ShowTargetEvent)
+        d['attrs']['Subject']         = d.get('Subject',                   TempSetPoint_Subject)
+        d['attrs']['DefaultTarget']   = d.get('DefaultTarget',             None)
         # Set other values available directly to the template (above):
         d['SetPointValue_class'] = "tempsetpoint-unknown"
         d['SetPointState_class'] = "tempsetpoint-unknown"
@@ -86,24 +86,24 @@ class TempSetPoint(FormField):
 #   'css_classes': [], 
 #   'help_text': None,
 # 
-#   'id': 'myzone',                                 (From page template)
-#   'name': u'uriname',                             (From controller)
-#   'Subject': 'myuri:myzone',                      (From page template)
-#   'DefaultTarget': '15.0',                        (From page template)
-#   'SetCurrentEvent': 'myuri:SetCurrentEvent',     (From page template)
-#   'SetTargetEvent': 'myuri:SetTargetEvent',       (From page template)
-#   'ShowTargetEvent': 'myuri:ShowTargetEvent',     (From page template)
+#   'id': 'myzone',                                     (From page template)
+#   'name': u'uriname',                                 (From controller)
+#   'Subject': 'myuri:myzone',                          (From page template)
+#   'DefaultTarget': '15.0',                            (From page template)
+#   'SetCurrentValueEvent': 'myuri:SetCurrentEvent',    (From page template)
+#   'SetTargetValueEvent':  'myuri:SetTargetEvent',     (From page template)
+#   'SetTargetModeEvent':   'myuri:ShowTargetEvent',    (From page template)
 # 
-#   'SetPointValue_class': 'tempsetpoint-unknown',  (From widget code)
-#   'SetPointState_class': 'tempsetpoint-unknown',  (From widget code)
+#   'SetPointValue_class':  'tempsetpoint-unknown',     (From widget code)
+#   'SetPointState_class':  'tempsetpoint-unknown',     (From widget code)
 # 
-#   'attrs': { 'name': u'uriname', 
-#              'SetCurrentEvent': 'myuri:SetCurrentEvent',
-#              'DefaultTarget': '15.0',
-#              'ShowTargetEvent': 'myuri:ShowTargetEvent',
-#              'Subject': 'myuri:myzone',
-#              'id': 'myzone',
-#              'SetTargetEvent': 'myuri:SetTargetEvent'}
+#   'attrs': { 'name':                 u'uriname', 
+#              'SetCurrentValueEvent': 'myuri:SetCurrentEvent',
+#              'DefaultTarget':        '15.0',
+#              'SetTargetModeEvent':   'myuri:ShowTargetEvent',
+#              'Subject':              'myuri:myzone',
+#              'id':                   'myzone',
+#              'SetTargetValueEvent':  'myuri:SetTargetEvent'}
 #   }
 
 # End.
