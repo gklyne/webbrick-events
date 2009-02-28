@@ -115,22 +115,55 @@ webbrick.widgets.getElementByTagPath = function (elem, pathnames) {
 };
 
 /**
- * Get text from the first node reached by following the supplied 
+ * Set attribute of first node reached by following the supplied 
  * path of elements descending from the supplied element node.
  * 
- * pathnames is a list of element names.
+ *  elem        is the base element to search from
+ *  pathnames   is a list of element names.
+ *  attrname    is the name of the attribute to set
+ *  attrval     is the attribute value to set
  */
-webbrick.widgets.getAttributeByTagPath = function (elem, pathnames, attr) {
+webbrick.widgets.setAttributeByTagPath = function (elem, pathnames, attrname, attrval) {
     var node = webbrick.widgets.getElementByTagPath(elem, pathnames);
-    if (node == null) return null; 
-    return node.getAttribute(attr); 
+    if (node != null) {
+        node.setAttribute(attrname, attrval);
+    };
 };
 
 /**
- * Get attribute value from the first node reached by following the supplied 
+ * Get attribute of the first node reached by following the supplied 
  * path of elements descending from the supplied element node.
  * 
- * pathnames is a list of element names.
+ *  elem        is the base element to search from
+ *  pathnames   is a list of element names.
+ *  attrname    is the name of the attribute to set
+ */
+webbrick.widgets.getAttributeByTagPath = function (elem, pathnames, attrname) {
+    var node = webbrick.widgets.getElementByTagPath(elem, pathnames);
+    if (node == null) return null; 
+    return node.getAttribute(attrname); 
+};
+
+/**
+ * Set text in the first node reached by following the supplied 
+ * path of elements descending from the supplied element node.
+ * 
+ *  elem        is the base element to search from
+ *  pathnames   is a list of element names.
+ */
+webbrick.widgets.setElementTextByTagPath = function (elem, pathnames, textval) {
+    var node = webbrick.widgets.getElementByTagPath(elem, pathnames);
+    if (node != null) {
+        webbrick.widgets.setElementText(node, textval);
+    };
+};
+
+/**
+ * Get test from the first node reached by following the supplied 
+ * path of elements descending from the supplied element node.
+ * 
+ *  elem        is the base element to search from
+ *  pathnames   is a list of element names.
  */
 webbrick.widgets.getElementTextByTagPath = function (elem, pathnames) {
     var node = webbrick.widgets.getElementByTagPath(elem, pathnames);
@@ -216,7 +249,7 @@ webbrick.widgets.WidgetEventRouter = null;
  *  Check for event router, create local event router if needed
  * 
  *  For testing, call this function before any call to getWidgetEventRouter
- *  for all event handling to be syncronous within the calling program.
+ *  for all event handling to be synchronous within the calling program.
  */
 webbrick.widgets.getLocalEventRouter = function () {
     //logDebug( "webbrick.widgets.getLocalEventRouter");
