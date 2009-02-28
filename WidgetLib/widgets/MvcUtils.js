@@ -354,7 +354,7 @@ webbrick.widgets.GenericDomRenderer.prototype.processDefinition = function
     };
 
     // Connect DOM event handlers
-    logDebug("GenericDomRenderer.connectModel: connect model listeners");
+    logDebug("GenericDomRenderer.processDefinition: connect model listeners");
     for (var ev in this._defn.collectDomInputs) {
         var handler = this[this._defn.collectDomInputs[ev]];
         logDebug("GenericDomRenderer.processDefinition: connect event: "+ev);
@@ -383,7 +383,7 @@ webbrick.widgets.GenericDomRenderer.prototype.connectModel = function (model) {
     logDebug("GenericDomRenderer.connectModel: connect model listeners");
     for (var mname in this._defn.renderModel) {
         var mfunc = this[this._defn.renderModel[mname]];
-        logDebug("GenericDomRenderer.connectModel: name: "+mname+", func: "+mfunc);
+        logDebug("GenericDomRenderer.connectModel: name: "+mname);
         this._model.addListener(mname, mfunc, this);
     };
 
@@ -466,7 +466,9 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathText = function
         (path, model, propname, oldvalue, newvalue) {
     logDebug("GenericDomRenderer.setWidgetPathText: newvalue: "+newvalue+", oldvalue: "+oldvalue);
     elem = webbrick.widgets.getElementByTagPath(this._elem, path);
-    webbrick.widgets.setElementText(elem, newvalue);
+    if (elem != null) {
+        webbrick.widgets.setElementText(elem, newvalue);
+    };
 };
 
 /**
@@ -488,12 +490,14 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathText = function
 webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathClass = function 
         (valuemap, path, model, propname, oldvalue, newvalue) {
     logDebug("GenericDomRenderer.setWidgetPathClass: newvalue: "+newvalue+", oldvalue: "+oldvalue);
-    elem = webbrick.widgets.getElementByTagPath(this._elem, path);
     var oldclass = valuemap[oldvalue];
     var newclass = valuemap[newvalue];
     logDebug("GenericDomRenderer.setWidgetPathClass: newclass: "+newclass+", oldclass: "+oldclass);
-    MochiKit.DOM.removeElementClass(elem, oldclass);
-    MochiKit.DOM.addElementClass(elem, newclass);
+    elem = webbrick.widgets.getElementByTagPath(this._elem, path);
+    if (elem != null) {
+        MochiKit.DOM.removeElementClass(elem, oldclass);
+        MochiKit.DOM.addElementClass(elem, newclass);
+    };
 };
 
 webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathTextClass = function 
@@ -683,6 +687,7 @@ webbrick.widgets.getWidgetValues = function(valueDefs, elem) {
     var modelvals = {};
     for (var vname in valueDefs) {
         var vfunc = valueDefs[vname];
+        logDebug("- vname: "+vname+", vfunc: "+vfunc.slice(1));
         var vval  = null;
         if (vfunc.length == 1) {
             vval = vfunc[0](elem);

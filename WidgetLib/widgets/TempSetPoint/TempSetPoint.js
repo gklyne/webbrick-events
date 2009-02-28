@@ -372,20 +372,20 @@ webbrick.widgets.TempSetPoint.StateClass = {
  */
 webbrick.widgets.TempSetPoint.initializeValues = {
     DISPLAY:                  
-        [ webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+        [ webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
     DISPLAYSTATE:                  
         [ webbrick.widgets.getWidgetPathClass, webbrick.widgets.TempSetPoint.StateClass, 
-          ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+          ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
     CURRENT:                  
-        [webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+        [webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
     CURRENTSTATE:                  
         [ webbrick.widgets.getWidgetPathClass, webbrick.widgets.TempSetPoint.StateClass, 
-          ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+          ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
     TARGET:                  
-        [webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+        [webbrick.widgets.getWidgetPathContent, ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
     TARGETSTATE:                  
         [ webbrick.widgets.getWidgetPathClass, webbrick.widgets.TempSetPoint.StateClass, 
-          ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+          ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
     SetCurrentValueEvent:
         [webbrick.widgets.getWidgetAttribute, "SetCurrentValueEvent"],
     SetTargetValueEvent:
@@ -423,13 +423,13 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
     renderFunctions: {
         SetDisplayModelListener:  
             [ 'setWidgetPathText', 
-              ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+              ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
         SetDisplayStateModelListener: 
             [ 'setWidgetPathClass', webbrick.widgets.TempSetPoint.StateClass, 
-              ["SetPointBody", "SetPointDisplay", "SetPointValue", "span"] ],
+              ["SetPointBody", "SetPointDisplay", "SetPointValue"] ],
         SetModeModelListener:  
             [ 'setWidgetPathTextClass', webbrick.widgets.TempSetPoint.StateClass, 
-              ["SetPointBody", "SetPointDisplay", "SetPointState", "span"] ],
+              ["SetPointBody", "SetPointDisplay", "SetPointState"] ],
         ButtonClicked: 
             ['domButtonClicked', 'BumpTarget', webbrick.widgets.TempSetPoint.ButtonValueMap]
         },
