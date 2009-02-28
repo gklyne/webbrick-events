@@ -227,7 +227,8 @@ webbrick.widgets.TestTempSetPoint.prototype.testInitialModel = function() {
     assertEq(testname+": ", this.model.get("SetTargetModeEvent"),      "_TempSetPoint.SetTargetModeEvent");
     assertEq(testname+": ", this.model.get("TargetChangeEvent"),       "_TempSetPoint.TargetChangeEvent");
     assertEq(testname+": ", this.model.get("TargetChangeSource"),      "_TempSetPoint.TargetChangeSource");
-    assertEq(testname+": ", this.model.get("ClockTickEvent"),          "_TempSetPoint.ClockTickEvent_OverrideMe");    
+    assertEq(testname+": ", this.model.get("ClockTickEvent"),          "http://id.webbrick.co.uk/events/ClockTickEventType_second");
+    //assertEq(testname+": ", this.model.get("ClockTickEvent"),          "_TempSetPoint.ClockTickEvent_OverrideMe");
 };
 
 /** 
@@ -921,7 +922,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
 
     // Set new current value
     logDebug(testname+": setting current value to '11.1'");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "11.1");
+    webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "11.1");
     
     // Confirm updated values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "11.1");
@@ -937,7 +938,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
 
     // Set new current value as floating point number
     logDebug(testname+": setting current value to 22.2");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, 22.2);
+    webbrick.widgets.publishEvent(sourceIdent, setValueEvent, 22.2);
     
     // Confirm updated values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "22.2");
@@ -953,7 +954,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
 
     // Set invalid current value
     logDebug(testname+": setting current value to 'xx.x'");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "xx.x");
+    webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "xx.x");
     
     // Confirm updated values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "xx.x");
@@ -993,7 +994,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetValueEvent = function()
 
     // Set new target value
     logDebug(testname+": setting current value to '11.1'");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "11.1");
+    webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "11.1");
     
     // Confirm updated values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "??.?");
@@ -1009,7 +1010,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetValueEvent = function()
 
     // Set new target value as floating point number
     logDebug(testname+": setting current value to 22.2");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, 22.2);
+    webbrick.widgets.publishEvent(sourceIdent, setValueEvent, 22.2);
     
     // Confirm updated values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "??.?");
@@ -1025,7 +1026,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetValueEvent = function()
 
     // Set invalid current value
     logDebug(testname+": setting current value to 'xx.x'");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "xx.x");
+    webbrick.widgets.publishEvent(sourceIdent, setValueEvent, "xx.x");
     
     // Confirm updated values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "??.?");
@@ -1062,7 +1063,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
 
     // Set new mode and confirm updated values in renderer
     logDebug(testname+": setting target mode timer to 5");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 5);
+    webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 5);
 
     assertEq(testname+": ", this.getElement(['SetPointValue','span']), "22.2");
     assertEq(testname+": ", this.getClass(['SetPointValue','span']), "tempsetpoint-target");
@@ -1071,7 +1072,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
 
     // Set new mode and confirm updated values in renderer
     logDebug(testname+": setting target mode timer to 0");
-    var sts = webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 0);
+    webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 0);
 
     assertEq(testname+": ", this.getElement(['SetPointValue','span']), "11.1");
     assertEq(testname+": ", this.getClass(['SetPointValue','span']), "tempsetpoint-current");
