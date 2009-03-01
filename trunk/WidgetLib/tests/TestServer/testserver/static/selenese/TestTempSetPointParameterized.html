@@ -53,6 +53,11 @@
 </tr>
 <!-- Set up to use the widget event router -->
 <tr>
+    <td>log</td>
+    <td>Set up to use the widget event router</td>
+    <td></td>
+</tr>
+<tr>
     <td>getWidgetEventRouter</td>
     <td>myuri:myzone</td>
     <td></td>
@@ -63,6 +68,11 @@
     <td></td>
 </tr>
 <!-- Set current value event -->
+<tr>
+    <td>log</td>
+    <td>Set current value event</td>
+    <td></td>
+</tr>
 <tr>
     <td>publishEvent</td>
     <td>myuri:SetCurrentEvent</td>
@@ -93,7 +103,6 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-current</td>
 </tr>
-
 <!-- Show target for 2 seconds -->
 <tr>
     <td>publishEvent</td>
@@ -156,7 +165,12 @@
     <td>tempsetpoint-current</td>
 </tr>
 <!-- Set target value -->
-<!-- Set current value event -->
+<!-- Set target value with event -->
+<tr>
+    <td>log</td>
+    <td>Set target value with event</td>
+    <td></td>
+</tr>
 <tr>
     <td>publishEvent</td>
     <td>myuri:SetTargetEvent</td>
@@ -220,7 +234,7 @@
 </tr>
 <tr>
     <td>pause</td>
-    <td>2250</td>
+    <td>2500</td>
     <td></td>
 </tr>
 <tr>
@@ -250,6 +264,11 @@
 </tr>
 <!-- Create, subscribe and set target event listener -->
 <tr>
+    <td>log</td>
+    <td>Create, subscribe and set target event listener</td>
+    <td></td>
+</tr>
+<tr>
     <td>storeEventListener</td>
     <td>myuri:SetTargetEvent</td>
     <td>settargetlistener</td>
@@ -257,8 +276,8 @@
 <!-- Click button to bump up target value -->
 <!-- (first click activates display) -->
 <tr>
-    <td>click</td>
-    <td>//setpointwidget//setpointup</td>
+    <td>log</td>
+    <td>Click button to bump up target value</td>
     <td></td>
 </tr>
 <tr>
@@ -266,18 +285,11 @@
     <td>//setpointwidget//setpointup</td>
     <td></td>
 </tr>
-<!--
 <tr>
-    <td>assertEventType</td>
-    <td>settargetlistener</td>
-    <td>http://id.webbrick.co.uk/events/TempSetPoint_SetTargetEvent</td>
+    <td>click</td>
+    <td>//setpointwidget//setpointup</td>
+    <td></td>
 </tr>
-<tr>
-    <td>verifyEventSource</td>
-    <td>settargetlistener</td>
-    <td>http://id.webbrick.co.uk/events/TempSetPoint_Subject</td>
-</tr>
--->
 <tr>
     <td>verifyText</td>
     <td>//setpointwidget//setpointvalue</td>
@@ -306,7 +318,7 @@
 <!-- Wait for display to revert -->
 <tr>
     <td>pause</td>
-    <td>1750</td>
+    <td>1503</td>
     <td></td>
 </tr>
 <tr>
@@ -321,7 +333,7 @@
 </tr>
 <tr>
     <td>pause</td>
-    <td>2000</td>
+    <td>2003</td>
     <td></td>
 </tr>
 <tr>
@@ -335,12 +347,7 @@
     <td>tempsetpoint-target</td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>2001</td>
-    <td></td>
-</tr>
-<tr>
-    <td>verifyText</td>
+    <td>waitForText</td>
     <td>//setpointwidget//setpointvalue</td>
     <td>15.0</td>
 </tr>
@@ -351,6 +358,11 @@
 </tr>
 <!-- Bump down target value twice -->
 <!-- (first click activates display) -->
+<tr>
+    <td>log</td>
+    <td>Bump down target value twice</td>
+    <td></td>
+</tr>
 <tr>
     <td>click</td>
     <td>//setpointwidget//setpointdown</td>
@@ -379,7 +391,7 @@
 <!-- Wait for display to revert -->
 <tr>
     <td>pause</td>
-    <td>3750</td>
+    <td>3754</td>
     <td></td>
 </tr>
 <tr>
@@ -393,12 +405,7 @@
     <td>tempsetpoint-target</td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>2000</td>
-    <td></td>
-</tr>
-<tr>
-    <td>verifyText</td>
+    <td>waitForText</td>
     <td>//setpointwidget//setpointvalue</td>
     <td>15.0</td>
 </tr>
@@ -409,6 +416,11 @@
 </tr>
 <!-- Bump down target value 3 times at 1-second intervals -->
 <!-- (first click activates display) -->
+<tr>
+    <td>log</td>
+    <td>Bump down target value 3 times at 1-second intervals</td>
+    <td></td>
+</tr>
 <tr>
     <td>click</td>
     <td>//setpointwidget//setpointdown</td>
@@ -426,7 +438,7 @@
 </tr>
 <tr>
     <td>pause</td>
-    <td>1000</td>
+    <td>1005</td>
     <td></td>
 </tr>
 <tr>
@@ -446,7 +458,7 @@
 </tr>
 <tr>
     <td>pause</td>
-    <td>1000</td>
+    <td>1005</td>
     <td></td>
 </tr>
 <tr>
@@ -466,7 +478,7 @@
 </tr>
 <tr>
     <td>pause</td>
-    <td>1000</td>
+    <td>1005</td>
     <td></td>
 </tr>
 <tr>
@@ -487,7 +499,7 @@
 <!-- Wait for display to revert -->
 <tr>
     <td>pause</td>
-    <td>3750</td>
+    <td>3505</td>
     <td></td>
 </tr>
 <tr>
@@ -501,12 +513,7 @@
     <td>tempsetpoint-target</td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>2000</td>
-    <td></td>
-</tr>
-<tr>
-    <td>verifyText</td>
+    <td>waitForText</td>
     <td>//setpointwidget//setpointvalue</td>
     <td>15.0</td>
 </tr>
@@ -516,6 +523,11 @@
     <td>tempsetpoint-current</td>
 </tr>
 <!-- Set current value for some other subject -->
+<tr>
+    <td>log</td>
+    <td>Set current value for some other subject</td>
+    <td></td>
+</tr>
 <tr>
     <td>getWidgetEventRouter</td>
     <td>myuri:myzone1</td>

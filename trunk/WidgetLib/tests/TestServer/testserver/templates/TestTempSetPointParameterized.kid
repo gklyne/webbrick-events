@@ -43,13 +43,13 @@
                     # Generate temperature set point widget bwith values parameterized
                     # The constructor 'tempsetpoint' comes from the CherryPy controller
                     setpointwidgetcontent = tempsetpoint.display(
-                        id=              "myzone",
-                        name=            "myzone_name",
-                        SetCurrentEvent= "myuri:SetCurrentEvent",
-                        SetTargetEvent=  "myuri:SetTargetEvent",
-                        ShowTargetEvent= "myuri:ShowTargetEvent",
-                        Subject=         "myuri:myzone",
-                        DefaultTarget=   "10.0"
+                        id=                   "myzone",
+                        name=                 "myzone_name",
+                        SetCurrentValueEvent= "myuri:SetCurrentEvent",
+                        SetTargetValueEvent=  "myuri:SetTargetEvent",
+                        SetTargetModeEvent=   "myuri:ShowTargetEvent",
+                        Subject=              "myuri:myzone",
+                        DefaultTarget=        "10.0"
                         )
                 ?>
                 <td py:content="setpointwidgetcontent">

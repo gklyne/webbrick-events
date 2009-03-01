@@ -107,10 +107,10 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
      *   the name of the event handler method of this object to be subscribed.
      */
     this._subscribes = [
-        ["SetCurrentValueEvent", null, "SetCurrentValueEventHandler"],
-        ["SetTargetValueEvent",  null, "SetTargetValueEventHandler"],
-        ["SetTargetModeEvent",   null, "SetTargetModeEventHandler"],
-        ["ClockTickEvent",       null, "ClockTickEventHandler"],
+        ["SetCurrentValueEvent", "Subject", "SetCurrentValueEventHandler"],
+        ["SetTargetValueEvent",  "Subject", "SetTargetValueEventHandler"],
+        ["SetTargetModeEvent",   "Subject", "SetTargetModeEventHandler"],
+        ["ClockTickEvent",       null,      "ClockTickEventHandler"]
     ];    
 
     // ---- Initialize ----
@@ -324,6 +324,7 @@ webbrick.widgets.TempSetPoint.modelDefinition = {
         "SetCurrentValueEvent",     // event type URI for setting current value
         "SetTargetValueEvent",      // event type URI for setting target value
         "SetTargetModeEvent",       // event type URI for setting widget mode
+        "Subject",                  // subject URI for event subscriptions
         "TargetChangeEvent",        // event type URI published when target is changed
         "TargetChangeSource",       // event source URI published when target is changed
         "ClockTickEvent"            // event type URI for clock tick
@@ -346,6 +347,7 @@ webbrick.widgets.TempSetPoint.modelDefinition = {
         SetCurrentValueEvent:   "_TempSetPoint.SetCurrentValueEvent",
         SetTargetValueEvent:    "_TempSetPoint.SetTargetValueEvent",
         SetTargetModeEvent:     "_TempSetPoint.SetTargetModeEvent",
+        Subject:                "http://id.webbrick.co.uk/source/TempSetPoint_Subject",
         TargetChangeEvent:      "_TempSetPoint.TargetChangeEvent",
         TargetChangeSource:     "_TempSetPoint.TargetChangeSource",
         ClockTickEvent:         "_TempSetPoint.ClockTickEvent_OverrideMe"
@@ -414,6 +416,8 @@ webbrick.widgets.TempSetPoint.initializeValues = {
         [webbrick.widgets.getWidgetAttribute, "SetTargetValueEvent"],
     SetTargetModeEvent:
         [webbrick.widgets.getWidgetAttribute, "SetTargetModeEvent"],
+    Subject:
+        [webbrick.widgets.getWidgetAttribute, "Subject"],
     ClickEvent:
         [webbrick.widgets.getWidgetAttribute, "ClickEvent"],
     ClickSource:
@@ -427,10 +431,12 @@ webbrick.widgets.TempSetPoint.initializeValues = {
 /**
  *  Table to map button values to signal parameter values for the Input collector
  */
-webbrick.widgets.TempSetPoint.ButtonValueMap = {
-    Up:     +0.5,
-    Down:   -0.5
-};
+webbrick.widgets.TempSetPoint.ButtonValueMap = [
+    [ 'SetPointUp',   null,   +0.5 ],
+    [ 'SetPointDown', null,   -0.5 ],
+    [ 'button',       'Up',   +0.5 ],
+    [ 'button',       'Down', -0.5 ]
+];
 
 /**
  *  Definitions for the TempSetPoint DOM renderer and input collector
@@ -479,10 +485,6 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
     collectDomInputs: {
         // TODO: remove surplus events
         onclick:        'ButtonClicked'
-        //onmousedown:    'ButtonClicked',
-        //onmouseup:      'ButtonClicked',
-        //onkeydown:      'ButtonClicked',
-        //onkeyup:        'ButtonClicked'
     }
 };
 
@@ -524,10 +526,11 @@ webbrick.widgets.TempSetPoint.renderer.prototype.initialize = function() {
  *  The input is propagated as a MochiKit non-DOM signal.
  *
  * @param   {String} signalname Name of signal to raise when event click occurs
- * @param   {Object} valuemap   Maps button values to parameters that
- *                              are provided with the propagated signal.
- *                              No signal is generated for button values that
- *                              do not appear in this table.
+ * @param   {Object} tagvalmap  Maps tag name and value attributes to a parameter
+ *                              that is provided with the propagated signal.
+ *                              No signal is generated for tag/value pairs that
+ *                              do not appear in this table.  If the value attribute
+ *                              in the table is null, then only the tag name is tested.
  * @param   {Object} event      MochiKit custom event object corresponding to the
  *                              incoming DOM event.
  *
@@ -536,25 +539,33 @@ webbrick.widgets.TempSetPoint.renderer.prototype.initialize = function() {
  *  handler function.
  */
 webbrick.widgets.TempSetPoint.renderer.prototype.domButtonClicked = function 
-        (signalname, valuemap, event) {
+        (signalname, tagvalmap, event) {
     MochiKit.Logging.logDebug("TempSetPoint.collector.domButtonClicked");
 
+    var tagValueParam = function (elem, tagvalentry) {
+        var tagname = elem.nodeName;
+        MochiKit.Logging.logDebug("button tag: "+tagname);
+        if (tagname.toLowerCase() == tagvalentry[0].toLowerCase()) {
+            if (tagvalentry[1] != null) {
+                var value = MochiKit.DOM.getNodeAttribute(elem, 'value');
+                MochiKit.Logging.logDebug("button value: "+value);
+                if (value != tagvalentry[1]) return null;
+            };
+        return tagvalentry[2];
+        };
+    };
+    
     var eventtype = event.type();
     MochiKit.Logging.logDebug("eventtype: "+eventtype);
     if (eventtype == 'click') {
         var elem = event.target();
-        var name = elem.nodeName;
-        MochiKit.Logging.logDebug("node name: "+name);
-        if (elem.nodeName.toLowerCase() == "button") {
-            var value = MochiKit.DOM.getNodeAttribute(elem, 'value');
-            MochiKit.Logging.logDebug("button value: "+value);
-            var sigparam = valuemap[value];
-            MochiKit.Logging.logDebug("signal parameter: "+sigparam);
+        for (var i in tagvalmap) {
+            var sigparam = tagValueParam(elem, tagvalmap[i]);
             if (sigparam != null) {
                 MochiKit.Signal.signal(this, signalname, sigparam);
                 event.stop();
             };
-        }
+        };
     };
 
     // Allow event to propagate...
