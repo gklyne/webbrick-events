@@ -79,9 +79,9 @@
     <td>javascript{15.0}</td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>250</td>
-    <td></td>
+    <td>waitForText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -108,20 +108,20 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-current</td>
 </tr>
-<!-- Show target for 2 seconds event -->
+<!-- Show target for 3 seconds event -->
 <tr>
     <td>log</td>
-    <td>Show target for 2 seconds event</td>
+    <td>Show target for 3 seconds event</td>
     <td></td>
 </tr>
 <tr>
     <td>publishEvent</td>
     <td>http://id.webbrick.co.uk/events/TempSetPoint_ShowTargetEvent</td>
-    <td>2</td>
+    <td>3</td>
 </tr>
 <tr>
     <td>pause</td>
-    <td>250</td>
+    <td>1500</td>
     <td></td>
 </tr>
 <tr>
@@ -152,12 +152,12 @@
 <!-- Wait, and check display reverts to current (15.0) -->
 <tr>
     <td>log</td>
-    <td>Wait, and check display reverts to current (15.0, 2.5s)</td>
+    <td>Wait, and check display reverts to current (15.0, 4.0s)</td>
     <td></td>
 </tr>
 <tr>
     <td>pause</td>
-    <td>2250</td>
+    <td>2500</td>
     <td></td>
 </tr>
 <tr>
@@ -185,10 +185,10 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-current</td>
 </tr>
-<!-- Set target value 19.5 -->
+<!-- Set target value 19.5 (no display change) -->
 <tr>
     <td>log</td>
-    <td>Set target value 19.5</td>
+    <td>Set target value 19.5 (no display change)</td>
     <td></td>
 </tr>
 <tr>
@@ -198,13 +198,18 @@
 </tr>
 <tr>
     <td>pause</td>
-    <td>250</td>
+    <td>500</td>
     <td></td>
 </tr>
 <tr>
     <td>verifyText</td>
     <td>//setpointwidget//setpointvalue</td>
     <td>15.0</td>
+</tr>
+<tr>
+    <td>waitForAttribute</td>
+    <td>//setpointwidget//setpointvalue@class</td>
+    <td>tempsetpoint-current</td>
 </tr>
 <tr>
     <td>verifyAttribute</td>
