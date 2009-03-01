@@ -28,7 +28,7 @@
     (a) create a test case for rendered response to the event
     (b) implement the logic to respond to the event
     (c) ensure test cases pass
-13. For each  input events
+13. For each input event
     (a) design a controller method to handle it
     (b) create a test case for model and/or rendered response to the event
     (c) implement the logic to handle the event
