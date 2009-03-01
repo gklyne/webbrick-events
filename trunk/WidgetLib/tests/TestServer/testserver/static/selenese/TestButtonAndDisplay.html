@@ -47,6 +47,11 @@
   <td>Numeric Display:</td>
 </tr>
 <tr>
+  <td>waitForTable</td>
+  <td>//div[@id='main_content']/form/table.1.1</td>
+  <td>0</td>
+</tr>
+<tr>
   <td>verifyTable</td>
   <td>//div[@id='main_content']/form/table.1.1</td>
   <td>0</td>
@@ -66,12 +71,6 @@
   <td>display1</td>
   <td>0</td>
 </tr>
-<!-- Wait for page to settle -->
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
 <!-- Set up to use the widget event router -->
 <tr>
     <td>getWidgetEventRouter</td>
@@ -90,9 +89,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1250</td>
-  <td></td>
+  <td>waitForValue</td>
+  <td>field1</td>
+  <td>Button:1</td>
 </tr>
 <tr>
   <td>assertValue</td>
@@ -100,9 +99,19 @@
   <td>Button:1</td>
 </tr>
 <tr>
+  <td>waitForAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_depressed</td>
+</tr>
+<tr>
   <td>verifyAttribute</td>
   <td>name=button1@class</td>
   <td>button_depressed</td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>display1</td>
+  <td>1</td>
 </tr>
 <tr>
   <td>verifyText</td>
@@ -116,9 +125,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1250</td>
-  <td></td>
+  <td>waitForValue</td>
+  <td>name=button1</td>
+  <td>Button:2</td>
 </tr>
 <tr>
   <td>verifyValue</td>
@@ -126,9 +135,19 @@
   <td>Button:2</td>
 </tr>
 <tr>
+  <td>waitForAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_pending</td>
+</tr>
+<tr>
   <td>verifyAttribute</td>
   <td>name=button1@class</td>
   <td>button_pending</td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>display1</td>
+  <td>2</td>
 </tr>
 <tr>
   <td>verifyText</td>
@@ -142,9 +161,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1250</td>
-  <td></td>
+  <td>waitForValue</td>
+  <td>name=button1</td>
+  <td>Button:3</td>
 </tr>
 <tr>
   <td>verifyValue</td>
@@ -152,9 +171,19 @@
   <td>Button:3</td>
 </tr>
 <tr>
+  <td>waitForAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_unknown</td>
+</tr>
+<tr>
   <td>verifyAttribute</td>
   <td>name=button1@class</td>
   <td>button_unknown</td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>display1</td>
+  <td>3</td>
 </tr>
 <tr>
   <td>verifyText</td>
@@ -168,9 +197,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1250</td>
-  <td></td>
+  <td>waitForValue</td>
+  <td>name=button1</td>
+  <td>Button:4</td>
 </tr>
 <tr>
   <td>verifyValue</td>
@@ -178,9 +207,19 @@
   <td>Button:4</td>
 </tr>
 <tr>
+  <td>waitForAttribute</td>
+  <td>name=button1@class</td>
+  <td>button_normal</td>
+</tr>
+<tr>
   <td>verifyAttribute</td>
   <td>name=button1@class</td>
   <td>button_normal</td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>display1</td>
+  <td>4</td>
 </tr>
 <tr>
   <td>verifyText</td>

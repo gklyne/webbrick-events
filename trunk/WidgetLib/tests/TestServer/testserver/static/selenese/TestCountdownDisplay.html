@@ -27,6 +27,11 @@
     <td>Countdown Display:</td>
 </tr>
 <tr>
+    <td>waitForText</td>
+    <td>id=cdname</td>
+    <td>0</td>
+</tr>
+<tr>
     <td>verifyText</td>
     <td>id=cdname</td>
     <td>0</td>
@@ -42,29 +47,22 @@
     <td>TestNumericDisplay_Sender</td>
     <td></td>
 </tr>
+<tr>
+    <td>pause</td>
+    <td>1000</td>
+    <td></td>
+</tr>
 <!-- Check for response to incoming SetButtonText event -->
 <tr>
-    <td>pause</td>
-    <td>1200</td>
-    <td></td>
-</tr>
-<tr>
-    <td>publishEvent</td>
-    <td>http://id.webbrick.co.uk/events/SetCountdownDisplayValue</td>
-    <td>1</td>
-</tr>
-<!--
-<tr>
     <td>publishEvent</td>
     <td>http://id.webbrick.co.uk/events/SetCountdownDisplayValue</td>
     <td>1</td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>100</td>
-    <td></td>
+    <td>waitForText</td>
+    <td>id=cdname</td>
+    <td>1</td>
 </tr>
--->
 <tr>
     <td>verifyText</td>
     <td>id=cdname</td>
