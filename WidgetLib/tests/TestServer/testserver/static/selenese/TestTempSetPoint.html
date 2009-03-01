@@ -152,7 +152,7 @@
 <!-- Wait, and check display reverts to current (15.0) -->
 <tr>
     <td>log</td>
-    <td>Wait, and check display reverts to current (15.0)</td>
+    <td>Wait, and check display reverts to current (15.0, 2.5s)</td>
     <td></td>
 </tr>
 <tr>
@@ -239,7 +239,7 @@
 </tr>
 <tr>
     <td>pause</td>
-    <td>250</td>
+    <td>750</td>
     <td></td>
 </tr>
 <tr>
@@ -267,16 +267,16 @@
     <td>//setpointwidget//setpointdisplay@class</td>
     <td>tempsetpoint-target</td>
 </tr>
-<!-- Wait, and check that display reverts to current (15.0) -->
+<!-- Wait, and check that display reverts to current (1) -->
 <tr>
     <td>log</td>
-    <td>Wait, and check that display reverts to current (15.0)</td>
+    <td>Wait, and check that display reverts to current (1)</td>
     <td></td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>2250</td>
-    <td></td>
+    <td>waitForText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -410,16 +410,16 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
-<!-- Wait for display to revert to current (6.0s, 15.0) -->
+<!-- Wait for display to revert to current (2) -->
 <tr>
     <td>log</td>
-    <td>Wait for display to revert to current (6.0s, 15.0)</td>
+    <td>Wait for display to revert to current (2)</td>
     <td></td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>2500</td>
-    <td></td>
+    <td>waitForText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -496,16 +496,16 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
-<!-- Wait for display to revert to current (6s, 15.0) -->
+<!-- Wait for display to revert to current (3) -->
 <tr>
     <td>log</td>
-    <td>Wait for display to revert to current (6s, 15.0)</td>
+    <td>Wait for display to revert (3)</td>
     <td></td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>2250</td>
-    <td></td>
+    <td>waitForText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
 </tr>
 <tr>
     <td>verifyText</td>
@@ -604,16 +604,16 @@
     <td>//setpointwidget//setpointvalue@class</td>
     <td>tempsetpoint-target</td>
 </tr>
-<!-- Wait for display to revert -->
+<!-- Wait for display to revert (4) -->
 <tr>
     <td>log</td>
-    <td>Wait for display to revert (6s)</td>
+    <td>Wait for display to revert (4)</td>
     <td></td>
 </tr>
 <tr>
-    <td>pause</td>
-    <td>2500</td>
-    <td></td>
+    <td>waitForText</td>
+    <td>//setpointwidget//setpointvalue</td>
+    <td>15.0</td>
 </tr>
 <tr>
     <td>verifyText</td>

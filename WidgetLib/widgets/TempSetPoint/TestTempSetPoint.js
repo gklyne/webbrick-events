@@ -230,6 +230,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testInitialModel = function() {
     assertEq(testname+": ", this.model.get("SetCurrentValueEvent"),    "_TempSetPoint.SetCurrentValueEvent");
     assertEq(testname+": ", this.model.get("SetTargetValueEvent"),     "_TempSetPoint.SetTargetValueEvent");
     assertEq(testname+": ", this.model.get("SetTargetModeEvent"),      "_TempSetPoint.SetTargetModeEvent");
+    assertEq(testname+": ", this.model.get("Subject"),                 "http://id.webbrick.co.uk/source/TempSetPoint_Subject");
     assertEq(testname+": ", this.model.get("TargetChangeEvent"),       "_TempSetPoint.TargetChangeEvent");
     assertEq(testname+": ", this.model.get("TargetChangeSource"),      "_TempSetPoint.TargetChangeSource");
     assertEq(testname+": ", this.model.get("ClockTickEvent"),          "http://id.webbrick.co.uk/events/ClockTickEventType_second");
@@ -914,7 +915,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetCurrentValueEvent = function(
     var testname = "testSetCurrentValueEvent";
     logInfo("==== webbrick.widgets.TestTempSetPoint."+testname+" ====");
     var setValueEvent = this.model.get("SetCurrentValueEvent");
-    var sourceIdent   = testname;
+    var sourceIdent   = this.model.get("Subject");
     
     // Confirm initial values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "??.?");
@@ -1018,7 +1019,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetValueEvent = function()
     var testname = "testSetTargetValueEvent";
     logInfo("==== webbrick.widgets.TestTempSetPoint."+testname+" ====");
     var setValueEvent = this.model.get("SetTargetValueEvent");
-    var sourceIdent   = testname;
+    var sourceIdent   = this.model.get("Subject");
     
     // Confirm initial values in model
     assertEq(testname+": ", this.model.get("CURRENT"),      "??.?");
@@ -1090,7 +1091,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
     var testname = "testSetTargetModeEvent";
     logInfo("==== webbrick.widgets.TestTempSetPoint."+testname+" ====");
     var setModeEvent = this.model.get("SetTargetModeEvent");
-    var sourceIdent  = testname;
+    var sourceIdent   = this.model.get("Subject");
 
     // Initialize and confirm initial values in renderer
     this.widget.setCurrentValue("11.1");
@@ -1137,7 +1138,8 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
 webbrick.widgets.TestTempSetPoint.prototype.testClockTickEvent = function() {
     var testname = "testClockTickEvent";
     logInfo("==== webbrick.widgets.TestTempSetPoint."+testname+" ====");
-    var sourceIdent  = testname;
+    var clockIdent   = testname;
+    var sourceIdent  = this.model.get("Subject");
     var clockEvent   = this.model.get("ClockTickEvent");
     var setModeEvent = this.model.get("SetTargetModeEvent");
 
@@ -1161,7 +1163,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testClockTickEvent = function() {
     
     // Clock tick with initial (default) mode timer - no change
     logDebug(testname+": clock tick with delay already at zero");
-    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(clockIdent, clockEvent);
 
     assertEq(testname+": ", this.model.get("MODE"),         "current");
     assertEq(testname+": ", this.model.get("MODETIMER"),     0);
@@ -1185,7 +1187,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testClockTickEvent = function() {
 
     // Clock tick to 1
     logDebug(testname+": clock tick down to 1");
-    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(clockIdent, clockEvent);
 
     assertEq(testname+": ", this.model.get("MODE"),         "target");
     assertEq(testname+": ", this.model.get("MODETIMER"),     1);
@@ -1198,7 +1200,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testClockTickEvent = function() {
 
     // Clock tick to 0
     logDebug(testname+": clock tick down to 0");
-    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(clockIdent, clockEvent);
 
     assertEq(testname+": ", this.model.get("MODE"),         "current");
     assertEq(testname+": ", this.model.get("MODETIMER"),     0);
@@ -1210,7 +1212,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testClockTickEvent = function() {
 
     // Clock tick at 0 (no change)
     logDebug(testname+": clock tick at 0");
-    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(clockIdent, clockEvent);
 
     assertEq(testname+": ", this.model.get("MODE"),         "current");
     assertEq(testname+": ", this.model.get("MODETIMER"),     0);
@@ -1234,7 +1236,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testClockTickEvent = function() {
 
     // Clock tick at -1 (no change)
     logDebug(testname+": clock tick at -1");
-    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(clockIdent, clockEvent);
     
     assertEq(testname+": ", this.model.get("MODE"),         "current");
     assertEq(testname+": ", this.model.get("MODETIMER"),    -1);
