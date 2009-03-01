@@ -79,6 +79,7 @@ webbrick.widgets.TestTempSetPoint.exposeTestFunctionNames = function() {
            , 'testSetTargetModeEvent'
            , 'testClockTickEvent'
            , 'testButtonClick'
+           , 'testButtonClickExtendsTargetMode'
            ];
     return [ 'testModuleContents'
              , 'testInitialModel'
@@ -1370,6 +1371,120 @@ webbrick.widgets.TestTempSetPoint.prototype.testButtonClick = function() {
 
     logDebug(testname+": complete");
 };
+
+/** 
+ *  Test button click extends target display mode timer
+ */
+webbrick.widgets.TestTempSetPoint.prototype.testButtonClickExtendsTargetMode = function() {
+    var testname = "testButtonClickExtendsTargetMode";
+    logInfo("==== webbrick.widgets.TestTempSetPoint."+testname+" ====");
+    var sourceIdent  = testname;
+    var clockEvent   = this.model.get("ClockTickEvent");
+
+    // Initialize
+    this.widget.setCurrentValue("11.1");
+    this.widget.setTargetValue("22.5");
+
+    // Confirm initial values in renderer
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "11.1");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-current");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "current");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-current");
+
+    // Simulate button-up click
+    logDebug(testname+": simulate button-up click");
+    this.widget.bumpTarget(+0.5);
+
+    assertEq(testname+": ", this.model.get("MODE"),         "target");
+    assertEq(testname+": ", this.model.get("MODETIMER"),     5);
+
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "22.5");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-target");
+
+    // Clock tick to 1
+    logDebug(testname+": clock tick down to 1");
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+
+    assertEq(testname+": ", this.model.get("MODE"),         "target");
+    assertEq(testname+": ", this.model.get("MODETIMER"),     1);
+
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "22.5");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-target");
+
+    // Simulate button-up click
+    logDebug(testname+": simulate button-up click");
+    this.widget.bumpTarget(+0.5);
+
+    assertEq(testname+": ", this.model.get("MODE"),         "target");
+    assertEq(testname+": ", this.model.get("MODETIMER"),     5);
+
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "23.0");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-target");
+
+    // Clock tick to 3
+    logDebug(testname+": clock tick down to 3");
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+
+    assertEq(testname+": ", this.model.get("MODE"),         "target");
+    assertEq(testname+": ", this.model.get("MODETIMER"),     3);
+
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "23.0");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-target");
+
+    // Simulate two button-down clicks
+    logDebug(testname+": simulate button-down clicks");
+    this.widget.bumpTarget(-0.5);
+    this.widget.bumpTarget(-0.5);
+
+    assertEq(testname+": ", this.model.get("MODE"),         "target");
+    assertEq(testname+": ", this.model.get("MODETIMER"),     5);
+
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "22.0");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-target");
+
+    // Clock tick to 3
+    logDebug(testname+": clock tick down to 3");
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+
+    assertEq(testname+": ", this.model.get("MODE"),         "target");
+    assertEq(testname+": ", this.model.get("MODETIMER"),     3);
+
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "22.0");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-target");
+
+    // Clock tick to 0
+    logDebug(testname+": clock tick down to 0");
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+    webbrick.widgets.publishEvent(sourceIdent, clockEvent);
+
+    assertEq(testname+": ", this.model.get("MODE"),         "current");
+    assertEq(testname+": ", this.model.get("MODETIMER"),     0);
+
+    assertEq(testname+": ", this.getElement(['SetPointValue']), "11.1");
+    assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-current");
+    assertEq(testname+": ", this.getElement(['SetPointState']), "current");
+    assertEq(testname+": ", this.getClass(['SetPointState']), "tempsetpoint-current");
+    
+    logDebug(testname+": complete");
+}
 
 //        1         2         3         4         5         6         7         8
 // 345678901234567890123456789012345678901234567890123456789012345678901234567890
