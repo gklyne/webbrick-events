@@ -1,4 +1,4 @@
-// $Id: TestWIDGETZZZ.js $
+// $Id: TestModeSelector.js $
 //
 // Copyright (c) 2008 WebBrick Systems Limited
 // Released under the MIT licence
@@ -7,9 +7,9 @@
 
 /**
  * @fileoverview
- * This script defines tests for the webbrick.widgets.WIDGETZZZ module.
+ * This script defines tests for the webbrick.widgets.ModeSelector module.
  *
- * @version $Id: TestWIDGETZZZ.js 36 2009-01-09 15:24:30Z gk-google@ninebynine.org $
+ * @version $Id: TestModeSelector.js 36 2009-01-09 15:24:30Z gk-google@ninebynine.org $
  * @author Graham Klyne
  *
  * @requires MochiKit.Base
@@ -29,7 +29,7 @@
  * @requires webbrick.EventRouterHTTPC.js
  * @requires webbrick.WidgetFunctions
  * @requires webbrick.widgets.MvcUtils
- * @requires webbrick.widgets.WIDGETZZZ
+ * @requires webbrick.widgets.ModeSelector
  */
 
 webbrick.require("MochiKit.Base");
@@ -50,7 +50,7 @@ webbrick.require("SimpleTest");
 // webbrick.require("webbrick.EventRouter");
 // webbrick.require("webbrick.EventRouterHTTPC");
 webbrick.require("webbrick.widgets.MvcUtils");
-webbrick.require("webbrick.widgets.WIDGETZZZ");
+webbrick.require("webbrick.widgets.ModeSelector");
 webbrick.require("webbrick.widgets.WidgetFunctions");
 
 // Shortcuts
@@ -65,76 +65,76 @@ var logError   = MochiKit.Logging.logError;
 
 /**
  * @class
- * Test suite for the webbrick.widgets.WIDGETZZZ module.
+ * Test suite for the webbrick.widgets.ModeSelector module.
  */
-webbrick.widgets.TestWIDGETZZZ = function() {
+webbrick.widgets.TestModeSelector = function() {
     return this;
 };
 
 // Specify order of tests: 
-webbrick.widgets.TestWIDGETZZZ.exposeTestFunctionNames = function() {
+webbrick.widgets.TestModeSelector.exposeTestFunctionNames = function() {
     return [ 'testModuleContents'
-           //, 'testInitialModel'
+           , 'testInitialModel'
            //, 'testInitialElem'
            //, 'testSetValue'
            //, 'testSetValueEvent'
            ];
-}
+};
 
 /**
  *  toString method to facilitate testing
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.toString = function() {
-    return 'TestWIDGETZZZ';
+webbrick.widgets.TestModeSelector.prototype.toString = function() {
+    return 'TestModeSelector';
 };
 
 /**
- *  Set up function for webbrick.widgets.TestWIDGETZZZ.
+ *  Set up function for webbrick.widgets.TestModeSelector.
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.setUp = function() {
+webbrick.widgets.TestModeSelector.prototype.setUp = function() {
     var elem = null;
-    logInfo("TestWIDGETZZZ.setUp");
+    logInfo("TestModeSelector.setUp");
     // Instantiate a local event router
     this.router = webbrick.widgets.getLocalEventRouter();
-    // Set up the WIDGETZZZ widget
+    // Set up the ModeSelector widget
     try {
         //////////////////////////
         //// TODO: define HTML for DOM to initialize widget
         var html =
-            "<span class='WIDGETZZZ_unknown'"+
-            ">WIDGETZZZ value here</span>";
+            "<span class='ModeSelector_unknown'"+
+            ">ModeSelector value here</span>";
         ////var html =
-        ////    "<input type='button' class='WIDGETZZZ_unknown' "+
-        ////    "value='WIDGETZZZ value here' >WIDGETZZZ value here</input>";
+        ////    "<input type='button' class='ModeSelector_unknown' "+
+        ////    "value='ModeSelector value here' >ModeSelector value here</input>";
         //////////////////////////
         var div = document.createElement('div');
         div.innerHTML = html;
         elem = div.getElementsByTagName('span')[0];
     } catch (e) {
-        logError("TestWIDGETZZZ.setUp: document.createElement('div') error, "+e.name+", "+e.message);
+        logError("TestModeSelector.setUp: document.createElement('div') error, "+e.name+", "+e.message);
     }
-    logDebug("TestWIDGETZZZ.setUp: elem: "+elem);
+    logDebug("TestModeSelector.setUp: elem: "+elem);
     if (elem == null) {
-        logError("TestWIDGETZZZ.setUp: elem is null");
+        logError("TestModeSelector.setUp: elem is null");
     }
     try {
-        this.widget = webbrick.widgets.WIDGETZZZ_Init(elem);
+        this.widget = webbrick.widgets.ModeSelector_Init(elem);
         this.model  = this.widget._model;
         this.elem   = elem;     // this.widget._elem;
     } catch (e) {
-        logError("setUp new WIDGETZZZ error, "+e.name+", "+e.message);
+        logError("setUp new ModeSelector error, "+e.name+", "+e.message);
     }
-    logDebug("TestWIDGETZZZ.setUp: done");
+    logDebug("TestModeSelector.setUp: done");
 };
 
 /**
- *  Tear down function for webbrick.widgets.TestWIDGETZZZ.
+ *  Tear down function for webbrick.widgets.TestModeSelector.
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.tearDown = function() {
+webbrick.widgets.TestModeSelector.prototype.tearDown = function() {
     try {
-        logInfo("TestWIDGETZZZ.tearDown");
+        logInfo("TestModeSelector.tearDown");
     } catch (e) {
-        logError("TestWIDGETZZZ.tearDown: error, "+e.name+", "+e.message);
+        logError("TestModeSelector.tearDown: error, "+e.name+", "+e.message);
     }
 };
 
@@ -142,20 +142,20 @@ webbrick.widgets.TestWIDGETZZZ.prototype.tearDown = function() {
  *  Compare widget class with supplied value, ensuring that other 
  *  display classes are not present.
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.compareElementClass = function(expected) {
+webbrick.widgets.TestModeSelector.prototype.compareElementClass = function(expected) {
     return webbrick.widgets.testClassValues(this.elem, expected, 
-        [ "WIDGETZZZ_normal"
-        , "WIDGETZZZ_pending"
-        , "WIDGETZZZ_unknown"
+        [ "ModeSelector_normal"
+        , "ModeSelector_pending"
+        , "ModeSelector_unknown"
         ] );
 };
 
 /**
- *  Test that the contents of the webbrick.widgets.WIDGETZZZ module have been defined.
+ *  Test that the contents of the webbrick.widgets.ModeSelector module have been defined.
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.testModuleContents = function() {
+webbrick.widgets.TestModeSelector.prototype.testModuleContents = function() {
     var testname = "testModuleContents";
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
+    logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
     assertNotUndefined(testname, "_model",      this.widget._model);
     assertNotUndefined(testname, "_renderer",   this.widget._renderer);
     assertNotUndefined(testname, "_collector",  this.widget._collector);
@@ -163,57 +163,55 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testModuleContents = function() {
 };
 
 /** 
- *  Test initial WIDGETZZZ model content
+ *  Test initial ModeSelector model content
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.testInitialModel = function() {
-    var testname = "testModuleContents";
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
-    logDebug(testname+": state: "+this.model.get("STATE"));
-    logDebug(testname+": value: "+this.model.get("VALUE"));
-    assertEq(testname, this.model.get("STATE"), "unknown");
-    assertEq(testname, this.model.get("VALUE"), "WIDGETZZZ value here");
-    assertEq(testname, this.model.get("SetValueEvent"),   "_WIDGETZZZ.SetValueEvent");
-    assertEq(testname, this.model.get("SetStateEvent"),   "_WIDGETZZZ.SetStateEvent");
-    assertEq(testname, this.model.get("ClickEvent"),      "_WIDGETZZZ.ClickEvent");
-    assertEq(testname, this.model.get("ClickSource"),     "_WIDGETZZZ.ClickSource");
-    assertEq(testname, this.model.get("ClockTickEvent"),  "_WIDGETZZZ.ClockTickEvent_OverrideMe");    
+webbrick.widgets.TestModeSelector.prototype.testInitialModel = function() {
+    var testname = "testInitialModel";
+    logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
+    logDebug(testname+": mode: "+this.model.get("MODE"));
+    logDebug(testname+": button states: "+this.model.get("BUTTONSTATES"));
+    assertEq(testname, this.model.get("MODE"), 0);
+    assertEq(testname, this.model.get("BUTTONSTATES"), [false,false,false,false]);
+    assertEq(testname, this.model.get("Default"),         "_ModeSelector.Default");
+    assertEq(testname, this.model.get("Source"),          "_ModeSelector.Source");
+    assertEq(testname, this.model.get("SetModeEvent"),    "_ModeSelector.SetModeEvent");
 };
 
 /** 
- *  Test initial WIDGETZZZ element values
+ *  Test initial ModeSelector element values
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.testInitialElem = function() {
+webbrick.widgets.TestModeSelector.prototype.testInitialElem = function() {
     var testname = "testInitialElem";
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
+    logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
     logDebug(testname+": class: "+this.elem.className);
     logDebug(testname+": value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
     logDebug(testname+": text:  "+webbrick.widgets.getElementText(this.elem));
     //////////////////////////
     //// TODO: adjust as needed
-    //assertEq("testInitialElem",  MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq(testname, webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+    //assertEq("testInitialElem",  MochiKit.DOM.getNodeAttribute(this.elem, "value"), "ModeSelector value here");
+    assertEq(testname, webbrick.widgets.getElementText(this.elem), "ModeSelector value here");
     //////////////////////////
-    assertEq(testname, null, this.compareElementClass("WIDGETZZZ_unknown"));
+    assertEq(testname, null, this.compareElementClass("ModeSelector_unknown"));
 };
 
 /** 
  *  Test set value by direct setting of model
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.testSetValue = function() {
+webbrick.widgets.TestModeSelector.prototype.testSetValue = function() {
     var testname = "testSetValue";
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
+    logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
 
     // Confirm initial element value
     //////////////////////////
     //// TODO: adjust as needed
     logDebug(testname+": value: "+webbrick.widgets.getElementText(this.elem));
     assertEq(testname+": value: ", 
-            webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+            webbrick.widgets.getElementText(this.elem), "ModeSelector value here");
     ////logDebug(testname+": value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
     ////assertEq(testname+": value: ", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
+    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "ModeSelector value here");
     ////logDebug(testname+": class: "+MochiKit.DOM.getNodeAttribute(this.elem, "class"));
-    ////assertEq(testname, null, this.compareElementClass("WIDGETZZZ_unknown"));
+    ////assertEq(testname, null, this.compareElementClass("ModeSelector_unknown"));
     //////////////////////////
     
     // Test set new element value
@@ -222,12 +220,12 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testSetValue = function() {
     this.model.set("VALUE", "new value");
     logDebug(testname+": value: "+webbrick.widgets.getElementText(this.elem));
     assertEq(testname+": value: ", 
-            webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+            webbrick.widgets.getElementText(this.elem), "ModeSelector value here");
     ////logDebug(testname+": value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
     ////assertEq(testname+": value: ", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
+    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "ModeSelector value here");
     ////logDebug(testname+": class: "+MochiKit.DOM.getNodeAttribute(this.elem, "class"));
-    ////assertEq(testname, null, this.compareElementClass("WIDGETZZZ_unknown"));
+    ////assertEq(testname, null, this.compareElementClass("ModeSelector_unknown"));
     //////////////////////////
 
     logDebug(testname+": complete");
@@ -236,9 +234,9 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testSetValue = function() {
 /** 
  *  Test set value by publishing event
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.testSetValueEvent = function() {
+webbrick.widgets.TestModeSelector.prototype.testSetValueEvent = function() {
     var testname = "testSetValueEvent";
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
+    logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
     var setValueEvent = this.model.get("SetValueEvent");
 
     // Test initial element value
@@ -246,9 +244,9 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testSetValueEvent = function() {
     //////////////////////////
     //// TODO: adjust as needed
     ////assertEq(testname+": value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
+    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "ModeSelector value here");
     assertEq(testname+": value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+        webbrick.widgets.getElementText(this.elem), "ModeSelector value here");
     //////////////////////////
 
     //////////////////////////

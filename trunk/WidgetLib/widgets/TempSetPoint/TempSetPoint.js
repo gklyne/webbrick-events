@@ -149,7 +149,7 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
 // ------------------
 
 webbrick.widgets.TempSetPoint.prototype.convertFloatToString = function(val, state) {
-    MochiKit.Logging.log("TempSetPoint.convertValue: "+val);
+    MochiKit.Logging.log("TempSetPoint.convertFloatToString: "+val);
     if (typeof val == "number") {
         val = val.toFixed(1);
     }
@@ -158,19 +158,6 @@ webbrick.widgets.TempSetPoint.prototype.convertFloatToString = function(val, sta
         val = val.toFixed(1);
     } else {
         state = "unknown";
-    };
-    return {value:val, state:state};
-};
-
-webbrick.widgets.TempSetPoint.prototype.convertStringToInt = function(val, state) {
-    MochiKit.Logging.log("TempSetPoint.convertValue: "+val);
-    if (typeof val == "string") {
-        if (val.match(/^\s*\d+\s*$/) != null) {
-            val = parseInt(val, 10);
-        };
-    };
-    if (typeof val != "integer") {
-            state = "unknown";
     };
     return {value:val, state:state};
 };
@@ -215,9 +202,9 @@ webbrick.widgets.TempSetPoint.prototype.setMode = function (val) {
 
 webbrick.widgets.TempSetPoint.prototype.setModeTimer = function (val) {
     MochiKit.Logging.log("TempSetPoint.setModeTimer: "+val);
-    this._model.set("MODETIMER", val);
-    var vs = this.convertStringToInt(val, "timer");
-    if (vs.value > 0 ) {
+    var vs = webbrick.widgets.convertStringToInt(val);
+    this._model.set("MODETIMER", vs);
+    if (vs > 0 ) {
         this.setMode("target");
     } else {
         this.setMode("current");

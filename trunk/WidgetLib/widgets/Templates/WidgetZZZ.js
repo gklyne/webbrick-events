@@ -26,6 +26,123 @@ webbrick.require("MochiKit.Logging");
 webbrick.require("MochiKit.Signal");
 webbrick.require("webbrick.widgets.MvcUtils");
 
+// ----------------
+// Model definition
+// ----------------
+
+/**
+ *  Definition of WIDGETZZZ model, with dynamic values determined by widget
+ *  behaviour and interactions, and static values initialized with parameters
+ *  provided when the widget is created.
+ */
+webbrick.widgets.WIDGETZZZ_ModelDefinition = {
+    ////////////////////
+    // TODO: Adjust as appropriate
+    ////////////////////
+    propertyNames : [ 
+        // Dynamic values:
+        "STATE",                    // state of widget
+        "VALUE",                    // value displayed in widget
+        // Static parameters:
+        "SetValueEvent",            // event type URI for setting widget value
+        "SetStateEvent",            // event type URI for setting widget state
+        "ClickEvent",               // event type URI published when widget is clicked
+        "ClickSource",              // event source URI published when widget is clicked
+        "ClockTickEvent"            // event type URI for clock tick
+    ],
+    ////////////////////
+    // TODO: Adjust as appropriate
+    ////////////////////
+    controlledValues : {
+        "STATE" : [ "unknown", "normal", "pending" ]
+    },
+    ////////////////////
+    // TODO: Adjust as appropriate
+    ////////////////////
+    defaultValues : {
+        STATE:                  "unknown",
+        VALUE:                  "(unknown)",
+        SetValueEvent:          "_WIDGETZZZ.SetValueEvent",
+        SetStateEvent:          "_WIDGETZZZ.SetStateEvent",
+        ClickEvent:             "_WIDGETZZZ.ClickEvent",
+        ClickSource:            "_WIDGETZZZ.ClickSource",
+        ClockTickEvent:         "_WIDGETZZZ.ClockTickEvent_OverrideMe"
+    }
+};
+
+// -------------------------
+// Model initialization data
+// -------------------------
+
+////////////////////
+// TODO: Adjust as appropriate
+////////////////////
+
+/**
+ *  Dictionary used to initialize a model from DOM element, used with
+ *  function webbrick.widgets.getWidgetValues (defined in MvcUtils).     
+ *  
+ *  Each entry initializes a single model value with the same name as
+ *  the dictionary key value.  The value initializer is obtained by
+ *  calling the indicated function with the supplied value and the DOM
+ *  element as parameters.  Module webbrick.widgets.MvcUtils defines some
+ *  commonly used functions in the webbrick.widgets namespace.
+ */
+webbrick.widgets.WIDGETZZZ_InitializeValues = {
+    STATE:                  
+        [webbrick.widgets.getMappedClass, webbrick.widgets.WIDGETZZZ_StateClass],
+    VALUE:                  
+        ////////////////////
+        // TODO: Adjust as appropriate
+        //[webbrick.widgets.getWidgetAttribute, "value"],     // From TG widget
+        [webbrick.widgets.getWidgetContent],
+        ////////////////////
+    SetValueEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetValueEvent"],
+    SetStateEvent:
+        [webbrick.widgets.getWidgetAttribute, "SetStateEvent"],
+    ClickEvent:
+        [webbrick.widgets.getWidgetAttribute, "ClickEvent"],
+    ClickSource:
+        [webbrick.widgets.getWidgetAttribute, "ClickSource"]
+};
+
+/**
+ * Table for mapping model STATE value to CSS class.
+ *
+ * See also modelDefinition.controlledValues above.
+ *
+ * As well as for initialization, this is used by the DOM renderer below.
+ */
+webbrick.widgets.WIDGETZZZ_StateClass = {
+        normal:     'WIDGETZZZ_normal',
+        pending:    'WIDGETZZZ_pending',
+        unknown:    'WIDGETZZZ_unknown'
+    };
+
+// ---------------
+// Incoming events
+// ---------------
+
+/**
+ * @private
+ * Table of event subscriptions for this widget.
+ *
+ * Each entry is a triple consisting of:
+ *   the name of the model property that defines the event type URI
+ *   the name of the model property that defines the event source URI, or null
+ *   the name of the event handler method of the widget object to be subscribed.
+ */
+webbrick.widgets.WIDGETZZZ_EventSubscriptions = [
+    ["SetValueEvent", null, "SetValueEventHandler"],
+    ////["ClockTickEvent",  null, "ClockTickEventHandler"],
+    ////["SetYYYEvent",  null, "SetYYYEventHandler"],
+    ];
+
+// ---------------------
+// Widget initialization
+// ---------------------
+
 /**
  * Function to create and return a new WIDGETZZZ object.
  *
@@ -43,7 +160,7 @@ webbrick.widgets.WIDGETZZZ_Init = function (element) {
 
     MochiKit.Logging.logDebug("WIDGETZZZ_Init: extract parameters from DOM");
     var modelvals = webbrick.widgets.getWidgetValues
-        (webbrick.widgets.WIDGETZZZ.initializeValues, element);
+        (webbrick.widgets.WIDGETZZZ_InitializeValues, element);
 
     MochiKit.Logging.logDebug("WIDGETZZZ: create widget");
     var widget = new webbrick.widgets.WIDGETZZZ(modelvals, renderer, renderer);
@@ -111,20 +228,15 @@ webbrick.widgets.WIDGETZZZ = function (modelvals, renderer, collector) {
      *   the name of the model property that defines the event source URI, or null
      *   the name of the event handler method of this object to be subscribed.
      */
-    this._subscribes = [
-        ["SetValueEvent", null, "SetValueEventHandler"],
-        ["SetStateEvent", null, "SetStateEventHandler"],
-        ////["ClockTickEvent",  null, "ClockTickEventHandler"],
-        ////["SetYYYEvent",  null, "SetYYYEventHandler"],
-    ];    
+    this._subscribes = webbrick.widgets.WIDGETZZZ_EventSubscriptions;
 
     // ---- Initialize ----
 
     // Create the model
     MochiKit.Logging.logDebug(
-        "WIDGETZZZ: create model: "+webbrick.widgets.WIDGETZZZ.modelDefinition);
+        "WIDGETZZZ: create model: "+webbrick.widgets.WIDGETZZZ_ModelDefinition);
     this._model = new webbrick.widgets.GenericModel(
-        webbrick.widgets.WIDGETZZZ.modelDefinition);
+        webbrick.widgets.WIDGETZZZ_ModelDefinition);
 
     // Populate the model attributes
     MochiKit.Logging.logDebug("WIDGETZZZ: populate model");
@@ -203,100 +315,6 @@ webbrick.widgets.WIDGETZZZ.prototype.SetStateEventHandler = function (handler, e
     };
 }
 
-// ----------------
-// Model definition
-// ----------------
-
-/**
- *  Definition of WIDGETZZZ model, with dynamic values determined by widget
- *  behaviour and interactions, and static values initialized with parameters
- *  provided when the widget is created.
- */
-webbrick.widgets.WIDGETZZZ.modelDefinition = {
-    ////////////////////
-    // TODO: Adjust as appropriate
-    ////////////////////
-    propertyNames : [ 
-        // Dynamic values:
-        "STATE",                    // state of widget
-        "VALUE",                    // value displayed in widget
-        // Static parameters:
-        "SetValueEvent",            // event type URI for setting widget value
-        "SetStateEvent",            // event type URI for setting widget state
-        "ClickEvent",               // event type URI published when widget is clicked
-        "ClickSource",              // event source URI published when widget is clicked
-        "ClockTickEvent"            // event type URI for clock tick
-    ],
-    ////////////////////
-    // TODO: Adjust as appropriate
-    ////////////////////
-    controlledValues : {
-        "STATE" : [ "unknown", "normal", "pending" ]
-    },
-    ////////////////////
-    // TODO: Adjust as appropriate
-    ////////////////////
-    defaultValues : {
-        STATE:                  "unknown",
-        VALUE:                  "(unknown)",
-        SetValueEvent:          "_WIDGETZZZ.SetValueEvent",
-        SetStateEvent:          "_WIDGETZZZ.SetStateEvent",
-        ClickEvent:             "_WIDGETZZZ.ClickEvent",
-        ClickSource:            "_WIDGETZZZ.ClickSource",
-        ClockTickEvent:         "_WIDGETZZZ.ClockTickEvent_OverrideMe"
-    }
-};
-
-// -------------------------
-// Model initialization data
-// -------------------------
-
-////////////////////
-// TODO: Adjust as appropriate
-////////////////////
-
-/**
- * Table for mapping model STATE value to CSS class.
- *
- * See also modelDefinition.controlledValues above.
- *
- * As well as for initialization, this is used by the DOM renderer below.
- */
-webbrick.widgets.WIDGETZZZ.StateClass = {
-        normal:     'WIDGETZZZ_normal',
-        pending:    'WIDGETZZZ_pending',
-        unknown:    'WIDGETZZZ_unknown'
-    };
-
-/**
- *  Dictionary used to initialize a model from DOM element, used with
- *  function webbrick.widgets.getWidgetValues (defined in MvcUtils).     
- *  
- *  Each entry initializes a single model value with the same name as
- *  the dictionary key value.  The value initializer is obtained by
- *  calling the indicated function with the supplied value and the DOM
- *  element as parameters.  Module webbrick.widgets.MvcUtils defines some
- *  commonly used functions in the webbrick.widgets namespace.
- */
-webbrick.widgets.WIDGETZZZ.initializeValues = {
-    STATE:                  
-        [webbrick.widgets.getMappedClass, webbrick.widgets.WIDGETZZZ.StateClass],
-    VALUE:                  
-        ////////////////////
-        // TODO: Adjust as appropriate
-        //[webbrick.widgets.getWidgetAttribute, "value"],     // From TG widget
-        [webbrick.widgets.getWidgetContent],
-        ////////////////////
-    SetValueEvent:
-        [webbrick.widgets.getWidgetAttribute, "SetValueEvent"],
-    SetStateEvent:
-        [webbrick.widgets.getWidgetAttribute, "SetStateEvent"],
-    ClickEvent:
-        [webbrick.widgets.getWidgetAttribute, "ClickEvent"],
-    ClickSource:
-        [webbrick.widgets.getWidgetAttribute, "ClickSource"]
-};
-
 // --------------------------------------------
 // Renderer and user input collector definition
 // --------------------------------------------
@@ -331,7 +349,7 @@ webbrick.widgets.WIDGETZZZ.rendererDefinition = {
             ['setElementText', null],
         ////////////////////
         SetStateModelListener: 
-            ['setClassMapped', webbrick.widgets.WIDGETZZZ.StateClass],
+            ['setClassMapped', webbrick.widgets.WIDGETZZZ_StateClass],
         WidgetClicked: 
             ['domEventClicked', 'Clicked', webbrick.widgets.WIDGETZZZ.ClickTypeMap]
         },

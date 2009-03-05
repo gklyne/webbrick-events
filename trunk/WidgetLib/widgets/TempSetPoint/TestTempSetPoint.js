@@ -1097,6 +1097,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
     this.widget.setCurrentValue("11.1");
     this.widget.setTargetValue("22.2");
     
+    assertEq(testname+": ", this.model.get("MODETIMER"),    0);
     assertEq(testname+": ", this.getElement(['SetPointValue']), "11.1");
     assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-current");
     assertEq(testname+": ", this.getElement(['SetPointState']), "current");
@@ -1106,6 +1107,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
     logDebug(testname+": setting target mode timer to 5");
     webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 5);
 
+    assertEq(testname+": ", this.model.get("MODETIMER"),    5);
     assertEq(testname+": ", this.getElement(['SetPointValue']), "22.2");
     assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
     assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
@@ -1115,6 +1117,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
     logDebug(testname+": setting target mode timer to 0");
     webbrick.widgets.publishEvent(sourceIdent, setModeEvent, 0);
 
+    assertEq(testname+": ", this.model.get("MODETIMER"),    0);
     assertEq(testname+": ", this.getElement(['SetPointValue']), "11.1");
     assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-current");
     assertEq(testname+": ", this.getElement(['SetPointState']), "current");
@@ -1124,6 +1127,7 @@ webbrick.widgets.TestTempSetPoint.prototype.testSetTargetModeEvent = function() 
     logDebug(testname+": setting target mode timer to '3'");
     webbrick.widgets.publishEvent(sourceIdent, setModeEvent, '3');
 
+    assertEq(testname+": ", this.model.get("MODETIMER"),    3);
     assertEq(testname+": ", this.getElement(['SetPointValue']), "22.2");
     assertEq(testname+": ", this.getClass(['SetPointValue']), "tempsetpoint-target");
     assertEq(testname+": ", this.getElement(['SetPointState']), "set point");
