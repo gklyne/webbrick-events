@@ -49,7 +49,6 @@ webbrick.widgets.TempSetPoint_Init = function (element) {
     var widget = new webbrick.widgets.TempSetPoint(modelvals, renderer, renderer);
 
     // If defined, set default target value from attribute
-    // TODO: is there a better way to handle this as part of the initialize-from-DOM logic?
     var deftgt = webbrick.widgets.getWidgetValue(element, "@DefaultTarget");
     if (deftgt != null && deftgt != "") {
         widget.setTargetValue(deftgt);
@@ -139,6 +138,7 @@ webbrick.widgets.TempSetPoint = function (modelvals, renderer, collector) {
     MochiKit.Logging.logDebug("TempSetPoint: connect input collector listeners");
     MochiKit.Signal.connect(this._collector, 'BumpTarget', this, this.bumpTarget);
 
+    // Connect controller to external control events
     webbrick.widgets.SubscribeWidgetEvents(this, this._model, this._subscribes);
 
     MochiKit.Logging.logDebug("TempSetPoint: initialized");
@@ -483,7 +483,6 @@ webbrick.widgets.TempSetPoint.rendererDefinition = {
     // These map DOM events to renderer handler methods (cf. GenericDomRenderer),
     // which may direct methods or indirectly defined via renderFundtions (above).
     collectDomInputs: {
-        // TODO: remove surplus events
         onclick:        'ButtonClicked'
     }
 };
