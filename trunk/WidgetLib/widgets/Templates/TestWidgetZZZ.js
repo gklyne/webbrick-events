@@ -76,9 +76,7 @@ webbrick.widgets.TestWIDGETZZZ.exposeTestFunctionNames = function() {
     return [ 'testModuleContents'
            //, 'testInitialModel'
            //, 'testInitialElem'
-           //, 'testSetState'
            //, 'testSetValue'
-           //, 'testSetStateEvent'
            //, 'testSetValueEvent'
            ];
 }
@@ -141,33 +139,6 @@ webbrick.widgets.TestWIDGETZZZ.prototype.tearDown = function() {
 };
 
 /**
- *  Test that the contents of the webbrick.widgets.WIDGETZZZ module have been defined.
- */
-webbrick.widgets.TestWIDGETZZZ.prototype.testModuleContents = function() {
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ.testModuleContents ====");
-    assertNotUndefined("testModuleContents", "_model",      this.widget._model);
-    assertNotUndefined("testModuleContents", "_renderer",   this.widget._renderer);
-    assertNotUndefined("testModuleContents", "_collector",  this.widget._collector);
-    assertNotUndefined("testModuleContents", "_subscribes", this.widget._subscribes);
-};
-
-/** 
- *  Test initial WIDGETZZZ model content
- */
-webbrick.widgets.TestWIDGETZZZ.prototype.testInitialModel = function() {
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ.testInitialModel ====");
-    logDebug("testInitialModel: state: "+this.model.get("STATE"));
-    logDebug("testInitialModel: value: "+this.model.get("VALUE"));
-    assertEq("testInitialModel", this.model.get("STATE"), "unknown");
-    assertEq("testInitialModel", this.model.get("VALUE"), "WIDGETZZZ value here");
-    assertEq("testInitialModel", this.model.get("SetValueEvent"),   "_WIDGETZZZ.SetValueEvent");
-    assertEq("testInitialModel", this.model.get("SetStateEvent"),   "_WIDGETZZZ.SetStateEvent");
-    assertEq("testInitialModel", this.model.get("ClickEvent"),      "_WIDGETZZZ.ClickEvent");
-    assertEq("testInitialModel", this.model.get("ClickSource"),     "_WIDGETZZZ.ClickSource");
-    assertEq("testInitialModel", this.model.get("ClockTickEvent"),  "_WIDGETZZZ.ClockTickEvent_OverrideMe");    
-};
-
-/**
  *  Compare widget class with supplied value, ensuring that other 
  *  display classes are not present.
  */
@@ -179,242 +150,122 @@ webbrick.widgets.TestWIDGETZZZ.prototype.compareElementClass = function(expected
         ] );
 };
 
+/**
+ *  Test that the contents of the webbrick.widgets.WIDGETZZZ module have been defined.
+ */
+webbrick.widgets.TestWIDGETZZZ.prototype.testModuleContents = function() {
+    var testname = "testModuleContents";
+    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
+    assertNotUndefined(testname, "_model",      this.widget._model);
+    assertNotUndefined(testname, "_renderer",   this.widget._renderer);
+    assertNotUndefined(testname, "_collector",  this.widget._collector);
+    assertNotUndefined(testname, "_subscribes", this.widget._subscribes);
+};
+
+/** 
+ *  Test initial WIDGETZZZ model content
+ */
+webbrick.widgets.TestWIDGETZZZ.prototype.testInitialModel = function() {
+    var testname = "testModuleContents";
+    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
+    logDebug(testname+": state: "+this.model.get("STATE"));
+    logDebug(testname+": value: "+this.model.get("VALUE"));
+    assertEq(testname, this.model.get("STATE"), "unknown");
+    assertEq(testname, this.model.get("VALUE"), "WIDGETZZZ value here");
+    assertEq(testname, this.model.get("SetValueEvent"),   "_WIDGETZZZ.SetValueEvent");
+    assertEq(testname, this.model.get("SetStateEvent"),   "_WIDGETZZZ.SetStateEvent");
+    assertEq(testname, this.model.get("ClickEvent"),      "_WIDGETZZZ.ClickEvent");
+    assertEq(testname, this.model.get("ClickSource"),     "_WIDGETZZZ.ClickSource");
+    assertEq(testname, this.model.get("ClockTickEvent"),  "_WIDGETZZZ.ClockTickEvent_OverrideMe");    
+};
+
 /** 
  *  Test initial WIDGETZZZ element values
  */
 webbrick.widgets.TestWIDGETZZZ.prototype.testInitialElem = function() {
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ.testInitialElem ====");
-    logDebug("testInitialElem: class: "+this.elem.className);
-    logDebug("testInitialElem: value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
-    logDebug("testInitialElem: text:  "+webbrick.widgets.getElementText(this.elem));
+    var testname = "testInitialElem";
+    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
+    logDebug(testname+": class: "+this.elem.className);
+    logDebug(testname+": value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
+    logDebug(testname+": text:  "+webbrick.widgets.getElementText(this.elem));
     //////////////////////////
     //// TODO: adjust as needed
     //assertEq("testInitialElem",  MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testInitialElem", webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+    assertEq(testname, webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
     //////////////////////////
-    assertEq("testInitialElem", null, this.compareElementClass("WIDGETZZZ_unknown"));
-};
-
-/** 
- *  Test set state by direct setting of model
- *
- *  Expect model and element class to be updated each time.
- */
-webbrick.widgets.TestWIDGETZZZ.prototype.testSetState = function() {
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ.testSetState ====");
-
-    // Confirm initial element class
-    assertEq("testSetState: Initial state: ", this.model.get("STATE"), "unknown");
-    assertEq("testSetState: Initial class: ", null, this.compareElementClass("WIDGETZZZ_unknown"));
-
-    // Test setting invalid state
-    logDebug("testSetState: test invalid state raises error");
-    try {
-        this.model.set("STATE", "invalid");
-        assertFail("testSetState: Set invalid state - exception expected");
-    } catch (e) {
-        if (e.name == "InvalidPropertyValuePairError") {
-            logDebug("testSetState: Set invalid state OK");
-        } else {
-            assertFail("testSetState: Set invalid state - wrong exception: "+e.name+", "+e.message);
-        }
-    }
-
-    // Test setting state to "normal"
-    logDebug("testSetState: setting state to 'normal'");
-    this.model.set("STATE", "normal");
-    assertEq("testSetState: state", this.model.get("STATE"), "normal");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetState: value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
-    //////////////////////////
-    assertEq("testSetState", null, this.compareElementClass("WIDGETZZZ_normal"));
-
-    // Test setting state to "pending"
-    logDebug("testSetState: setting state to 'pending'");
-    this.model.set("STATE", "pending");
-    assertEq("testSetState: state", this.model.get("STATE"), "pending");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetState: value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
-    //////////////////////////
-    assertEq("testSetState", null, this.compareElementClass("WIDGETZZZ_pending"));
-
-    // Test setting state to "unknown"
-    logDebug("testSetState: setting state to 'unknown'");
-    this.model.set("STATE", "unknown");
-    assertEq("testSetState: state", this.model.get("STATE"), "unknown");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetState: value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
-    //////////////////////////
-    assertEq("testSetState", null, this.compareElementClass("WIDGETZZZ_unknown"));
-
-    logDebug("testSetState: complete");
+    assertEq(testname, null, this.compareElementClass("WIDGETZZZ_unknown"));
 };
 
 /** 
  *  Test set value by direct setting of model
  */
 webbrick.widgets.TestWIDGETZZZ.prototype.testSetValue = function() {
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ.testSetValue ====");
+    var testname = "testSetValue";
+    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
 
     // Confirm initial element value
     //////////////////////////
     //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
+    logDebug(testname+": value: "+webbrick.widgets.getElementText(this.elem));
+    assertEq(testname+": value: ", 
+            webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+    ////logDebug(testname+": value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
+    ////assertEq(testname+": value: ", 
     ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetState: value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+    ////logDebug(testname+": class: "+MochiKit.DOM.getNodeAttribute(this.elem, "class"));
+    ////assertEq(testname, null, this.compareElementClass("WIDGETZZZ_unknown"));
     //////////////////////////
-
+    
     //////////////////////////
     //// TODO: adjust as needed
     // Test set new element value
     this.model.set("VALUE", "new value");
-    logDebug("testSetValue: new element value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
-    assertEq("testSetValue: value", webbrick.widgets.getElementText(this.elem), "new value");
-    ////logDebug("set new element value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
-    ////assertEq("testSetValue: value",  
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "new value");
-    //////////////////////////
-
-    logDebug("testSetValue: complete");
-};
-
-/** 
- *  Publish event helper function
- *
- *  Returns a deferred status value.
- */
-// TODO: refactor this to common library code
-webbrick.widgets.TestWIDGETZZZ.prototype.publishEvent = function 
-        (evtype, payload) {
-    logDebug("publishEvent: evtype: "+evtype+", payload: "+payload);
-    var source = makeEventAgent("testSetStateEvent");
-    logDebug("publishEvent: source: "+source);
-    var event  = makeEvent(evtype, "testSetStateEvent", payload);
-    logDebug("publishEvent: event: "+event);
-    var sts = this.router.publish(source, event);
-    logDebug("publishEvent: sts: "+sts);
-    var sts = syncDeferred(sts);
-    logDebug("publishEvent: syncDeferred(sts): "+sts);
-    return sts;
-}
-
-/** 
- *  Test set state by publishing event
- *
- *  Expect model and element class to be updated each time.
- */
-webbrick.widgets.TestWIDGETZZZ.prototype.testSetStateEvent = function() {
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ.testSetStateEvent ====");
-    var setStateEvent = this.model.get("SetStateEvent");
-
-    // Confirm initial element class
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "unknown");
-    assertEq("testSetStateEvent", null, this.compareElementClass("WIDGETZZZ_unknown"));
-
-    // Test for invalid state
-    logDebug("test invalid state raises error");
-    var sts = this.publishEvent(setStateEvent, "invalid");
-    logDebug("testSetStateEvent: Set invalid state");
-    logDebug("sts "+sts);
-    assertEquals("testSetStateEvent: publishEvent", typeof(sts), "object");
-    assertEquals("testSetStateEvent: publishEvent", sts.constructor, Error);
-    assertEquals("testSetStateEvent: publishEvent", sts.name, "InvalidPropertyValuePairError");
-    assertEquals("testSetStateEvent: publishEvent", sts.message, "Invalid property-value pair, property name: STATE, property value: invalid");
-
-    // Retest initial element class - should be set to unknown after invalid value
-    assertEq("testSetStateEvent: invalid", this.model.get("STATE"), "unknown");
-    assertEq("testSetStateEvent", null, this.compareElementClass("WIDGETZZZ_unknown"));
-
-    // Test setting state to "normal"
-    logDebug("testSetStateEvent: setting state to 'normal'");
-    var sts = this.publishEvent(setStateEvent, "normal");
-    assertEquals("testSetStateEvent: publishEvent(normal) sts", sts, StatusVal.OK);
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "normal");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
+    logDebug(testname+": value: "+webbrick.widgets.getElementText(this.elem));
+    assertEq(testname+": value: ", 
+            webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+    ////logDebug(testname+": value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
+    ////assertEq(testname+": value: ", 
     ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetStateEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
+    ////logDebug(testname+": class: "+MochiKit.DOM.getNodeAttribute(this.elem, "class"));
+    ////assertEq(testname, null, this.compareElementClass("WIDGETZZZ_unknown"));
     //////////////////////////
-    assertEq("testSetStateEvent", null, this.compareElementClass("WIDGETZZZ_normal"));
 
-    // Test setting state to "pending"
-    logDebug("testSetStateEvent: setting state to 'pending'");
-    var sts = this.publishEvent(setStateEvent, "pending");
-    assertEquals("testSetStateEvent: publishEvent(pending) sts", sts, StatusVal.OK);
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "pending");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetStateEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
-    //////////////////////////
-    assertEq("testSetStateEvent", null, this.compareElementClass("WIDGETZZZ_pending"));
-
-    // Test setting state to "unknown"
-    logDebug("testSetStateEvent: setting state to 'unknown'");
-    var sts = this.publishEvent(setStateEvent, "unknown");
-    assertEquals("testSetStateEvent: publishEvent(unknown) sts", sts, StatusVal.OK);
-    assertEq("testSetStateEvent: state", this.model.get("STATE"), "unknown");
-    //////////////////////////
-    //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
-    ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetStateEvent: value", 
-        webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
-    //////////////////////////
-    assertEq("testSetStateEvent", null, this.compareElementClass("WIDGETZZZ_unknown"));
-
-    logDebug("testSetStateEvent: complete");
+    logDebug(testname+": complete");
 };
 
 /** 
  *  Test set value by publishing event
  */
 webbrick.widgets.TestWIDGETZZZ.prototype.testSetValueEvent = function() {
-    logInfo("==== webbrick.widgets.TestWIDGETZZZ.testSetValueEvent ====");
+    var testname = "testSetValueEvent";
+    logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
     var setValueEvent = this.model.get("SetValueEvent");
 
     // Test initial element value
-    logDebug("testSetValueEvent: initial element value: "+webbrick.widgets.getElementText(this.elem));
+    logDebug(testname+": initial element value: "+webbrick.widgets.getElementText(this.elem));
     //////////////////////////
     //// TODO: adjust as needed
-    ////assertEq("testSetState: value", 
+    ////assertEq(testname+": value", 
     ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "WIDGETZZZ value here");
-    assertEq("testSetValueEvent: value", 
+    assertEq(testname+": value", 
         webbrick.widgets.getElementText(this.elem), "WIDGETZZZ value here");
     //////////////////////////
 
     //////////////////////////
     //// TODO: adjust as needed
     // Test set new element value
-    logDebug("testSetValueEvent: setting text to 'new value'");
+    logDebug(testname+": setting text to 'new value'");
     var sts = this.publishEvent(setValueEvent, "new value");
-    logDebug("testSetValueEvent: sts: "+sts);
-    logDebug("testSetValueEvent: new element value: "+webbrick.widgets.getElementText(this.elem));
-    assertEq("testSetValueEvent: value", 
+    logDebug(testname+": sts: "+sts);
+    logDebug(testname+": new element value: "+webbrick.widgets.getElementText(this.elem));
+    assertEq(testname+": value", 
         webbrick.widgets.getElementText(this.elem), "new value");
     ////logDebug("set new element value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
-    ////assertEq("testSetValue: value",  
+    ////assertEq(testname+": value",  
     ////    MochiKit.DOM.getNodeAttribute(this.elem, "value"), "new value");
     //////////////////////////
     
-    logDebug("testSetValueEvent: complete");
+    logDebug(testname+": complete");
 };
 
 //        1         2         3         4         5         6         7         8

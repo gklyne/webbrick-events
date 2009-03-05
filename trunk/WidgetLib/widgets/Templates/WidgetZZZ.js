@@ -47,6 +47,22 @@ webbrick.widgets.WIDGETZZZ_Init = function (element) {
 
     MochiKit.Logging.logDebug("WIDGETZZZ: create widget");
     var widget = new webbrick.widgets.WIDGETZZZ(modelvals, renderer, renderer);
+
+    ////////////////////
+    // TODO: delete or adjust as needed:
+    // If defined, access additional attributes to set default value(s)
+    //var defYYYY = webbrick.widgets.getWidgetValue(element, "@DefaultYYYY");
+    //if (defYYYY != null && defYYYY != "") {
+    //    widget.setYYYYValue(defYYYY);
+    //}
+    ////////////////////
+
+    ////////////////////
+    // TODO: delete or adjust as needed:
+    // Initialize display state
+    //widget.setYYYY(...);
+    ////////////////////
+    
     return widget;
 };
 
@@ -125,21 +141,9 @@ webbrick.widgets.WIDGETZZZ = function (modelvals, renderer, collector) {
     ////MochiKit.Signal.connect(this._collector, 'Clicked', this, this.Clicked);
     ////////////////////
 
-    // Access widget event router
-    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
-
-    // TODO: Refactor this to common support code, with checks to catch non-existing methods 
-    // Subscribe handlers for incoming controller events
-    MochiKit.Logging.logDebug("WIDGETZZZ: subscribe controller events");
-    for (var i = 0 ; i<this._subscribes.length ; i++) {
-        var evtyp = this._model.get(this._subscribes[i][0]);
-        var evsrc = this._model.getDefault(this._subscribes[i][1], null);
-        // makeEventHandler  arguments are (handlerUri,handlerFunc,initFunc,endFunc)
-        var handler = makeEventHandler(
-            evtyp+"_handler", MochiKit.Base.bind(this._subscribes[i][2],this), null, null);
-        MochiKit.Logging.logDebug("WIDGETZZZ: subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
-        WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
-    }
+    // Connect controller to external control events
+    // (Subscribed event definitions reference the model)
+    webbrick.widgets.SubscribeWidgetEvents(this, this._model, this._subscribes);
 
     MochiKit.Logging.logDebug("WIDGETZZZ: initialized");
 };
@@ -161,13 +165,10 @@ webbrick.widgets.WIDGETZZZ = function (modelvals, renderer, collector) {
  */
 webbrick.widgets.WIDGETZZZ.prototype.Clicked = function (inputtype) {
     MochiKit.Logging.logDebug("WIDGETZZZ.Clicked: "+inputtype);
-    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
-    var Event  = makeEvent(this._model.get("YYYClickEvent"), 
-                           this._model.get("YYYClickSource"), 
-                           inputtype);
-    var Source = makeEventAgent(this._model.get("YYYClickSource"));
-    MochiKit.Logging.logDebug("WIDGETZZZ.Clicked: Source: "+Source+", Event: "+Event);
-    WidgetEventRouter.publish(Source, Event);
+    webbrick.widgets.publishEvent(
+            this._model.get("YYYClickSource"),
+            this._model.get("YYYClickEvent"),
+            inputtype);
 };
 
 // ----------------------------------
