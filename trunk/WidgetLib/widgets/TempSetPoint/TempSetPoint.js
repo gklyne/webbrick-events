@@ -29,11 +29,9 @@ webbrick.require("webbrick.widgets.MvcUtils");
 /**
  * Function to create and return a new TempSetPoint object.
  *
- * Widget element attributes:
- *  [[[see initializeValues below]]]
- *
  * @param   {HTMLElement}   element     HTML element that constitutes the widget.
- * @return  A WIDGETSAMPLE widget object - can be discarded
+ *
+ * @return  A widget object - can be discarded
  * @type    {webbrick.widgets.TempSetPoint}
  */
 webbrick.widgets.TempSetPoint_Init = function (element) {
@@ -49,6 +47,7 @@ webbrick.widgets.TempSetPoint_Init = function (element) {
     var widget = new webbrick.widgets.TempSetPoint(modelvals, renderer, renderer);
 
     // If defined, set default target value from attribute
+    // TODO: fold into main model and widget initialization
     var deftgt = webbrick.widgets.getWidgetValue(element, "@DefaultTarget");
     if (deftgt != null && deftgt != "") {
         widget.setTargetValue(deftgt);

@@ -175,7 +175,7 @@ webbrick.widgets.GenericModel.prototype.set = function( propertyName, value ) {
     this._validatePropertyValuePair(propertyName, value);
     var oldValue = this._data[propertyName];                // store the old value
     this._data[propertyName] = value;                       // set the new value
-    this._notifyListeners(propertyName, oldValue, value);   // notify the change
+    this._notifyListeners(propertyName, null, oldValue, value);   // notify the change
     return oldValue;
 };
 
@@ -188,11 +188,10 @@ webbrick.widgets.GenericModel.prototype.set = function( propertyName, value ) {
  * @return  {Any}                   the previous value of the property.
  */
 webbrick.widgets.GenericModel.prototype.setIndexed = function(propertyName, index, value) {
-    var indexedname = propertyName+"."+index;
-    this._validatePropertyValuePair(indexedname, value);
-    var oldValue = this._data[propertyName][index];         // save the old value
-    this._data[propertyName][index] = value;                // set the new value
-    this._notifyListeners(indexedname, oldValue, value);    // notify the change
+    this._validatePropertyValuePair(propertyName, value);
+    var oldValue = this._data[propertyName][index];                 // save the old value
+    this._data[propertyName][index] = value;                        // set the new value
+    this._notifyListeners(propertyName, index, oldValue, value);    // notify the change
     return oldValue;
 };
 
@@ -264,15 +263,23 @@ webbrick.widgets.GenericModel.prototype.addListener = function(propertyName, lis
     };
 };
 
-/** Notify all listeners of a property change.
- * @param {String} propertyName the name of the property to validate
- * @param {Any} oldValue the old property value
- * @param {Any} newValue the new property value
+/**
+ *  Notify all listeners of a property change.
+ *  
+ * @param   {String} propertyName   the name of the property to validate
+ * @param   {Integer} index         index of property, or null
+ * @param   {Any} oldValue          the old property value
+ * @param   {Any} newValue          the new property value
  * @private
  */
-webbrick.widgets.GenericModel.prototype._notifyListeners = function( propertyName, oldValue, newValue ) {
-    logDebug("_notifyListeners, "+propertyName+", old: "+oldValue+", new: "+newValue);
-    MochiKit.Signal.signal(this, propertyName, this, propertyName, oldValue, newValue);
+webbrick.widgets.GenericModel.prototype._notifyListeners = function
+        (propertyName, index, oldValue, newValue) {
+    logDebug("_notifyListeners, "+propertyName+", index: "+index+", old: "+oldValue+", new: "+newValue);
+    var propid = propertyName
+    if (index != null) { 
+        propid = [propertyName, index];
+    };
+    MochiKit.Signal.signal(this, propertyName, this, propid, oldValue, newValue);
 };
 
 /** 
@@ -432,7 +439,7 @@ webbrick.widgets.GenericDomRenderer.prototype.connectModel = function (model) {
  */
 webbrick.widgets.GenericDomRenderer.prototype.setAttributeValue = function 
         (attribute, model, propname, oldvalue, newvalue) {
-    logDebug("GenericDomRenderer.setAttributeValue: "+newvalue);
+    logDebug("GenericDomRenderer.setAttributeValue: "+propname+"="+newvalue);
     MochiKit.DOM.setNodeAttribute(this._elem, attribute, newvalue);
 };
 
@@ -468,7 +475,9 @@ webbrick.widgets.GenericDomRenderer.prototype.setClassMapped = function
         (valuemap, model, propname, oldvalue, newvalue) {
     logDebug("GenericDomRenderer.setClassMapped: newvalue: "+newvalue+", oldvalue: "+oldvalue);
     var oldclass = valuemap[oldvalue];
+    if (oldclass == undefined) oldclass = valuemap.unknown_class;  
     var newclass = valuemap[newvalue];
+    if (newclass == undefined) newclass = valuemap.unknown_class;  
     logDebug("GenericDomRenderer.setClassMapped: newclass: "+newclass+", oldclass: "+oldclass);
     MochiKit.DOM.removeElementClass(this._elem, oldclass);
     MochiKit.DOM.addElementClass(this._elem, newclass);
@@ -600,7 +609,7 @@ webbrick.widgets.GenericDomRenderer.prototype.doMultipleListenerFunctions = func
  */
 webbrick.widgets.GenericDomRenderer.prototype.undefinedListener = function 
         (name, model, propname, oldvalue, newvalue) {
-    logDebug("GenericDomRenderer.undefinedListener: name: "+name+
+    logError("GenericDomRenderer.undefinedListener: name: "+name+
             ", property: "+propname+", newvalue: "+newvalue+", oldvalue: "+oldvalue);
 };
 
@@ -659,6 +668,33 @@ webbrick.widgets.hide = function( element ) {
 }
 
 /** 
+ *  Retrieve widget value from the textual content of the supplied DOM element.
+ *
+ * @param   {HTMLElement} element   the element whose textual content is retrieved.
+ * @return  {String}                the element textual content, which may be an empty string
+ */
+webbrick.widgets.getWidgetContent = function(element) {
+    return element.innerHTML;
+    // or null if there is no element content?
+};
+
+/** 
+ *  Retrieve widget value from an attribute of the supplied DOM element.
+ *
+ * @param   {String} attrname       name of the attribute whose value is retrieved.
+ * @param   {HTMLElement} element   the element whose attribute value is retrieved.
+ * @return  {String}                the attribute value, or null if the attribute is
+ *                                  not present on the element.
+ */
+webbrick.widgets.getWidgetAttribute = function(attrname, element) {
+    // See http://developer.mozilla.org/en/DOM/element.getAttribute#Notes
+    if (element.hasAttribute(attrname)) {
+        return element.getAttribute(attrname);
+    };
+    return null;
+};
+
+/** 
  *  Retrieve widget value from the DOM element class mapped though supplied mapping table.
  *
  *  Note that this function performs a reverse transformation through the supplied 
@@ -689,6 +725,7 @@ webbrick.widgets.getMappedClass = function(classmap, element) {
  * @param   {HTMLElement} element   the element whose textual content is retrieved.
  * @return  {HTMLElement}           the element designated by the given path. 
  */
+//TODO: merge with near-duplicate in WidgetFunctions
 webbrick.widgets.getWidgetPathElement = function(path, element) {
     for (var i in path) {
         var n = path[i];
@@ -705,34 +742,7 @@ webbrick.widgets.getWidgetPathElement = function(path, element) {
 };
 
 /** 
- *  Retrieve widget value from an attribute of the supplied DOM element.
- *
- * @param   {String} attrname       name of the attribute whose value is retrieved.
- * @param   {HTMLElement} element   the element whose attribute value is retrieved.
- * @return  {String}                the attribute value, or null if the attribute is
- *                                  not present on the element.
- */
-webbrick.widgets.getWidgetAttribute = function(attrname, element) {
-    // See http://developer.mozilla.org/en/DOM/element.getAttribute#Notes
-    if (element.hasAttribute(attrname)) {
-        return element.getAttribute(attrname);
-    };
-    return null;
-};
-
-/** 
- *  Retrieve widget value from the textual content of the supplied DOM element.
- *
- * @param   {HTMLElement} element   the element whose textual content is retrieved.
- * @return  {String}                the element textual content, which may be an empty string
- */
-webbrick.widgets.getWidgetContent = function(element) {
-    return element.innerHTML;
-    // or null if there is no element content?
-};
-
-/** 
- *  Retrieve the textual content of the supplied element at at the end of
+ *  Retrieve the textual content of the element at at the end of
  *  the supplied path from the supplied element.
  *
  * @param   {String*} path          a list of element names that define a path from
@@ -741,9 +751,43 @@ webbrick.widgets.getWidgetContent = function(element) {
  * @param   {HTMLElement} element   the element whose textual content is retrieved.
  * @return  {String}                the element textual content, which may be an empty string
  */
+//TODO: merge with near-duplicate in WidgetFunctions?
 webbrick.widgets.getWidgetPathContent = function(path, element) {
     var e = webbrick.widgets.getWidgetPathElement(path, element);
     return webbrick.widgets.getWidgetContent(e);
+};
+
+/** 
+ *  Retrieve an attribute from the element at at the end of
+ *  the supplied path from the supplied element.
+ *
+ * @param   {String} attr           name of attribute to be extracted
+ * @param   {String*} path          a list of element names that define a path from
+ *                                  the widget's root element to the desired inner
+ *                                  element.
+ * @param   {HTMLElement} element   the element whose textual content is retrieved.
+ * @return  {String}                the element textual content, which may be an empty string
+ */
+//TODO: merge with near-duplicate in WidgetFunctions?
+webbrick.widgets.getWidgetPathAttribute = function(attr, path, element) {
+    var e = webbrick.widgets.getWidgetPathElement(path, element);
+    return webbrick.widgets.getWidgetAttribute(attr, e);
+};
+
+/** 
+ *  Retrieve an integer attribute from the element at at the end of
+ *  the supplied path from the supplied element.
+ *
+ * @param   {String} attr           name of attribute to be extracted
+ * @param   {String*} path          a list of element names that define a path from
+ *                                  the widget's root element to the desired inner
+ *                                  element.
+ * @param   {HTMLElement} element   the element whose textual content is retrieved.
+ * @return  {String}                the element textual content, which may be an empty string
+ */
+webbrick.widgets.getWidgetPathAttributeInt = function(attr, path, element) {
+    var a = webbrick.widgets.getWidgetPathAttribute(attr, path, element);
+    return webbrick.widgets.convertStringToInt(a);
 };
 
 /** 
@@ -828,6 +872,57 @@ webbrick.widgets.testClassValues = function(elem, expected, trials) {
     }
     if (mismatch.length > 0) return mismatch;
     return null;     
+};
+
+/**
+ * Function returns its first parameter (like combinator K).
+ * 
+ * Used as an initialization function to provide a fixed value. 
+ */
+webbrick.widgets.constantValue = function(val) {
+    return val;
+};
+
+/**
+ * Return a count of the number of named subelements in an givem element.
+ * 
+ * @param   {[String]} subtaginit       a single-element list with the name of the 
+ *                                      sub-elements to be counted.
+ * @param   {HTMLElement} elem          an HTML element that is scanned for 
+ *                                      matching sub-elements. 
+ */
+webbrick.widgets.countSubelementArray = function(subtaginit, elem) {
+    var subelems = elem.getElementsByTagName(subtaginit[0])
+    MochiKit.Logging.logDebug("countSubelementArray: "+subelems.length);
+    return subelems.length;
+};
+
+/**
+ * Return an array value with an element for each DOM sub-element with
+ * the indicated name, initialized with the result of applying the supplied funtion
+ * to the supplied value and the element.
+ * 
+ * @param   {[String,any]} subtaginit   a pair consisting of a subtag name, an
+ *                                      initialization function and parameter to
+ *                                      initialize the value of each allocated array 
+ *                                      element.
+ * @param   {HTMLElement} elem          an HTML element that is scanned for 
+ *                                      matching sub-elements. 
+ */
+webbrick.widgets.mapSubelementArray = function(subtaginit, elem) {
+    var subelems = elem.getElementsByTagName(subtaginit[0])
+    var array     = new Array(subelems.length);
+    for (var i = 0 ; i < array.length ; i++) {
+        if (subtaginit.length == 3 ) {
+            array[i] = subtaginit[1](subtaginit[2], subelems[i]);
+        } else if (subtaginit.length == 4 ) {
+            array[i] = subtaginit[1](subtaginit[2], subtaginit[3], subelems[i]);
+        } else {
+            throw "UnimplementedError", "Only 1 or 2 function parameters handled by mapSubelementArray";
+        };
+    };
+    MochiKit.Logging.logDebug("mapSubelementArray: "+array.length+", "+array[0]+", ...");
+    return array;
 };
 
 // End.

@@ -98,14 +98,22 @@ webbrick.widgets.setElementText = function (elem, text) {
  * Locate the first node reached by following the supplied path of elements 
  * descending from the supplied element node.
  * 
- * pathnames is a list of element names.
+ * A numeric value N in the path selects the Nth occurrence of the
+ * preceding named tag. 
+ * 
+ * @param   {Array} pathnames   is a list of element names and optional index selections
  */
 webbrick.widgets.getElementByTagPath = function (elem, pathnames) {
     logDebug("getElementByTagPath: "+elem+", "+pathnames);
+    if (pathnames.length == 0) {
+        return elem;
+    };
     var nodes = elem.getElementsByTagName(pathnames[0]);
     if ( nodes.length > 0 ) {
         if (pathnames.length == 1) {
             return nodes[0];
+        } else if (typeof pathnames[1] == "number") {
+            return webbrick.widgets.getElementByTagPath(nodes[pathnames[1]], pathnames.slice(2));
         } else {
             return webbrick.widgets.getElementByTagPath(nodes[0], pathnames.slice(1));
         }
@@ -118,10 +126,10 @@ webbrick.widgets.getElementByTagPath = function (elem, pathnames) {
  * Set attribute of first node reached by following the supplied 
  * path of elements descending from the supplied element node.
  * 
- *  elem        is the base element to search from
- *  pathnames   is a list of element names.
- *  attrname    is the name of the attribute to set
- *  attrval     is the attribute value to set
+ * @param   {HTMLElement} elem  is the base element to search from
+ * @param   {Array} pathnames   is a list of element names.
+ * @param   {String} attrname   is the name of the attribute to set
+ * @param   {Any} attrval       is the attribute value to set
  */
 webbrick.widgets.setAttributeByTagPath = function (elem, pathnames, attrname, attrval) {
     var node = webbrick.widgets.getElementByTagPath(elem, pathnames);
