@@ -75,7 +75,7 @@ webbrick.widgets.TestModeSelector = function() {
 webbrick.widgets.TestModeSelector.exposeTestFunctionNames = function() {
     return [ 'testModuleContents'
            , 'testInitialModel'
-           //, 'testInitialElem'
+           , 'testInitialElem'
            //, 'testSetValue'
            //, 'testSetValueEvent'
            ];
@@ -98,18 +98,34 @@ webbrick.widgets.TestModeSelector.prototype.setUp = function() {
     this.router = webbrick.widgets.getLocalEventRouter();
     // Set up the ModeSelector widget
     try {
-        //////////////////////////
-        //// TODO: define HTML for DOM to initialize widget
         var html =
-            "<span class='ModeSelector_unknown'"+
-            ">ModeSelector value here</span>";
-        ////var html =
-        ////    "<input type='button' class='ModeSelector_unknown' "+
-        ////    "value='ModeSelector value here' >ModeSelector value here</input>";
-        //////////////////////////
+            "<ModeSelectorWidget InitializeWidget='ModeSelector_Init' SelectionName='TestSelection'>"+
+            "  <ModeSelectorBody>"+
+            "    <ModeSelectorButton class='modeselector-unknown'>"+
+            "      <input type='radio' name='SelectionName' value='1'>"+
+            "        Selection[1]"+
+            "      </input>"+
+            "    </ModeSelectorButton>"+
+            "    <ModeSelectorButton class='modeselector-unknown'>"+
+            "      <input type='radio' name='SelectionName' value='3'>"+
+            "        Selection[2]"+
+            "      </input>"+
+            "    </ModeSelectorButton>"+
+            "    <ModeSelectorButton class='modeselector-unknown'>"+
+            "      <input type='radio' name='SelectionName' value='5'>"+
+            "        Selection[3]"+
+            "      </input>"+
+            "    </ModeSelectorButton>"+
+            "    <ModeSelectorButton class='modeselector-unknown'>"+
+            "      <input type='radio' name='SelectionName' value='7'>"+
+            "        Selection[4]"+
+            "      </input>"+
+            "    </ModeSelectorButton>"+
+            "  </ModeSelectorBody>"+
+            "</ModeSelectorWidget>";
         var div = document.createElement('div');
         div.innerHTML = html;
-        elem = div.getElementsByTagName('span')[0];
+        elem = div.getElementsByTagName('ModeSelectorWidget')[0];
     } catch (e) {
         logError("TestModeSelector.setUp: document.createElement('div') error, "+e.name+", "+e.message);
     }
@@ -171,10 +187,13 @@ webbrick.widgets.TestModeSelector.prototype.testInitialModel = function() {
     logDebug(testname+": mode: "+this.model.get("MODE"));
     logDebug(testname+": button states: "+this.model.get("BUTTONSTATES"));
     assertEq(testname, this.model.get("MODE"), 0);
-    assertEq(testname, this.model.get("BUTTONSTATES"), [false,false,false,false]);
-    assertEq(testname, this.model.get("Default"),         "_ModeSelector.Default");
-    assertEq(testname, this.model.get("Source"),          "_ModeSelector.Source");
-    assertEq(testname, this.model.get("SetModeEvent"),    "_ModeSelector.SetModeEvent");
+    assertEq(testname, this.model.get("BUTTONCOUNT"),       4);
+    assertEquals(testname, this.model.get("BUTTONVALUES"),  [1,3,5,7]);
+    assertEquals(testname, this.model.get("BUTTONSTATES"),  [false,false,false,false]);
+    assertEq(testname, this.model.get("SelectionName"),     "TestSelection");
+    assertEq(testname, this.model.get("Default"),           "_ModeSelector.Default");
+    assertEq(testname, this.model.get("Subject"),           "_ModeSelector.Subject");
+    assertEq(testname, this.model.get("SetModeEvent"),      "_ModeSelector.SetModeEvent");
 };
 
 /** 
@@ -186,12 +205,28 @@ webbrick.widgets.TestModeSelector.prototype.testInitialElem = function() {
     logDebug(testname+": class: "+this.elem.className);
     logDebug(testname+": value: "+MochiKit.DOM.getNodeAttribute(this.elem, "value"));
     logDebug(testname+": text:  "+webbrick.widgets.getElementText(this.elem));
-    //////////////////////////
-    //// TODO: adjust as needed
-    //assertEq("testInitialElem",  MochiKit.DOM.getNodeAttribute(this.elem, "value"), "ModeSelector value here");
-    assertEq(testname, webbrick.widgets.getElementText(this.elem), "ModeSelector value here");
-    //////////////////////////
-    assertEq(testname, null, this.compareElementClass("ModeSelector_unknown"));
+
+    // Main widget element
+    assertEq(testname, MochiKit.DOM.getNodeAttribute(this.elem, "CurrentMode"), "0");
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown"));
+
+    // Selection buttons
+    for (var i = 0 ; i < 4 ; i++) {
+        var valstr = (i+1).toString(); 
+        assertEq(testname+": selection["+valstr+"].class: ", 
+                webbrick.widgets.getAttributeByTagPath(this.elem, ["ModeSelectorButton", i, "input"], "class"), 
+                "modeselector-unknown");
+        assertEq(testname+": selection["+valstr+"].name: ", 
+                webbrick.widgets.getAttributeByTagPath(this.elem, ["ModeSelectorButton", i, "input"], "name"), 
+                "TestSelection");
+        assertEq(testname+": selection["+valstr+"].value: ", 
+                webbrick.widgets.getAttributeByTagPath(this.elem, ["ModeSelectorButton", i, "input"], "value"), 
+                valstr);
+        assertEq(testname+": selection["+i+"].text: ", 
+                webbrick.widgets.getElementTextByTagPath(this.elem, ["ModeSelectorButton", i, "input"]), 
+                "Selection["+valstr+"]");
+    };
+    
 };
 
 /** 

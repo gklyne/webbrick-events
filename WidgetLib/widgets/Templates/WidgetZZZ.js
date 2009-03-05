@@ -146,25 +146,29 @@ webbrick.widgets.WIDGETZZZ_EventSubscriptions = [
 /**
  * Function to create and return a new WIDGETZZZ object.
  *
- * Widget element attributes:
- *  [[[see initializeValues below]]]
- *
  * @param   {HTMLElement}   element     HTML element that constitutes the widget.
- * @return  A WIDGETSAMPLE widget object - can be discarded
+ * 
+ * @return  A widget object - can be discarded
  * @type    {webbrick.widgets.WIDGETZZZ}
  */
 webbrick.widgets.WIDGETZZZ_Init = function (element) {
     MochiKit.Logging.logDebug("WIDGETZZZ_Init: create renderer/collector");
+
+    // Create a renderer
     var renderer  = new webbrick.widgets.WIDGETZZZ.renderer(element);
     renderer.initialize();
 
+    // Extract a dictionary of values from the DOM, to be used to initialize the widget model.
     MochiKit.Logging.logDebug("WIDGETZZZ_Init: extract parameters from DOM");
     var modelvals = webbrick.widgets.getWidgetValues
         (webbrick.widgets.WIDGETZZZ_InitializeValues, element);
 
+    // Create the widget object
     MochiKit.Logging.logDebug("WIDGETZZZ: create widget");
     var widget = new webbrick.widgets.WIDGETZZZ(modelvals, renderer, renderer);
 
+    // Finish initializing the widget
+    
     ////////////////////
     // TODO: delete or adjust as needed:
     // If defined, access additional attributes to set default value(s)
@@ -259,6 +263,10 @@ webbrick.widgets.WIDGETZZZ = function (modelvals, renderer, collector) {
 
     MochiKit.Logging.logDebug("WIDGETZZZ: initialized");
 };
+
+// ------------------
+// Controller methods
+// ------------------
 
 // ------------------------------
 // Input collector event handlers

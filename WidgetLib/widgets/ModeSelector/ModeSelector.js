@@ -39,8 +39,12 @@ webbrick.widgets.ModeSelector_ModelDefinition = {
     propertyNames : [ 
         // Dynamic values:
         "MODE",                     // Current mode (integer 0..N)
+        "STATE",                    // Overall state of widget
+        "BUTTONCOUNT",              // Number of selector buttons
+        "BUTTONVALUES",             // Mode index value (1..N) for each button
         "BUTTONSTATES",             // True/false selection state for each button
         // Static parameters:
+        "SelectionName",            // Mode/selection name covering all modes
         "Default",                  // Default mode (integer 0..N)
         "Subject",                  // Subject URI for mode-change events
         "SetModeEvent"              // Type URI for mode-change events
@@ -48,7 +52,11 @@ webbrick.widgets.ModeSelector_ModelDefinition = {
     controlledValues : {
     },
     defaultValues : {
-        MODE:                   "0",
+        MODE:                   0,
+        STATE:                  "unknown",
+        BUTTONSTATES:           ['_ModeSelector.BUTTONSTATES'],
+        SelectionName:          "_ModeSelector.SelectionName",
+        Default:                "_ModeSelector.Default",
         Subject:                "_ModeSelector.Subject",
         SetModeEvent:           "_ModeSelector.SetModeEvent"
     }
@@ -57,25 +65,6 @@ webbrick.widgets.ModeSelector_ModelDefinition = {
 // -------------------------
 // Model initialization data
 // -------------------------
-
-/**
- * Return an array value with an element for each DOM sub-element with
- * the indicated name, initialized to the specified value
- * 
- * @param   {[String,any]} subtagvalue  a pair consisting of a subtag name and an
- *                                      initial value for each allocated array 
- *                                      element.
- * @param   {HTMLElement} elem          an HTML element that is scanned for 
- *                                      matching sub-elements. 
- */
-webbrick.widgets.allocateButtonArray = function(subtagvalue, elem) {
-    var array  = new Array(elem.getElementsByTagName(subtagvalue[0]).length);
-    for (var i = 0 ; i < array.length ; i++) {
-        array[i] = subtagvalue[1];
-    };
-    MochiKit.Logging.logDebug("allocateButtonArray: "+array.length+", "+array[0]+", ...");
-    return array;
-};
 
 /**
  *  Dictionary used to initialize a model from DOM element, used with
@@ -90,13 +79,28 @@ webbrick.widgets.allocateButtonArray = function(subtagvalue, elem) {
 webbrick.widgets.ModeSelector_InitializeValues = {
     MODE:
         [webbrick.widgets.getWidgetAttribute,   "Default"],
+    BUTTONCOUNT:
+        [webbrick.widgets.countSubelementArray, ["ModeSelectorButton"]],
+    BUTTONVALUES:
+        [webbrick.widgets.mapSubelementArray,   ["ModeSelectorButton", webbrick.widgets.getWidgetPathAttributeInt, "value", ["input"]]],
     BUTTONSTATES:
-        [webbrick.widgets.allocateButtonArray,  ["ModeSelectorButton",false]],
+        [webbrick.widgets.mapSubelementArray,   ["ModeSelectorButton", webbrick.widgets.constantValue, false]],
+    SelectionName:
+        [webbrick.widgets.getWidgetAttribute,   "SelectionName"],
     Subject:
         [webbrick.widgets.getWidgetAttribute,   "Subject"],
     SetModeEvent:
         [webbrick.widgets.getWidgetAttribute,   "SetModeEvent"],
 };
+
+/**
+ * A dictionary of class names used for rendering different selector mand button states. 
+ */
+webbrick.widgets.ModeSelector_ClassMap = {
+    unknown:    "modeselector-unknown",
+    normal:     "modeselector-normal",
+    selected:   "modeselector-selected"
+};    
 
 // ---------------
 // Incoming events
@@ -130,21 +134,22 @@ webbrick.widgets.ModeSelector_EventSubscriptions = [
  */
 webbrick.widgets.ModeSelector_Init = function (element) {
     MochiKit.Logging.logDebug("ModeSelector_Init: create renderer/collector");
+
+    // Create a renderer
     var renderer  = new webbrick.widgets.ModeSelector.renderer(element);
     renderer.initialize();
 
+    // Extract a dictionary of values from the DOM, to be used to initialize the widget model.
     MochiKit.Logging.logDebug("ModeSelector_Init: extract parameters from DOM");
     var modelvals = webbrick.widgets.getWidgetValues
         (webbrick.widgets.ModeSelector_InitializeValues, element);
 
-    // Initialize button data
-    var buttons = element.getElementsByTagName("ModeSelectorButton");
-    for (var i = 0 ; i < buttons.length ; i++) {
-        //TODO..............
-    }
-
+    // Create the widget object
     MochiKit.Logging.logDebug("ModeSelector: create widget");
     var widget = new webbrick.widgets.ModeSelector(modelvals, renderer, renderer);
+
+    // Finish initializing the widget 
+    widget.setMode(0);
     
     return widget;
 };
@@ -226,6 +231,27 @@ webbrick.widgets.ModeSelector = function (modelvals, renderer, collector) {
     MochiKit.Logging.logDebug("ModeSelector: initialized");
 };
 
+// ------------------
+// Controller methods
+// ------------------
+
+webbrick.widgets.ModeSelector.prototype.setMode = function (mode) {
+    MochiKit.Logging.logDebug("ModeSelector.setMode: "+mode);
+    this._model.set("MODE", mode);
+    var state = "unknown";
+    for (var i = 0 ; i < this._model.get("BUTTONCOUNT") ; i++) {
+        // look for matching button
+        if (this._model.getIndexed("BUTTONVALUES", i) == mode) {
+            this._model.setIndexed("BUTTONSTATES", i, true);
+            state = "normal"
+        } else {
+            this._model.setIndexed("BUTTONSTATES", i, false);
+        };
+    this._model.set("STATE", state);            
+    MochiKit.Logging.logDebug("ModeSelector.setMode: done.");
+    }
+};
+
 // ------------------------------
 // Input collector event handlers
 // ------------------------------
@@ -292,16 +318,19 @@ webbrick.widgets.ModeSelector.ClickTypeMap = {
 webbrick.widgets.ModeSelector.rendererDefinition = {
     // Define functions used by other parts of the renderer definition
     renderFunctions: {
-        SetModeModelListener:  
-            ['undefinedListener', 'SetModeModelListener'],
-        SetButtonStateModelListener:  
-            ['undefinedListener', 'SetButtonStateModelListener'],
+        SetModeModelListener:
+            ['setAttributeValue', 'CurrentMode'],
+        SetStateModelListener:
+            ['setWidgetPathClass',  webbrick.widgets.ModeSelector_ClassMap, []],
+        SetButtonStateModelListener:
+            ['SetButtonStateModelListener', webbrick.widgets.ModeSelector_ClassMap],
         WidgetClicked: 
             ['undefinedListener', 'WidgetClicked']
         },
     // Define model listener connections
     renderModel: {
         MODE:         'SetModeModelListener',
+        STATE:        'SetStateModelListener',
         BUTTONSTATES: 'SetButtonStateModelListener'
     },
     // Define DOM input event connections
@@ -338,6 +367,22 @@ webbrick.widgets.ModeSelector.renderer.prototype =
  */
 webbrick.widgets.ModeSelector.renderer.prototype.initialize = function() {
     this.processDefinition(webbrick.widgets.ModeSelector.rendererDefinition, this._element);
+};
+
+/**
+ *  Set class for a mode selection button (normal or selected)
+ */
+webbrick.widgets.ModeSelector.renderer.prototype.SetButtonStateModelListener = function
+        (valuemap, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.SetButtonStateModelListener: propname: "+propname+
+            ", newvalue: "+newvalue+", oldvalue: "+oldvalue);
+    var path = ["ModeSelectorButton", propname[1], "input"];
+    // TODO: revise upstream code to use these values instead of True/False
+    var oldkey = "normal";
+    if (oldvalue) oldkey = "selected";
+    var newkey = "normal";
+    if (newvalue) newkey = "selected";
+    this.setWidgetPathClass(valuemap, path, model, propname, oldkey, newkey);
 };
 
 // End.
