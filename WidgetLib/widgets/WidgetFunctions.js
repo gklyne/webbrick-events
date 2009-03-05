@@ -522,6 +522,39 @@ webbrick.widgets.clockTick = function () {
 };
 
 // ----------------------------------------------------------------
+// String handling
+// ----------------------------------------------------------------
+
+webbrick.widgets.mapConcatObject = function (pre, f, suf, obj) {
+    var str = pre;
+    for (name in obj) {
+        str += f(name, obj[name]);
+    };
+    return str+suf;
+};
+
+webbrick.widgets.formatField = function (name, val) {
+    return name+":"+val+" ; "
+};
+
+webbrick.widgets.objectString = function (obj) {
+    return webbrick.widgets.mapConcatObject("{ ", webbrick.widgets.formatField, " }", obj);
+};
+
+webbrick.widgets.convertStringToInt = function(val) {
+    MochiKit.Logging.log("TempSetPoint.convertStringToInt: "+val);
+    if (typeof val == "string") {
+        if (val.match(/^\s*\d+\s*$/) != null) {
+            val = parseInt(val, 10);
+        };
+    };
+    if (typeof val != "number") {
+            val = undefined;
+    };
+    return val;
+};
+
+// ----------------------------------------------------------------
 // Page initialization
 // ----------------------------------------------------------------
 

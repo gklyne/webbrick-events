@@ -144,6 +144,15 @@ webbrick.widgets.GenericModel.prototype.get = function( propertyName ) {
     return this._data[propertyName];
 };
 
+/** Get an indexed property of the model.
+ * @param {String}  propertyName    the name of the property to get a value from
+ * @param {Integer} index           the index of the value to get
+ */
+webbrick.widgets.GenericModel.prototype.getIndexed = function(propertyName, index) {
+    this._validatePropertyName(propertyName);
+    return this._data[propertyName][index];
+};
+
 /** Get a property of the model, or a default value if the supplied property name is null.
  * @param {String} propertyName the name of the property to get
  * @param {any}    defaultValue default value returned if supplied name is null
@@ -170,6 +179,23 @@ webbrick.widgets.GenericModel.prototype.set = function( propertyName, value ) {
     return oldValue;
 };
 
+/** Set an indexed property of the model.
+ *  All listeners will be notified of the change: 
+ *  the property name used in such notifications has the form "name.index".
+ * @param   {String} propertyName   the name of the property to be updated
+ * @param   {Integer} index         the index of the value to set
+ * @param   {Any} value             the new value of the property
+ * @return  {Any}                   the previous value of the property.
+ */
+webbrick.widgets.GenericModel.prototype.setIndexed = function(propertyName, index, value) {
+    var indexedname = propertyName+"."+index;
+    this._validatePropertyValuePair(indexedname, value);
+    var oldValue = this._data[propertyName][index];         // save the old value
+    this._data[propertyName][index] = value;                // set the new value
+    this._notifyListeners(indexedname, oldValue, value);    // notify the change
+    return oldValue;
+};
+
 /** Validate a property name.
  * @param {String} propertyName the name of the property to validate
  * @private
@@ -181,7 +207,7 @@ webbrick.widgets.GenericModel.prototype._validatePropertyName = function( proper
     };
     if (!valid) {
         throw webbrick.Error("InvalidPropertyNameError", 
-            "Invalid property name: "+propertyName);
+            "Invalid property name: '"+propertyName+"'");
     };
 };
 
@@ -264,6 +290,7 @@ webbrick.widgets.GenericModel.prototype._notifyListeners = function( propertyNam
 webbrick.widgets.GenericModel.prototype.swap = function (newprops) {
     logDebug("GenericModel.swap");
     var oldprops = {};
+    logDebug("- newprops: "+webbrick.widgets.objectString(newprops));
     for (var pn in newprops) {
         oldprops[pn] = this.set(pn, newprops[pn]);
     } ;
@@ -557,6 +584,24 @@ webbrick.widgets.GenericDomRenderer.prototype.doMultipleListenerFunctions = func
         }
         this[fnam](model, propname, oldvalue, newvalue);
     };
+};
+
+/**
+ *  Undefined listener function used as a placeholder during development
+ *
+ * @param   {String} name           name of the listener function
+ * @param   {GenericModel} model    the widget model being rendered
+ * @param   {String} propname       name of the changed model property
+ * @param   {any} oldvalue          previous value of the changed model property
+ * @param   {any} newvalue          new value of the changed model property
+ *
+ *  This function should be partially applied to the path parameter 
+ *  to yield a model listener function.
+ */
+webbrick.widgets.GenericDomRenderer.prototype.undefinedListener = function 
+        (name, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.undefinedListener: name: "+name+
+            ", property: "+propname+", newvalue: "+newvalue+", oldvalue: "+oldvalue);
 };
 
 // TODO - define more renderer base methods as required
