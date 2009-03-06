@@ -50,10 +50,10 @@ webbrick.widgets.ModeSelector_ModelDefinition = {
         "SetModeEvent"              // Type URI for mode-change events
     ],
     controlledValues : {
+        STATE:                  [ "normal",  "unknown" ]
     },
     defaultValues : {
         MODE:                   0,
-        STATE:                  "unknown",
         BUTTONSTATES:           ['_ModeSelector.BUTTONSTATES'],
         SelectionName:          "_ModeSelector.SelectionName",
         Default:                "_ModeSelector.Default",
@@ -242,14 +242,16 @@ webbrick.widgets.ModeSelector.prototype.setMode = function (mode) {
     for (var i = 0 ; i < this._model.get("BUTTONCOUNT") ; i++) {
         // look for matching button
         if (this._model.getIndexed("BUTTONVALUES", i) == mode) {
-            this._model.setIndexed("BUTTONSTATES", i, true);
             state = "normal"
-        } else {
-            this._model.setIndexed("BUTTONSTATES", i, false);
         };
-    this._model.set("STATE", state);            
+    };
+    this._model.set("STATE", state);
+    for (i = 0 ; i < this._model.get("BUTTONCOUNT") ; i++) {
+        // look for matching button
+        var sel = this._model.getIndexed("BUTTONVALUES", i) == mode;
+        this._model.setIndexed("BUTTONSTATES", i, sel);
+    };
     MochiKit.Logging.logDebug("ModeSelector.setMode: done.");
-    }
 };
 
 // ------------------------------
@@ -376,12 +378,16 @@ webbrick.widgets.ModeSelector.renderer.prototype.SetButtonStateModelListener = f
         (valuemap, model, propname, oldvalue, newvalue) {
     logDebug("GenericDomRenderer.SetButtonStateModelListener: propname: "+propname+
             ", newvalue: "+newvalue+", oldvalue: "+oldvalue);
-    var path = ["ModeSelectorButton", propname[1], "input"];
+    var path = ["ModeSelectorButton", propname[1]];
     // TODO: revise upstream code to use these values instead of True/False
     var oldkey = "normal";
-    if (oldvalue) oldkey = "selected";
     var newkey = "normal";
+    if (oldvalue) oldkey = "selected";
     if (newvalue) newkey = "selected";
+    if (model.get("STATE") == "unknown" ) {
+        oldkey = "unknown";
+        newkey = "unknown";
+    };
     this.setWidgetPathClass(valuemap, path, model, propname, oldkey, newkey);
 };
 

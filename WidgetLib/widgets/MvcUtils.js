@@ -280,6 +280,7 @@ webbrick.widgets.GenericModel.prototype._notifyListeners = function
         propid = [propertyName, index];
     };
     MochiKit.Signal.signal(this, propertyName, this, propid, oldValue, newValue);
+    logDebug("_notifyListeners, done");
 };
 
 /** 
@@ -552,14 +553,19 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathAttribute = function
  */
 webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathClass = function 
         (valuemap, path, model, propname, oldvalue, newvalue) {
+    logDebug("GenericDomRenderer.setWidgetPathClass: path: "+path);
     logDebug("GenericDomRenderer.setWidgetPathClass: newvalue: "+newvalue+", oldvalue: "+oldvalue);
     var oldclass = valuemap[oldvalue];
     var newclass = valuemap[newvalue];
     logDebug("GenericDomRenderer.setWidgetPathClass: newclass: "+newclass+", oldclass: "+oldclass);
-    elem = webbrick.widgets.getElementByTagPath(this._elem, path);
+    var elem = webbrick.widgets.getElementByTagPath(this._elem, path);
+    logDebug("GenericDomRenderer.setWidgetPathClass: elem: "+elem+", "+elem.nodeName+", "+elem.className);
     if (elem != null) {
+        logDebug("- remove "+oldclass+" from "+elem.className);
         MochiKit.DOM.removeElementClass(elem, oldclass);
+        logDebug("- add "+newclass+" to "+elem.className);
         MochiKit.DOM.addElementClass(elem, newclass);
+        logDebug("- result "+elem.className);
     };
 };
 
