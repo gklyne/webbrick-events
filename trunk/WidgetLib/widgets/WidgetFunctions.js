@@ -78,6 +78,9 @@ webbrick.widgets.getElementText = function (elem) {
             txt += elem.childNodes[i].nodeValue ;
         };
     };
+    // Trim leading and trailing spaces
+    // From: http://blog.stevenlevithan.com/archives/faster-trim-javascript
+    txt = txt.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     return txt ;
 };
 
@@ -104,7 +107,7 @@ webbrick.widgets.setElementText = function (elem, text) {
  * @param   {Array} pathnames   is a list of element names and optional index selections
  */
 webbrick.widgets.getElementByTagPath = function (elem, pathnames) {
-    logDebug("getElementByTagPath: "+elem+", "+pathnames);
+    logDebug("getElementByTagPath: "+elem+", ["+pathnames+"], (len "+pathnames.length+")");
     if (pathnames.length == 0) {
         return elem;
     };

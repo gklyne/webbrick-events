@@ -102,24 +102,20 @@ webbrick.widgets.TestModeSelector.prototype.setUp = function() {
             "<ModeSelectorWidget InitializeWidget='ModeSelector_Init' SelectionName='TestSelection'>"+
             "  <ModeSelectorBody>"+
             "    <ModeSelectorButton class='modeselector-unknown'>"+
-            "      <input type='radio' name='SelectionName' value='1'>"+
-            "        Selection[1]"+
-            "      </input>"+
+            "      <input type='radio' name='TestSelection' value='1'/>"+
+            "      Selection[1]"+
             "    </ModeSelectorButton>"+
             "    <ModeSelectorButton class='modeselector-unknown'>"+
-            "      <input type='radio' name='SelectionName' value='3'>"+
-            "        Selection[2]"+
-            "      </input>"+
+            "      <input type='radio' name='TestSelection' value='3'/>"+
+            "      Selection[2]"+
             "    </ModeSelectorButton>"+
             "    <ModeSelectorButton class='modeselector-unknown'>"+
-            "      <input type='radio' name='SelectionName' value='5'>"+
-            "        Selection[3]"+
-            "      </input>"+
+            "      <input type='radio' name='TestSelection' value='5'/>"+
+            "      Selection[3]"+
             "    </ModeSelectorButton>"+
             "    <ModeSelectorButton class='modeselector-unknown'>"+
-            "      <input type='radio' name='SelectionName' value='7'>"+
-            "        Selection[4]"+
-            "      </input>"+
+            "      <input type='radio' name='TestSelection' value='7'/>"+
+            "      Selection[4]"+
             "    </ModeSelectorButton>"+
             "  </ModeSelectorBody>"+
             "</ModeSelectorWidget>";
@@ -186,7 +182,8 @@ webbrick.widgets.TestModeSelector.prototype.testInitialModel = function() {
     logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
     logDebug(testname+": mode: "+this.model.get("MODE"));
     logDebug(testname+": button states: "+this.model.get("BUTTONSTATES"));
-    assertEq(testname, this.model.get("MODE"), 0);
+    assertEq(testname, this.model.get("MODE"),              0);
+    assertEq(testname, this.model.get("STATE"),             "unknown");
     assertEq(testname, this.model.get("BUTTONCOUNT"),       4);
     assertEquals(testname, this.model.get("BUTTONVALUES"),  [1,3,5,7]);
     assertEquals(testname, this.model.get("BUTTONSTATES"),  [false,false,false,false]);
@@ -211,22 +208,22 @@ webbrick.widgets.TestModeSelector.prototype.testInitialElem = function() {
     assertEq(testname, null, this.compareElementClass("modeselector-unknown"));
 
     // Selection buttons
+    var values = ["1","3","5","7"];
     for (var i = 0 ; i < 4 ; i++) {
         var valstr = (i+1).toString(); 
         assertEq(testname+": selection["+valstr+"].class: ", 
-                webbrick.widgets.getAttributeByTagPath(this.elem, ["ModeSelectorButton", i, "input"], "class"), 
+                webbrick.widgets.getAttributeByTagPath(this.elem, ["ModeSelectorButton", i], "class"), 
                 "modeselector-unknown");
         assertEq(testname+": selection["+valstr+"].name: ", 
                 webbrick.widgets.getAttributeByTagPath(this.elem, ["ModeSelectorButton", i, "input"], "name"), 
                 "TestSelection");
         assertEq(testname+": selection["+valstr+"].value: ", 
                 webbrick.widgets.getAttributeByTagPath(this.elem, ["ModeSelectorButton", i, "input"], "value"), 
-                valstr);
+                values[i]);
         assertEq(testname+": selection["+i+"].text: ", 
-                webbrick.widgets.getElementTextByTagPath(this.elem, ["ModeSelectorButton", i, "input"]), 
+                webbrick.widgets.getElementTextByTagPath(this.elem, ["ModeSelectorButton", i]), 
                 "Selection["+valstr+"]");
-    };
-    
+    };   
 };
 
 /** 
