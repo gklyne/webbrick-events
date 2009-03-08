@@ -15,22 +15,38 @@
  * @author Graham Klyne, copied and adapted from something similar Alistair Miles.
  */
 
-if (typeof webbrick == "undefined" || !webbrick) {
+/**
+ * @class
+ * @constructor
+ * A class for namespaces.
+ */
+Namespace_class = function (base, name) {
     /**
-     * @class
-     * The webbrick global namespace. 
-     * If already defined, the existing value will not be overwritten 
-     * so that defined namespaces are preserved.
+     * @member
      */
-    webbrick = function () {
-    };
-    webbrick._namespaces = [];
-    webbrick._globalobj  = this;
-}
+    this._globalobj  = base;
 
-if (typeof webbrick._namespaces == "undefined" ) {
-    webbrick._namespaces = [];
+    /**
+     * @member
+     */
+    this._name = name;
+
+    /**
+     * @member
+     */
+    this._namespaces = [];
 };
+
+/**
+ * Create the webbrick global namespace.
+ *  
+ * If already defined, the existing value will not be overwritten 
+ * so that defined namespaces are preserved.
+ */
+var webbrick;
+if (typeof webbrick == "undefined" || !webbrick) {
+    webbrick = new Namespace_class(this, "webbrick");
+}
 
 /**
  * Returns the namespace specified and creates it if it doesn't exist.
@@ -53,18 +69,19 @@ if (typeof webbrick._namespaces == "undefined" ) {
  * @return {Object}             A reference to the last namespace object created
  */
 webbrick.namespace = function() {
-    var a=arguments, o=null, i, j, d;
-    for (i=0; i<a.length; i=i+1) {
-        o=webbrick;
-        o._namespaces.push(a[i]);
+    for (var i=0; i<arguments.length; i+=1) {
+        MochiKit.Logging.logDebug("webbrick.namespace: "+arguments[i]);
+        var nspath = arguments[i].split(".");
+        var nsobj  = webbrick;
+        nsobj._namespaces.push(arguments[i]);
         // webbrick is implied, so it is ignored if it is included
-        d=a[i].split(".");
-        for (j=(d[0] == "webbrick") ? 1 : 0; j<d.length; j=j+1) {
-            o[d[j]]=o[d[j]] || {};
-            o=o[d[j]];
+        for (var j=(nspath[0] == "webbrick") ? 1 : 0; j<nspath.length; j+=1) {
+            if (!nsobj[nspath[j]]) {
+                nsobj[nspath[j]] = new Namespace_class(nsobj._globalobj, nspath[j]);
+            };
+            nsobj=nsobj[nspath[j]];
         }
     }
-    return o;
 };
 
 /**
@@ -74,21 +91,18 @@ webbrick.namespace = function() {
  * @param  {String*} arguments 1-n namespaces to check 
  * @return {Object}  A reference to the last namespace object checked
  */
-webbrick._globalobj = this;
 webbrick.require = function() {
-    var a=arguments, o=null, i, j, d;
-    for ( i=0 ; i<a.length ; i++ ) {
-        d=a[i].split(".");
-        o=webbrick._globalobj;
-        MochiKit.Logging.logDebug("webbrick.require: "+a[i]);
-        for (j=0 ; j<d.length ; j=j+1) {
-            if (!o[d[j]]) {
-                throw webbrick.Error("MissingNamespaceError", "MissingNamespaceError: "+a[i]+" not present");
+    for (var i=0 ; i<arguments.length ; i+=1 ) {
+        MochiKit.Logging.logDebug("webbrick.require: "+arguments[i]);
+        var nspath = arguments[i].split(".");
+        var nsobj  = webbrick._globalobj;
+        for (var j=0 ; j<nspath.length ; j+=1) {
+            if (!nsobj[nspath[j]]) {
+                throw "MissingNamespaceError", "MissingNamespaceError: "+arguments[i]+" not present";
             }
-            o=o[d[j]];
+            nsobj=nsobj[nspath[j]];
         }
     }
-    return o;
 };
 
 // End.

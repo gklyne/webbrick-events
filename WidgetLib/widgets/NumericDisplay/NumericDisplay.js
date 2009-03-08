@@ -248,7 +248,7 @@ webbrick.widgets.NumericDisplay.modelDefinition = {
         STATE:                  "unknown",
         VALUE:                  "(unknown)",
         SetDisplayValueEvent:   "_NumericDisplay.SetDisplayValueEvent",
-        SetDisplayStateEvent:   "_NumericDisplay.SetDisplayStateEvent",
+        SetDisplayStateEvent:   "_NumericDisplay.SetDisplayStateEvent"
     }
 };
 
@@ -267,7 +267,7 @@ webbrick.widgets.NumericDisplay.rendererDefinition = {
         SetValueModelListener:  
             ['setElementText', null],
         SetStateModelListener: 
-            ['setClassMapped', webbrick.widgets.NumericDisplay.StateClass],
+            ['setClassMapped', webbrick.widgets.NumericDisplay.StateClass]
         },
     // Define model listener connections
     renderModel: {

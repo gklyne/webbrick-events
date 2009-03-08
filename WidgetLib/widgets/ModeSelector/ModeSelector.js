@@ -388,6 +388,7 @@ webbrick.widgets.ModeSelector.renderer.prototype.SetButtonStateModelListener = f
         oldkey = "unknown";
         newkey = "unknown";
     };
+    this.setWidgetPathClass(valuemap, path, model, propname, "unknown", oldkey);
     this.setWidgetPathClass(valuemap, path, model, propname, oldkey, newkey);
 };
 

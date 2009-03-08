@@ -76,8 +76,16 @@ webbrick.widgets.TestWIDGETZZZ.exposeTestFunctionNames = function() {
     return [ 'testModuleContents'
            //, 'testInitialModel'
            //, 'testInitialElem'
-           //, 'testSetValue'
-           //, 'testSetValueEvent'
+           // Test effect of setting various model values:
+           //, 'testModelSetVALUE'
+           // Test effect on model of calling controller functions:
+           //, 'testControllerSetValueModel'
+           // Test effect on renderer of calling controller functions:
+           //, 'testControllerSetValueRender'
+           // Test effect of controller events:
+           //, 'testEventSetValue'
+           // Test effect of input collector events:
+           //, 'testButtonClick'
            ];
 }
 
@@ -199,8 +207,8 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testInitialElem = function() {
 /** 
  *  Test set value by direct setting of model
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.testSetValue = function() {
-    var testname = "testSetValue";
+webbrick.widgets.TestWIDGETZZZ.prototype.testModelSetVALUE = function() {
+    var testname = "testModelSetVALUE";
     logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
 
     // Confirm initial element value
@@ -236,8 +244,8 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testSetValue = function() {
 /** 
  *  Test set value by publishing event
  */
-webbrick.widgets.TestWIDGETZZZ.prototype.testSetValueEvent = function() {
-    var testname = "testSetValueEvent";
+webbrick.widgets.TestWIDGETZZZ.prototype.testEventSetValue = function() {
+    var testname = "testEventSetValue";
     logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
     var setValueEvent = this.model.get("SetValueEvent");
 
