@@ -559,13 +559,15 @@ webbrick.widgets.GenericDomRenderer.prototype.setWidgetPathClass = function
     var newclass = valuemap[newvalue];
     logDebug("GenericDomRenderer.setWidgetPathClass: newclass: "+newclass+", oldclass: "+oldclass);
     var elem = webbrick.widgets.getElementByTagPath(this._elem, path);
-    logDebug("GenericDomRenderer.setWidgetPathClass: elem: "+elem+", "+elem.nodeName+", "+elem.className);
     if (elem != null) {
+        logDebug("GenericDomRenderer.setWidgetPathClass: elem: "+elem+", "+elem.nodeName+", "+elem.className);
         logDebug("- remove "+oldclass+" from "+elem.className);
         MochiKit.DOM.removeElementClass(elem, oldclass);
         logDebug("- add "+newclass+" to "+elem.className);
         MochiKit.DOM.addElementClass(elem, newclass);
         logDebug("- result "+elem.className);
+    } else {
+        logDebug("GenericDomRenderer.setWidgetPathClass: elem not defined.");
     };
 };
 
@@ -863,19 +865,26 @@ webbrick.widgets.getWidgetValues = function(valueDefs, elem) {
  *  class values is present on an element.
  *
  * @param   {Object} elem       DOM element to be tested
- * @param   {String} exected    expected class value
+ * @param   {String} expected   expected class value
  * @param   (String*} trials    list of class values to test
  * @return  (String*}           null if only the expected value is present, 
  *                              or a list of unexpected class values found.
  */
 webbrick.widgets.testClassValues = function(elem, expected, trials) {
     var mismatch = [];
+    var expectedseen = false;
     for (var i = 0 ; i <trials.length ; i++) {
         var c = MochiKit.DOM.hasElementClass(elem, trials[i]);
         if (c != ( trials[i] == expected ) ) {
             mismatch.push(trials[i]);
-        }
-    }
+        };
+        if (trials[i] == expected ) {
+            expectedseen = true;
+        };
+    };
+    if (!expectedseen) {
+        mismatch.push(expected+" NOT SEEN");
+    };
     if (mismatch.length > 0) return mismatch;
     return null;     
 };

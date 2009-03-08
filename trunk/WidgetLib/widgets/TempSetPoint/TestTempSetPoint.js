@@ -187,9 +187,9 @@ webbrick.widgets.TestTempSetPoint.prototype.getClass = function(path) {
  */
 webbrick.widgets.TestTempSetPoint.prototype.compareElementClass = function(elem, expected) {
     return webbrick.widgets.testClassValues(elem, expected, 
-        [ "tempsetpoint-normal"
-        , "tempsetpoint-pending"
-        , "tempsetpoint-unknown"
+        [ "tempsetpoint-unknown"
+        , "tempsetpoint-current"
+        , "tempsetpoint-target"
         ] );
 };
 
