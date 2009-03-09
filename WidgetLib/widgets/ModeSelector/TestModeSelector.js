@@ -81,9 +81,9 @@ webbrick.widgets.TestModeSelector.exposeTestFunctionNames = function() {
            , 'testModelSetSTATE'
            , 'testModelSetBUTTONSTATES'
            // Test effect on model of calling controller functions:
-           //, 'testControllerSetValueModel'
+           , 'testControllerSetModeModel'
            // Test effect on renderer of calling controller functions:
-           //, 'testControllerSetValueRender'
+           , 'testControllerSetModeRender'
            // Test effect of controller events:
            //, 'testEventSetValue'
            // Test effect of input collector events:
@@ -323,7 +323,7 @@ webbrick.widgets.TestModeSelector.prototype.testModelSetBUTTONSTATES = function(
             this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 0]));
     
     // Select button values values with overall state unknown
-    logInfo(testname+": set BUTTONSTATES[0][2] to true");
+    logDebug(testname+": set BUTTONSTATES[0][2] to true");
     this.model.setIndexed("BUTTONSTATES", 0, true);
     this.model.setIndexed("BUTTONSTATES", 2, true);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  true);
@@ -346,7 +346,7 @@ webbrick.widgets.TestModeSelector.prototype.testModelSetBUTTONSTATES = function(
     assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 3]));
 
     // Set BUTTONSTATE[0]
-    logInfo(testname+": set BUTTONSTATES[0] to false");
+    logDebug(testname+": set BUTTONSTATES[0] to false");
     this.model.setIndexed("BUTTONSTATES", 0, false);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  false);
@@ -359,7 +359,7 @@ webbrick.widgets.TestModeSelector.prototype.testModelSetBUTTONSTATES = function(
     assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 3]));
 
     // Set BUTTONSTATE[1]
-    logInfo(testname+": set BUTTONSTATES[1] to true");
+    logDebug(testname+": set BUTTONSTATES[1] to true");
     this.model.setIndexed("BUTTONSTATES", 1, true);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  true);
@@ -368,11 +368,11 @@ webbrick.widgets.TestModeSelector.prototype.testModelSetBUTTONSTATES = function(
     assertEq(testname, null, this.compareElementClass("modeselector-normal"));
     assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 0]));
     assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 1]));
-    assertEq(testname, null, this.compareElementClass("modeselector-unknown",  ["ModeSelectorButton",  2]));
-    assertEq(testname, null, this.compareElementClass("modeselector-unknown",  ["ModeSelectorButton",  3]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown",  ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown",  ["ModeSelectorButton", 3]));
     
     // Set BUTTONSTATE[2]
-    logInfo(testname+": set BUTTONSTATES[2] to false");
+    logDebug(testname+": set BUTTONSTATES[2] to false");
     this.model.setIndexed("BUTTONSTATES", 2, false);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  true);
@@ -381,11 +381,11 @@ webbrick.widgets.TestModeSelector.prototype.testModelSetBUTTONSTATES = function(
     assertEq(testname, null, this.compareElementClass("modeselector-normal"));
     assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 0]));
     assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 1]));
-    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton",  2]));
-    assertEq(testname, null, this.compareElementClass("modeselector-unknown",  ["ModeSelectorButton",  3]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown",  ["ModeSelectorButton", 3]));
     
     // Set BUTTONSTATE[3]
-    logInfo(testname+": set BUTTONSTATES[3] to true");
+    logDebug(testname+": set BUTTONSTATES[3] to true");
     this.model.setIndexed("BUTTONSTATES", 3, true);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
     assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  true);
@@ -394,8 +394,142 @@ webbrick.widgets.TestModeSelector.prototype.testModelSetBUTTONSTATES = function(
     assertEq(testname, null, this.compareElementClass("modeselector-normal"));
     assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 0]));
     assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 1]));
-    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton",  2]));
-    assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton",  3]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 3]));
+    
+    logDebug(testname+": complete");
+};
+
+/** 
+ *  Test controller set mode effect on model 
+ */
+webbrick.widgets.TestModeSelector.prototype.testControllerSetModeModel = function() {
+    var testname = "testControllerSetModeModel";
+    logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
+
+    // Set mode 0
+    logDebug(testname+": set mode to 0");
+    this.widget.setMode(0);
+    assertEq(testname, this.model.get("MODE"),                    0);
+    assertEq(testname, this.model.get("STATE"),                   "unknown");
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 2),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 3),  false);
+    
+    // Set mode 1
+    logDebug(testname+": set mode to 1");
+    this.widget.setMode(1);
+    assertEq(testname, this.model.get("MODE"),                    1);
+    assertEq(testname, this.model.get("STATE"),                   "normal");
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  true);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 2),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 3),  false);
+
+    // Set mode 3
+    logDebug(testname+": set mode to 3");
+    this.widget.setMode(3);
+    assertEq(testname, this.model.get("MODE"),                    3);
+    assertEq(testname, this.model.get("STATE"),                   "normal");
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  true);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 2),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 3),  false);
+
+    // Set mode 5
+    logDebug(testname+": set mode to 5");
+    this.widget.setMode(5);
+    assertEq(testname, this.model.get("MODE"),                    5);
+    assertEq(testname, this.model.get("STATE"),                   "normal");
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 2),  true);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 3),  false);
+
+    // Set mode 7
+    logDebug(testname+": set mode to 7");
+    this.widget.setMode(7);
+    assertEq(testname, this.model.get("MODE"),                    7);
+    assertEq(testname, this.model.get("STATE"),                   "normal");
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 2),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 3),  true);
+
+    // Set mode 2
+    logDebug(testname+": set mode to 2");
+    this.widget.setMode(2);
+    assertEq(testname, this.model.get("MODE"),                    2);
+    assertEq(testname, this.model.get("STATE"),                   "unknown");
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 0),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 1),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 2),  false);
+    assertEq(testname, this.model.getIndexed("BUTTONSTATES", 3),  false);
+    
+    logDebug(testname+": complete");
+};
+
+/** 
+ *  Test controller set mode effect on renderer 
+ */
+webbrick.widgets.TestModeSelector.prototype.testControllerSetModeRender = function() {
+    var testname = "testControllerSetModeRender";
+    logInfo("==== webbrick.widgets.TestModeSelector."+testname+" ====");
+
+    // Set mode 0
+    logDebug(testname+": set mode to 0");
+    this.widget.setMode(0);
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown"));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 0]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 1]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 3]));
+    
+    // Set mode 1
+    logDebug(testname+": set mode to 1");
+    this.widget.setMode(1);
+    assertEq(testname, null, this.compareElementClass("modeselector-normal"));
+    assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 0]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 1]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 3]));
+
+    // Set mode 3
+    logDebug(testname+": set mode to 3");
+    this.widget.setMode(3);
+    assertEq(testname, null, this.compareElementClass("modeselector-normal"));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 0]));
+    assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 1]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 3]));
+
+    // Set mode 5
+    logDebug(testname+": set mode to 5");
+    this.widget.setMode(5);
+    assertEq(testname, null, this.compareElementClass("modeselector-normal"));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 0]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 1]));
+    assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 3]));
+
+    // Set mode 7
+    logDebug(testname+": set mode to 7");
+    this.widget.setMode(7);
+    assertEq(testname, null, this.compareElementClass("modeselector-normal"));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 0]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 1]));
+    assertEq(testname, null, this.compareElementClass("modeselector-normal",   ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-selected", ["ModeSelectorButton", 3]));
+
+    // Set mode 2
+    logDebug(testname+": set mode to 2");
+    this.widget.setMode(2);
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown"));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 0]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 1]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 2]));
+    assertEq(testname, null, this.compareElementClass("modeselector-unknown", ["ModeSelectorButton", 3]));
     
     logDebug(testname+": complete");
 };

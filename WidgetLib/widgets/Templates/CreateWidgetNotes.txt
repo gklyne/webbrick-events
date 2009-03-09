@@ -5,7 +5,11 @@
    Try to reflect all calculations and complex logic in the internal model, 
    with direct mappings from there to the renderer.  
    Avoid requiring the renderer to perform any complex logic.  
-   This ensures that most of the logic is unit-testable. 
+   This ensures that most of the logic is unit-testable.
+   Focus on: 
+   (a) required displayable states/values,
+   (b) required inputs
+   (c) required outputs 
 5. Create and enable test cases for the initial model.
 6. Define widget model and initializer.  Ensure tests pass.
 7. Create and enable test cases for initial element content.  
