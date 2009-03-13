@@ -88,7 +88,7 @@ webbrick.widgets.ModeSelector_InitializeValues = {
     SelectionName:
         [webbrick.widgets.getWidgetAttribute,   "SelectionName"],
     Subject:
-        [webbrick.widgets.getWidgetAttribute,   "Subject"],
+        [webbrick.widgets.getWidgetAttribute,   "ModeSubject"],
     SetModeEvent:
         [webbrick.widgets.getWidgetAttribute,   "SetModeEvent"],
 };
@@ -292,6 +292,9 @@ webbrick.widgets.ModeSelector.prototype.SetModeEventHandler = function (handler,
  */
 // Note: this function definition must precede the table below that refers to it
 webbrick.widgets.ModeSelector.ButtonValueMap = function(elem) {
+    if (elem.tagName.toLowerCase() == "input") {
+        return MochiKit.DOM.getNodeAttribute(elem, 'value');
+    };
     return webbrick.widgets.getAttributeByTagPath(elem, ['input'], 'value')
 };
 
@@ -364,6 +367,9 @@ webbrick.widgets.ModeSelector.renderer.prototype.SetButtonStateModelListener = f
     };
     this.setWidgetPathClass(valuemap, path, model, propname, "unknown", oldkey);
     this.setWidgetPathClass(valuemap, path, model, propname, oldkey, newkey);
+    var inputpath = ["ModeSelectorButton", propname[1], "input"];
+    var inputelem = webbrick.widgets.getElementByTagPath(this._elem, inputpath);
+    inputelem.checked = newvalue;
 };
 
 // End.

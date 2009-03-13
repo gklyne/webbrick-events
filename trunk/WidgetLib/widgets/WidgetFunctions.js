@@ -108,6 +108,9 @@ webbrick.widgets.setElementText = function (elem, text) {
  */
 webbrick.widgets.getElementByTagPath = function (elem, pathnames) {
     logDebug("getElementByTagPath: "+elem+", ["+pathnames+"], (len "+pathnames.length+")");
+    if (elem == undefined) {
+        return null;
+    };
     if (pathnames.length == 0) {
         return elem;
     };
