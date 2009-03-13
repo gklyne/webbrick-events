@@ -205,12 +205,18 @@ function(testname, subtest, selectedlist, nonselectedclass, selectedclass) {
     assertEq(testname+"("+subtest+","+nonselectedclass+")", 
         null, this.compareElementClass(nonselectedclass));
     for (var i = 0 ; i < 4 ; i++) {
-        var cls = nonselectedclass;
+        var expect_class   = nonselectedclass;
+        var expect_checked = false;
         if (webbrick.widgets.contains(selectedlist, i)) {
-             cls = selectedclass;
-        assertEq(testname+"("+subtest+","+selectedclass+")", 
-            null, this.compareElementClass(cls, ["ModeSelectorButton", i]));
+            expect_class = selectedclass;
+            expect_checked = true;
         };
+        assertEq(testname+"("+subtest+","+selectedclass+")", 
+            null, 
+            this.compareElementClass(expect_class, ["ModeSelectorButton", i]));
+        var is_checked = webbrick.widgets.getElementByTagPath
+            (this.elem, ["ModeSelectorButton", i, "input"]).checked;
+        assertEq(testname+"("+subtest+",checked)", is_checked, expect_checked);
     };
 }; 
 
@@ -588,7 +594,7 @@ webbrick.widgets.TestModeSelector.prototype.testButtonClick = function() {
 
     // Simulate Click on mode '7'
     logDebug(testname+": Click on mode '7'");
-    event = this.makeButtonClickEvent(["ModeSelectorButton", 3])
+    event = this.makeButtonClickEvent(["ModeSelectorButton", 3, "input"])
     this.collector.ButtonClicked(event);    // simulate button-click
     this.checkModelValues(testname, "[3]=7", [3], 7, "normal");
     this.checkClassValues(testname, "[3]=7", [3], "modeselector-normal", "modeselector-selected");
