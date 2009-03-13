@@ -415,18 +415,22 @@ webbrick.widgets.TempSetPoint.initializeValues = {
 // --------------------------------------------
 
 /**
- *  Table to map button values to signal parameter values for the Input collector
- *  Each entry is:
- *      matching (sub-)element tag
- *      matching element value attribute
- *      corresponding signal parameter
+ *  Button value mapping function that returns the signal parameter value
+ *  for an indicated button element, or null if no such value exists. 
  */
-webbrick.widgets.TempSetPoint.ButtonValueMap = [
-    [ 'SetPointUp',   null,   +0.5 ],
-    [ 'SetPointDown', null,   -0.5 ],
-    [ 'button',       'Up',   +0.5 ],
-    [ 'button',       'Down', -0.5 ]
-];
+webbrick.widgets.TempSetPoint.ButtonValueMap = function(elem) {
+    var tagname = elem.nodeName;
+    if (tagname == 'button') {
+        var value = MochiKit.DOM.getNodeAttribute(elem, 'value');
+        if (value == 'Up')   return +0.5;
+        if (value == 'Down') return -0.5;
+    } else if (tagname == 'SetPointUp' ) {
+        return +0.5;
+    } else if (tagname == 'SetPointDown' ) {
+        return -0.5;
+    };
+    return null;
+};
 
 /**
  *  Definitions for the TempSetPoint DOM renderer and input collector
@@ -507,57 +511,6 @@ webbrick.widgets.TempSetPoint.renderer.prototype.initialize = function() {
     // Create functions and connect DOM events
     this.processDefinition(webbrick.widgets.TempSetPoint.rendererDefinition, this._element);
     // Further DOM initialization is performed when the widget is initialized 
-};
-
-/**
- *  Button-click handler: need to determine which button was clicked
- *
- *  The input is propagated as a MochiKit non-DOM signal.
- *
- * @param   {String} signalname Name of signal to raise when event click occurs
- * @param   {Object} tagvalmap  Maps tag name and value attributes to a parameter
- *                              that is provided with the propagated signal.
- *                              No signal is generated for tag/value pairs that
- *                              do not appear in this table.  If the value attribute
- *                              in the table is null, then only the tag name is tested.
- * @param   {Object} event      MochiKit custom event object corresponding to the
- *                              incoming DOM event.
- *
- *  This function should be partially applied to name of signal to generate, an 
- *  event type mapping table and a button mapping table to yield a usable DOM event 
- *  handler function.
- */
-webbrick.widgets.TempSetPoint.renderer.prototype.domButtonClicked = function 
-        (signalname, tagvalmap, event) {
-    MochiKit.Logging.logDebug("TempSetPoint.collector.domButtonClicked");
-
-    var tagValueParam = function (elem, tagvalentry) {
-        var tagname = elem.nodeName;
-        MochiKit.Logging.logDebug("button tag: "+tagname);
-        if (tagname.toLowerCase() == tagvalentry[0].toLowerCase()) {
-            if (tagvalentry[1] != null) {
-                var value = MochiKit.DOM.getNodeAttribute(elem, 'value');
-                MochiKit.Logging.logDebug("button value: "+value);
-                if (value != tagvalentry[1]) return null;
-            };
-        return tagvalentry[2];
-        };
-    };
-    
-    var eventtype = event.type();
-    MochiKit.Logging.logDebug("eventtype: "+eventtype);
-    if (eventtype == 'click') {
-        var elem = event.target();
-        for (var i in tagvalmap) {
-            var sigparam = tagValueParam(elem, tagvalmap[i]);
-            if (sigparam != null) {
-                MochiKit.Signal.signal(this, signalname, sigparam);
-                event.stop();
-            };
-        };
-    };
-
-    // Allow event to propagate...
 };
 
 // End.

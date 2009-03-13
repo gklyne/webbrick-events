@@ -287,9 +287,8 @@ webbrick.widgets.ModeSelector.prototype.SetModeEventHandler = function (handler,
 // --------------------------------------------
 
 /**
- *  Button value mapping function that returns the value of an attribute from
- *  an element at an indicated location within the containing button element,
- *  or null if no such value exists. 
+ *  Button value mapping function that returns the signal parameter value
+ *  for an indicated button element, or null if no such value exists. 
  */
 // Note: this function definition must precede the table below that refers to it
 webbrick.widgets.ModeSelector.ButtonValueMap = function(elem) {
@@ -298,11 +297,6 @@ webbrick.widgets.ModeSelector.ButtonValueMap = function(elem) {
 
 /**
  *  Definitions for the ModeSelector DOM renderer and input collector
- *
- *  The renderer responds to model changes to 'VALUE' and 'STATE'.
- *
- *  The collector class generates the following input events via MochiKit.Signal:
- *    'Clicked', with parameter 'click', 'down', or 'up' to indicate the type of input event.
  */
 webbrick.widgets.ModeSelector.rendererDefinition = {
     // Define functions used by other parts of the renderer definition
@@ -355,18 +349,16 @@ webbrick.widgets.ModeSelector.renderer.prototype.initialize = function() {
 };
 
 /**
- *  Set class for a mode selection button (normal or selected)
+ *  Set class for a mode selection button (normal, selected or unknown)
  */
 webbrick.widgets.ModeSelector.renderer.prototype.SetButtonStateModelListener = function
         (valuemap, model, propname, oldvalue, newvalue) {
     logDebug("GenericDomRenderer.SetButtonStateModelListener: propname: "+propname+
             ", newvalue: "+newvalue+", oldvalue: "+oldvalue);
     var path = ["ModeSelectorButton", propname[1]];
-    // TODO: revise upstream code to use these values instead of True/False
-    var oldkey = "normal";
-    var newkey = "normal";
-    if (oldvalue) oldkey = "selected";
-    if (newvalue) newkey = "selected";
+    var tfmap = {false: "normal", true: "selected"};
+    var oldkey = tfmap[oldvalue];
+    var newkey = tfmap[newvalue];
     if (model.get("STATE") == "unknown" ) {
         newkey = "unknown";
     };
