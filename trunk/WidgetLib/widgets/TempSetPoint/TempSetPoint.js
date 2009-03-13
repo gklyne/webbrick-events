@@ -416,6 +416,10 @@ webbrick.widgets.TempSetPoint.initializeValues = {
 
 /**
  *  Table to map button values to signal parameter values for the Input collector
+ *  Each entry is:
+ *      matching (sub-)element tag
+ *      matching element value attribute
+ *      corresponding signal parameter
  */
 webbrick.widgets.TempSetPoint.ButtonValueMap = [
     [ 'SetPointUp',   null,   +0.5 ],

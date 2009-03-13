@@ -247,7 +247,12 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testModelSetVALUE = function() {
 webbrick.widgets.TestWIDGETZZZ.prototype.testEventSetValue = function() {
     var testname = "testEventSetValue";
     logInfo("==== webbrick.widgets.TestWIDGETZZZ."+testname+" ====");
-    var setValueEvent = this.model.get("SetValueEvent");
+    //////////////////////////
+    //// TODO: pick and/or adjust
+    var sourceIdent  = testname;
+    var sourceIdent  = this.model.get("Subject")
+    var setYYYYEvent = this.model.get("SetYYYYEvent");
+    //////////////////////////
 
     // Test initial element value
     logDebug(testname+": initial element value: "+webbrick.widgets.getElementText(this.elem));
@@ -263,7 +268,7 @@ webbrick.widgets.TestWIDGETZZZ.prototype.testEventSetValue = function() {
     //// TODO: adjust as needed
     // Test set new element value
     logDebug(testname+": setting text to 'new value'");
-    var sts = this.publishEvent(setValueEvent, "new value");
+    webbrick.widgets.publishEvent(sourceIdent, setYYYYEvent, "new value");
     logDebug(testname+": sts: "+sts);
     logDebug(testname+": new element value: "+webbrick.widgets.getElementText(this.elem));
     assertEq(testname+": value", 

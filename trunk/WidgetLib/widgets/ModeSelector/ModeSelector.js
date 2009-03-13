@@ -217,12 +217,9 @@ webbrick.widgets.ModeSelector = function (modelvals, renderer, collector) {
     MochiKit.Logging.logDebug("ModeSelector: connect model listeners");
     this._renderer.connectModel(this._model);
 
-    ////////////////////
-    // TODO: delete or enable this as appropriate
     // Connect controller input listeners to input collector
-    ////MochiKit.Logging.logDebug("ModeSelector: connect input collector listeners");
-    ////MochiKit.Signal.connect(this._collector, 'Clicked', this, this.Clicked);
-    ////////////////////
+    MochiKit.Logging.logDebug("ModeSelector: connect input collector listeners");
+    MochiKit.Signal.connect(this._collector, 'ModeSelect', this, this.ModeButtonClicked);
 
     // Connect controller to external control events
     // (Subscribed event definitions reference the model)
@@ -258,22 +255,17 @@ webbrick.widgets.ModeSelector.prototype.setMode = function (mode) {
 // Input collector event handlers
 // ------------------------------
 
-////////////////////
-// TODO: delete this function if there are no user input events.
-////////////////////
-
 /**
- *  Function called when widget is clicked (down, up, clicked)
+ *  Function called when mode selection button is clicked
  *
  * @param {String}      inputtype   a string value that indicates the type of 
- *                      click event (e.g. 'up', 'down', etc.).  See also
- *                      the DOM event mapping table at 'ClickTypeMap' below. 
+ *                      click event (e.g. 'up', 'down', etc.).  
  */
-webbrick.widgets.ModeSelector.prototype.Clicked = function (inputtype) {
-    MochiKit.Logging.logDebug("ModeSelector.Clicked: "+inputtype);
+webbrick.widgets.ModeSelector.prototype.ModeButtonClicked = function (inputtype) {
+    MochiKit.Logging.logDebug("ModeSelector.ModeButtonClicked: "+inputtype);
     webbrick.widgets.publishEvent(
-            this._model.get("YYYClickSource"),
-            this._model.get("YYYClickEvent"),
+            this._model.get("Subject"), 
+            this._model.get("SetModeEvent"), 
             inputtype);
 };
 
@@ -281,17 +273,13 @@ webbrick.widgets.ModeSelector.prototype.Clicked = function (inputtype) {
 // Incoming controller event handlers
 // ----------------------------------
 
-////////////////////
-// TODO: These functions will need removing or adjusting to match the widget capabilities
-// These functions support a common pattern of simple VALUE and STATE values in themodel
-////////////////////
-
 /**
  *  Incoming event handler for setting the current mode
  */
 webbrick.widgets.ModeSelector.prototype.SetModeEventHandler = function (handler, event) {
-    MochiKit.Logging.logDebug("ModeSelector.SetModeEventHandler: "+event.getPayload());
-    this._model.set("MODE", event.getPayload());
+    var mode = webbrick.widgets.convertStringToInt(event.getPayload());
+    MochiKit.Logging.logDebug("ModeSelector.SetModeEventHandler: "+mode);
+    this.setMode(mode);
 };
 
 // --------------------------------------------
@@ -299,14 +287,13 @@ webbrick.widgets.ModeSelector.prototype.SetModeEventHandler = function (handler,
 // --------------------------------------------
 
 /**
- *  Table to map DOM event types to signal parameter values for Input collector
+ *  Button value mapping function that returns the value of an attribute from
+ *  an element at an indicated location within the containing button element,
+ *  or null if no such value exists. 
  */
-webbrick.widgets.ModeSelector.ClickTypeMap = {
-    click:      'click',
-    mousedown:  'down',
-    keydown:    'down',
-    mouseup:    'up',
-    keyup:      'up'
+// Note: this function definition must precede the table below that refers to it
+webbrick.widgets.ModeSelector.ButtonValueMap = function(elem) {
+    return webbrick.widgets.getAttributeByTagPath(elem, ['input'], 'value')
 };
 
 /**
@@ -326,8 +313,8 @@ webbrick.widgets.ModeSelector.rendererDefinition = {
             ['setWidgetPathClass',  webbrick.widgets.ModeSelector_ClassMap, []],
         SetButtonStateModelListener:
             ['SetButtonStateModelListener', webbrick.widgets.ModeSelector_ClassMap],
-        WidgetClicked: 
-            ['undefinedListener', 'WidgetClicked']
+        ButtonClicked: 
+            ['domButtonClicked', 'ModeSelect', webbrick.widgets.ModeSelector.ButtonValueMap]
         },
     // Define model listener connections
     renderModel: {
@@ -337,11 +324,7 @@ webbrick.widgets.ModeSelector.rendererDefinition = {
     },
     // Define DOM input event connections
     collectDomInputs: {
-        onclick:        'WidgetClicked',
-        onmousedown:    'WidgetClicked',
-        onmouseup:      'WidgetClicked',
-        onkeydown:      'WidgetClicked',
-        onkeyup:        'WidgetClicked'
+        onclick:        'ButtonClicked'
     }
 };
 

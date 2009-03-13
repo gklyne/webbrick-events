@@ -553,7 +553,7 @@ webbrick.widgets.objectString = function (obj) {
 };
 
 webbrick.widgets.convertStringToInt = function(val) {
-    MochiKit.Logging.log("TempSetPoint.convertStringToInt: "+val);
+    MochiKit.Logging.logDebug("TempSetPoint.convertStringToInt: "+val);
     if (typeof val == "string") {
         if (val.match(/^\s*\d+\s*$/) != null) {
             val = parseInt(val, 10);
@@ -563,6 +563,17 @@ webbrick.widgets.convertStringToInt = function(val) {
             val = undefined;
     };
     return val;
+};
+
+// ----------------------------------------------------------------
+// Array/list handling
+// ----------------------------------------------------------------
+
+webbrick.widgets.contains = function(list, val) {
+    for (var i = 0 ; i < list.length ; i++) {
+        if (list[i] == val) return true;
+    };
+    return false;
 };
 
 // ----------------------------------------------------------------
