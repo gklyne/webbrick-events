@@ -679,7 +679,6 @@ webbrick.widgets.GenericDomRenderer.prototype.domButtonClicked = function
         var sigparam = elemvalmap(elem);
         if (sigparam != null) {
             MochiKit.Signal.signal(this, signalname, sigparam);
-            event.stop();
         };
     };
     // Allow event to propagate...
