@@ -78,7 +78,7 @@ webbrick.widgets.ModeSelector_ModelDefinition = {
  */
 webbrick.widgets.ModeSelector_InitializeValues = {
     MODE:
-        [webbrick.widgets.getWidgetAttribute,   "Default"],
+        [webbrick.widgets.getWidgetAttribute,   "DefaultMode"],
     BUTTONCOUNT:
         [webbrick.widgets.countSubelementArray, ["ModeSelectorButton"]],
     BUTTONVALUES:
@@ -149,7 +149,7 @@ webbrick.widgets.ModeSelector_Init = function (element) {
     var widget = new webbrick.widgets.ModeSelector(modelvals, renderer, renderer);
 
     // Finish initializing the widget 
-    widget.setMode(0);
+    widget.setMode(widget._model.get("MODE"));
     
     return widget;
 };
@@ -369,7 +369,9 @@ webbrick.widgets.ModeSelector.renderer.prototype.SetButtonStateModelListener = f
     this.setWidgetPathClass(valuemap, path, model, propname, oldkey, newkey);
     var inputpath = ["ModeSelectorButton", propname[1], "input"];
     var inputelem = webbrick.widgets.getElementByTagPath(this._elem, inputpath);
+    logDebug("- inputelem.tagName: "+inputelem.tagName+", value: "+inputelem.value+", checked: "+inputelem.checked);
     inputelem.checked = newvalue;
+    logDebug("- inputelem.tagName: "+inputelem.tagName+", value: "+inputelem.value+", checked: "+inputelem.checked);
 };
 
 // End.

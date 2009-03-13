@@ -420,15 +420,20 @@ webbrick.widgets.TempSetPoint.initializeValues = {
  */
 webbrick.widgets.TempSetPoint.ButtonValueMap = function(elem) {
     var tagname = elem.nodeName;
-    if (tagname == 'button') {
+    MochiKit.Logging.logDebug("TempSetPoint.ButtonValueMap, tagname: "+tagname);
+    if (tagname.toLowerCase() == 'button') {
         var value = MochiKit.DOM.getNodeAttribute(elem, 'value');
+        MochiKit.Logging.logDebug("TempSetPoint.ButtonValueMap, value: "+value);
         if (value == 'Up')   return +0.5;
         if (value == 'Down') return -0.5;
-    } else if (tagname == 'SetPointUp' ) {
+    } else if (tagname.toLowerCase() == 'setpointup' ) {
+        MochiKit.Logging.logDebug("TempSetPoint.ButtonValueMap, up");
         return +0.5;
-    } else if (tagname == 'SetPointDown' ) {
+    } else if (tagname.toLowerCase() == 'setpointdown' ) {
+        MochiKit.Logging.logDebug("TempSetPoint.ButtonValueMap, down");
         return -0.5;
     };
+    MochiKit.Logging.logDebug("TempSetPoint.ButtonValueMap, no match");
     return null;
 };
 
