@@ -53,7 +53,7 @@ webbrick.Error = function(nam, msg) {
  *  
  * @param {Object} widget       widget whose event handlers are to be subscribed
  * @param {Object} model        a model object from which event type and/or source
- *                              values may be extrcated.
+ *                              values may be extracted.
  * @param {Array*} subscribes   a list of event subscription descriptors, 
  *                              each of indicates an event type and event source
  *                              to be subscribed to (either but not both may be null)
@@ -72,7 +72,7 @@ webbrick.widgets.SubscribeWidgetEvents = function(widget, model, subscribes) {
         var evsrc = model.getDefault(subscribes[i][1], null);
         MochiKit.Logging.logDebug("subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
         //
-        if (evtyp == null && evscrc == null) {
+        if (evtyp == null && evsrc == null) {
             throw "ValueError", 
                 "SubscribeWidgetEvents: either event type of event source must be specified";
         }
@@ -631,7 +631,7 @@ webbrick.widgets.GenericDomRenderer.prototype.undefinedListener = function
  *  The input is propagated as a MochiKit non-DOM signal.
  *
  * @param   {String} signalname Name of signal to raise when event click occurs
- * @param   {Object} eventmap   Maps event type values to singnal parameter values.
+ * @param   {Object} eventmap   Maps event type values to signal parameter values.
  *                              No signal is generated for DOM event types that do
  *                              not appear in this table.
  * @param   {Object} event      MochiKit custom event object corresponding to the
@@ -649,6 +649,40 @@ webbrick.widgets.GenericDomRenderer.prototype.domEventClicked = function
     if (pubevent !== null) {
         MochiKit.Signal.signal(this, signalname, pubevent);
     };
+};
+
+/**
+ *  Button-click handler: use when one of several sub-elements (buttons) may be
+ *  clicked, and signal parameters are extracted from that element.  If the
+ *  element mapping function returns null, no signal is raised and the DOM 
+ *  event is allowed to bubble up the DOM tree.
+ *
+ *  The input is propagated as a MochiKit non-DOM signal.
+ *
+ * @param   {String} signalname Name of signal to raise when a button click occurs
+ * @param   {Object} elemvalmap Maps an element to a parameter that is provided with 
+ *                              the propagated signal, or null if no signal is to
+ *                              be raised for this event.
+ * @param   {Object} event      MochiKit custom event object corresponding to the
+ *                              incoming DOM event.
+ *
+ *  This function should be partially applied to name of signal to generate, and
+ *  an event mapping/filter function to yield a usable DOM event handler function.
+ */
+webbrick.widgets.GenericDomRenderer.prototype.domButtonClicked = function 
+        (signalname, elemvalmap, event) {
+    MochiKit.Logging.logDebug("ModeSelector.collector.domButtonClicked");
+    var eventtype = event.type();
+    MochiKit.Logging.logDebug("eventtype: "+eventtype);
+    if (eventtype == 'click') {
+        var elem     = event.target();
+        var sigparam = elemvalmap(elem);
+        if (sigparam != null) {
+            MochiKit.Signal.signal(this, signalname, sigparam);
+            event.stop();
+        };
+    };
+    // Allow event to propagate...
 };
 
 // TODO - define more collector base methods as required
@@ -739,10 +773,10 @@ webbrick.widgets.getWidgetPathElement = function(path, element) {
         var n = path[i];
         e = element.getElementsByTagName(n);
         if (e.length == 0) {
-            throw "ValueError", "DOM element contains no <"+n+"> child";
+            throw "ValueError", "DOM element ("+element.tagName+") contains no <"+n+"> child";
         };
         if (e.length > 1) {
-            throw "ValueError", "DOM element contains more than one <"+n+"> child";
+            throw "ValueError", "DOM element ("+element.tagName+") contains more than one <"+n+"> child";
         };
         element = e[0];
     };
