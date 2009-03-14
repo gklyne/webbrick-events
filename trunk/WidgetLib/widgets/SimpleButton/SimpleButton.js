@@ -123,20 +123,8 @@ webbrick.widgets.SimpleButton = function (modelvals, renderer, collector) {
     MochiKit.Logging.logDebug("SimpleButton: connect input collector listeners");
     MochiKit.Signal.connect(this._collector, 'Clicked', this, this.Clicked);
 
-    // Access widget event router
-    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
-
-    // Subscribe handlers for incoming controller events
-    MochiKit.Logging.logDebug("SimpleButton: subscribe controller events");
-    for (var i = 0 ; i<this._subscribes.length ; i++) {
-        var evtyp = this._model.get(this._subscribes[i][0]);
-        var evsrc = this._model.getDefault(this._subscribes[i][1], null);
-        // makeEventHandler(handlerUri,handlerFunc,initFunc,endFunc)
-        var handler = makeEventHandler(
-            evtyp+"_handler", MochiKit.Base.bind(this._subscribes[i][2],this), null, null);
-        MochiKit.Logging.logDebug("SimpleButton: subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
-        WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
-    }
+    // Connect controller to external control events
+    webbrick.widgets.SubscribeWidgetEvents(this, this._model, this._subscribes);
 
     MochiKit.Logging.logDebug("SimpleButton: initialized");
 };

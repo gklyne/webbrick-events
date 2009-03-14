@@ -120,25 +120,12 @@ webbrick.widgets.CountdownDisplay = function (modelvals, renderer, collector) {
     // Connect model change listeners to renderer methods
     MochiKit.Logging.logDebug("CountdownDisplay: connect model listeners");
     this._renderer.connectModel(this._model);
-
+    
+    // Connect controller to external control events
+    webbrick.widgets.SubscribeWidgetEvents(this, this._model, this._subscribes);
+    
     // Call SetCounter to convert numeric value and establish state for widget
     this.SetCounter(this._model.get("VALUE"));
-    
-    // Access widget event router
-    var WidgetEventRouter = webbrick.widgets.getWidgetEventRouter();
-    
-    // Subscribe handlers for incoming controller events
-    MochiKit.Logging.logDebug("CountdownDisplay: subscribe controller events");
-    for (var i = 0 ; i<this._subscribes.length ; i++) {
-        var evtyp = this._model.get(this._subscribes[i][0]);
-        var evsrc = this._model.getDefault(this._subscribes[i][1], null);
-        var evfun = this._subscribes[i][2];
-        // makeEventHandler(handlerUri,handlerFunc,initFunc,endFunc)
-        var handler = makeEventHandler(
-            evtyp+"_handler", MochiKit.Base.bind(evfun,this), null, null);
-        MochiKit.Logging.logDebug("CountdownDisplay: subscribe: evtyp: "+evtyp+", evsrc: "+evsrc);
-        WidgetEventRouter.subscribe(32000, handler, evtyp, evsrc);
-    }
 
     MochiKit.Logging.logDebug("CountdownDisplay: initialized");
 };
