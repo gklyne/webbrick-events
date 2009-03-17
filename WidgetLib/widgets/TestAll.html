@@ -1,0 +1,33 @@
+<!-- $Id: $ -->
+<!-- To run these tests, just load this file into a browser -->
+<html>
+<head>
+    <!-- Test all functions in Mochikit asynchronous test runner -->
+    <!-- Run all WidgetLib widget unit tests -->
+
+    <title>webbrick.widgets.AllTests controller Test Runner </title>
+
+    <!-- MochiKit dependencies -->
+    <script type="text/javascript">MochiKit = {__export__: false};</script>
+    <script type="text/javascript"
+            src="../../MiscLib/static/javascript/MochiKit.js">
+    </script>
+
+    <!-- Testing dependencies -->
+    <script type="text/javascript" src="../../MiscLib/static/SimpleTest/SimpleTest.js"></script>
+    <script type="text/javascript" src="../../MiscLib/static/SimpleTest/TestRunner.js"></script>
+    <script type="text/javascript" src="../../MiscLib/static/javascript/AsyncUnitTest.js"></script>
+
+</head>
+<body>
+<script type="text/javascript">
+TestRunner.runTests(
+    'SimpleButton/TestSimpleButton.html',
+    'NumericDisplay/TestNumericDisplay.html',
+    'CountdownDisplay/TestCountdownDisplay.html',
+    'TempSetPoint/TestTempSetPoint.html',
+    'ModeSelector/TestModeSelector.html'
+);
+</script>
+</body>
+</html>
