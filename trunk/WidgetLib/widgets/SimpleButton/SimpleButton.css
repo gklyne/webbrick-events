@@ -24,13 +24,13 @@
 }
 
 .button_unknown {
-    background-color:grey;
+    background-color:gray;
     color:silver;
 }
 
 .button_inactive {
     background-color:white;
-    color: grey;
+    color: gray;
 }
 
 /* End. */
