@@ -30,10 +30,14 @@ Tests consist of synchronous tests that must be run in the jsUnit test runner, a
  * `MiscLib/tests/static/TestAsyncAll.html` - run directly in browser
  * `EventLib/tests/static/TestAsyncAll.html` - run directly in browser
  * Widget component tests - run directly in browser:
-   * `WidgetLib/tests/static/TestMvcUtils.html`
-   * `WidgetLib/tests/static/TestSimpleButton.html`
-   * `WidgetLib/tests/static/TestNumericDisplay.html`
+   * `WidgetLib/widgets/TestMvcUtils/TestMvcUtils.html`
+   * `WidgetLib/widgets/TestSimpleButton/TestSimpleButton.html`
+   * `WidgetLib/widgets/TestNumericDisplay/TestNumericDisplay.html`
    * (etc.)
+ * To run all of the widget unit tests - run directly in browser:
+   * `WidgetLib/widgets/TestAll.html`
+
+Note: in order to keep all widget code together, I've departed from the previous code organization of having tests in a separate directory.  Each widget consists of a combination of Python, Javascript, HTML, CSS code, which need to be closely coordinated.
 
 
 = Python client/Python server tests =
