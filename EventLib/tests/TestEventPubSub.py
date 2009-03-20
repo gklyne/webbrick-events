@@ -80,9 +80,9 @@ def evTriggerEq(handler,expect):
     return handler.isTriggered() == expect
 
 # Helper to map assertion over a pair of lists
-def mapAssert(f, as, bs, msg):
-    rs = map(f, as, bs)
-    for r in rs: assert r, msg
+def mapAssert(f, als, bls, msg):
+    rls = map(f, als, bls)
+    for r in rls: assert r, msg
 
 # Test class
 class TestEventPubSub(unittest.TestCase):
