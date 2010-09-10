@@ -83,12 +83,12 @@ class TestEventAgent(unittest.TestCase):
         es2 = makeEventAgent()
         self.assertNotEqual(es1, None)
 
-    def testEventAgentEqual5(self):
+    def testEventAgentEqual6(self):
         es1 = makeEventAgent()
         es2 = makeEventAgent()
         self.assertNotEqual(None, es2)
 
-    def testEventAgentEqual6(self):
+    def testEventAgentEqual7(self):
         # test against object that is not an event
         es1 = makeEventAgent()
         self.assertNotEqual(es1, DummyClass(), "testEventAgentEqual6")
@@ -131,8 +131,8 @@ def getTestSuite(select="unit"):
             , "testEventAgentEqual3"
             , "testEventAgentEqual4"
             , "testEventAgentEqual5"
-            , "testEventAgentEqual5"
             , "testEventAgentEqual6"
+            , "testEventAgentEqual7"
             ],
         "component":
             [ "testComponents"
