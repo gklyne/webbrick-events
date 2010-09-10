@@ -4,9 +4,14 @@
 import sys
 import glob
 from os.path import *
-cpfile = glob.glob(sys.prefix+"\\Lib\\site-packages\\cherrypy-2.*")
-sys.path.insert(1, cpfile[0])
+# For running on Windows:
+#cpfile = glob.glob(sys.prefix+"\\Lib\\site-packages\\cherrypy-2.*")
+# For running on Ubuntu:
+cpfile = glob.glob("/usr/local/lib/python2.6/dist-packages/CherryPy-2.*")
+#print "sys.prefix: ", sys.prefix
+#print "cpfile: ", cpfile
 #print "path insert: ", cpfile[0]
+sys.path.insert(1, cpfile[0])
 #print '\n'.join(sys.path)
 
 # Now can import TurboGears, etc.
