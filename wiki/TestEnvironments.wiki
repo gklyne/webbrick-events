@@ -55,7 +55,7 @@ See source code for usage notes.
  * `EventLib/tests/JSProxy/start-jsproxy.py`
  * `EventLib/tests/static/TestAsyncEventRouterHTTP.html` - see source code for usage notes.
 
-jsProxy needs CherryPy 2.x, runs on port 8080, and proxies requests of the form /Proxy/port to another HTTP server on the same machine (e.g. {{{http://localhost:8080/Proxy/8082}}}).
+jsProxy needs !CherryPy 2.x, runs on port 8080, and proxies requests of the form /Proxy/port to another HTTP server on the same machine (e.g. {{{http://localhost:8080/Proxy/8082}}}).
 
 TestEventHTTPClientServer runs event routers for testing on ports 8082 and 8083.
 
