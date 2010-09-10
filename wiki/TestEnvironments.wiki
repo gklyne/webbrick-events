@@ -59,6 +59,8 @@ jsProxy needs !CherryPy 2.x, runs on port 8080, and proxies requests of the form
 
 TestEventHTTPClientServer runs event routers for testing on ports 8082 and 8083.
 
+The file {{{TestAsyncEventRouterHTTP.html}}} should be loaded into a browser via the proxy.  Browsing to {{{http://localhost:8080/}}} should display a page of links that can be clicked to activate various tests.  Note that the file {{{JSProxy/config/app.cfg}}} should be edited to reflect the root path for static files served by the proxy.
+
 
 = Selenium user interface tests =
 
